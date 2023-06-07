@@ -66,3 +66,7 @@ tasks.withType<Test> {
 }
 
 springBoot.buildInfo { properties { } }
+
+tasks.getByName<Jar>("jar") {
+	enabled = false
+}

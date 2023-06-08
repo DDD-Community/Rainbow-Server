@@ -14,3 +14,12 @@ cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 nohup java -jar $JAR_FILE 
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)
+
+if [ -n PID ]
+then
+    echo "Kill -15 $PID"
+    kill -15 $PID
+    sleep 5
+fi
+
+nohup java -jar -Dspring.profiles.active=prod $JAR_FILE > /dev/null 2> /dev/null < /dev/null &

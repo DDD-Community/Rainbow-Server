@@ -20,12 +20,12 @@ import javax.persistence.MappedSuperclass
 @AllOpen
 abstract class BaseEntity {
     @CreatedDate
-    @Column(name = "created_at", columnDefinition = "datetime default CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "Asia/Seoul")
     var createdAt: ZonedDateTime = ZonedDateTime.now()
 
     @LastModifiedDate
-    @Column(name = "updated_at", columnDefinition = "datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(name = "updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "Asia/Seoul")
     var updatedAt: ZonedDateTime = ZonedDateTime.now()
 }

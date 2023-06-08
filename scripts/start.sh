@@ -11,6 +11,6 @@ TIME_NOW=$(date +%c)
 cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 
 # jar 파일 실행
-nohup java -jar $JAR_FILE > $APP_LOG 2> $ERROR_LOG &
+nohup java -jar $JAR_FILE 
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)

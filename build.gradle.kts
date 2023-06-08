@@ -14,6 +14,7 @@ plugins {
 
 allOpen {
 	annotation("javax.persistence.Entity")
+	annotation("com.rainbow.server.domain.AllOpen")
 }
 
 
@@ -49,8 +50,8 @@ dependencies {
     //redis
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
-	runtimeOnly("com.h2database:h2")
-	runtimeOnly("com.mysql:mysql-connector-j")
+
+	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

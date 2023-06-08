@@ -22,7 +22,7 @@ class BoardService(val boardRepository: BoardRepository) {
 
     fun findAll():List<BoardResponse>{
         val boardList=boardRepository.findAll()
-        return boardList.map { board->BoardResponse(board.id, board.writer, board.title) }
+        return boardList.map { board->BoardResponse(board.id, board.writer, board.title,board.createdAt,board.updatedAt) }
     }
 
     fun update(boardRequest: BoardRequest):BoardResponse{

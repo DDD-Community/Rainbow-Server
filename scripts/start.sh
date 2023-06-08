@@ -11,7 +11,7 @@ TIME_NOW=$(date +%c)
 cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 
 # jar 파일 실행
-nohup java -jar $JAR_FILE 
+#nohup java -jar $JAR_FILE
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)
 
@@ -22,4 +22,4 @@ then
     sleep 5
 fi
 
-nohup java -jar -Dspring.profiles.active=prod $JAR_FILE > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar -Dspring.profiles.active=local $JAR_FILE > /dev/null 2> /dev/null < /dev/null &

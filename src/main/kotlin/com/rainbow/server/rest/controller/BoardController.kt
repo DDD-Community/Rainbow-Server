@@ -31,6 +31,11 @@ class BoardController(val boardService: BoardService) {
         return ResponseEntity.ok().body(boardService.findById(id))
     }
 
+    @GetMapping("/findAll")
+    fun findAllBoard(): ResponseEntity<Any> {
+        return ResponseEntity.ok().body(boardService.findAll())
+    }
+
     @PutMapping("/update")
     fun updateBoard(@RequestBody boardRequest: BoardRequest): ResponseEntity<Any> {
         val save=boardService.update(boardRequest)

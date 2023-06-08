@@ -20,6 +20,11 @@ class BoardService(val boardRepository: BoardRepository) {
         return BoardResponse.from(boardRepository.findById(id).get())
     }
 
+    fun findAll():List<BoardResponse>{
+        val boardList=boardRepository.findAll()
+        return boardList.map { board->BoardResponse(board.id, board.writer, board.title) }
+    }
+
     fun update(boardRequest: BoardRequest):BoardResponse{
        val board= boardRepository.findById(boardRequest.id).get()
         board.title=boardRequest.title

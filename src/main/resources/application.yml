@@ -12,8 +12,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    hikari:
-      jdbc-url: jdbc:mariadb://rainbow-server-db.cgchmvhetcl5.ap-northeast-2.rds.amazonaws.com:3306/rainbow_db?autoReconnect=true
+      url: jdbc:mariadb://rainbow-server-db.cgchmvhetcl5.ap-northeast-2.rds.amazonaws.com:3306/rainbow_db
       username: rainbow
       password: gwon188!!
       driver-class-name: org.mariadb.jdbc.Driver

@@ -44,7 +44,7 @@ class KakaoApiClient(private val restTemplate: RestTemplate)  {
         body.add("grant_type", GRANT_TYPE)
         body.add("client_id", clientId)
         body.add("client_secret",secret)
-        body.add("redirect_uri","http://localhost:8080/auth/kakao")
+        body.add("redirect_uri","http://43.201.219.27:8080/auth/kakao")
 
         val request = HttpEntity(body, httpHeaders)
 

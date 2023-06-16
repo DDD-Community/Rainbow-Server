@@ -19,7 +19,7 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
                      @Value("\${oauth.kakao.client-id}")
                      private val clientId: String) {
 
-    @GetMapping("/kakao")
+    @PostMapping("/kakao")
     fun loginKakao(@RequestParam("code") code:String): ResponseEntity<Any> {
         return ResponseEntity.ok(kakaoLoginService.login(code))
     }

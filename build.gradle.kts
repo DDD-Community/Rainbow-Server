@@ -50,6 +50,8 @@ dependencies {
     //redis
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+	implementation("org.apache.httpcomponents:httpclient:4.5")
+	implementation("com.google.code.gson:gson:2.9.0")
 
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

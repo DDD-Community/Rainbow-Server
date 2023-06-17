@@ -24,7 +24,7 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
         return ResponseEntity.ok(kakaoLoginService.login(code))
     }
 
-    @PostMapping("/kakao/logout")
+    @GetMapping("/kakao/logout")
     fun logoutKakao(code: String): ResponseEntity<KakaoUserLogout> {
         return ResponseEntity.ok(kakaoLoginService.logout(code))
     }

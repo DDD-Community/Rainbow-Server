@@ -27,3 +27,17 @@ oauth:
     url:
       auth: https://kauth.kakao.com
       api: https://kapi.kakao.com
+
+cloud:
+  aws:
+    s3:
+      bucket: 
+        credentials:
+          access_key: {IAM access key}
+          secret_key: {IAM secret key}
+
+    stack:
+      auto: false
+
+    region:
+      static: ap-northeast-2

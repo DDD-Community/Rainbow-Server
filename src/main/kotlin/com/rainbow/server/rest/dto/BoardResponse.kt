@@ -1,6 +1,7 @@
 package com.rainbow.server.rest.dto
 
 import com.rainbow.server.domain.board.entity.Board
+import com.rainbow.server.domain.member.Member
 import java.time.ZonedDateTime
 
 /***
@@ -8,8 +9,9 @@ import java.time.ZonedDateTime
  * */
 
 data class BoardResponse (var id:Long?,
-                          var writer:String,
+                          var writer:Member,
                           var title:String,
+                          var content:String,
                           var createdAt: ZonedDateTime,
                           var updatedAt: ZonedDateTime,
 
@@ -21,6 +23,7 @@ data class BoardResponse (var id:Long?,
                 id = board.id,
                 writer = board.writer,
                 title = board.title,
+                content = board.content,
                 createdAt=board.createdAt,
                 updatedAt = board.updatedAt
             )

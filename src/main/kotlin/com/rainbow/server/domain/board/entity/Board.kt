@@ -14,9 +14,18 @@ class Board(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id:Long?=null,
-    var writer:String,
     var title:String
 ):BaseEntity()
 
-
+@Entity
+class BoardImage(
+    originalFileName: String,
+    saveFileName: String,
+    board: Board
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
+    val saveFileName: String = saveFileName
+}
 

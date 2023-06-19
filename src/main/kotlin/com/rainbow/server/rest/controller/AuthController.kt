@@ -19,7 +19,7 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
                      @Value("\${oauth.kakao.client-id}")
                      private val clientId: String) {
 
-    @PostMapping("/kakao")
+    @GetMapping("/kakao")
     fun loginKakao(@RequestParam("code") code:String): ResponseEntity<Any> {
         return ResponseEntity.ok(kakaoLoginService.login(code))
     }
@@ -32,7 +32,7 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
     @GetMapping("/kakao/signin")
     fun kakaoBackendSignPage(
     ): ResponseEntity<*> {
-        val redirectUrl = "https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=http://43.201.219.27:8080/auth/kakao&response_type=code"
+        val redirectUrl = "https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=http://localhost:8080/view/kakaoView&response_type=code"
         val uri = URI(redirectUrl)
         val headers = HttpHeaders()
         headers.location = uri

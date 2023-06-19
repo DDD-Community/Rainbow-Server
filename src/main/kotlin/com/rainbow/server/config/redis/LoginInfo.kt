@@ -5,7 +5,7 @@ import java.io.Serializable
 import org.springframework.data.annotation.Id
 
 @RedisHash(value = "sessionKey", timeToLive = 3660)
-data class RefreshToken(
+data class LoginInfo(
     @Id
     val sessionKey: String,
     val memberName:String,

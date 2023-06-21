@@ -2,7 +2,7 @@ package com.rainbow.server.service
 
 import com.rainbow.server.config.redis.LoginInfo
 import com.rainbow.server.config.redis.LoginInfoRepository
-import com.rainbow.server.domain.member.Member
+import com.rainbow.server.domain.member.entity.Member
 import org.springframework.stereotype.Service
 import java.util.*
 

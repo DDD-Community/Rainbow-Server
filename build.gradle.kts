@@ -14,7 +14,8 @@ plugins {
 
 allOpen {
 	annotation("javax.persistence.Entity")
-	annotation("com.rainbow.server.domain.AllOpen")
+	annotation("javax.persistence.MappedSuperclass")
+	annotation("javax.persistence.Embeddable")
 }
 
 

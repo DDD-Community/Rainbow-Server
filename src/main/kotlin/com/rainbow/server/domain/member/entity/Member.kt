@@ -1,4 +1,4 @@
-package com.rainbow.server.domain.member
+package com.rainbow.server.domain.member.entity
 
 import com.rainbow.server.domain.BaseEntity
 import javax.persistence.Entity
@@ -9,10 +9,11 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "member")
-class Member (
+class Member (email:String,nickName:String
+):BaseEntity(){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 1,
-    var email:String,
-    var nickName:String
-):BaseEntity()
+    var id: Long? = null
+    var email:String =email
+    var nickName:String=nickName
+}

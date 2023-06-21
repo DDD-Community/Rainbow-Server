@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -32,7 +31,7 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
     @GetMapping("/kakao/signin")
     fun kakaoBackendSignPage(
     ): ResponseEntity<*> {
-        val redirectUrl = "https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=http://localhost:8080/view/kakaoView&response_type=code"
+        val redirectUrl = "https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=http://localhost:8080/auth/kakao&response_type=code"
         val uri = URI(redirectUrl)
         val headers = HttpHeaders()
         headers.location = uri

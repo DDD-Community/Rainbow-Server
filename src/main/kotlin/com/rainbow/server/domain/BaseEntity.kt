@@ -17,7 +17,6 @@ import javax.persistence.MappedSuperclass
     ], allowGetters = true
 )
 @EntityListeners(AuditingEntityListener::class)
-@AllOpen
 abstract class BaseEntity {
     @CreatedDate
     @Column(name = "created_at")

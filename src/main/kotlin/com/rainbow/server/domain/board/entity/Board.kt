@@ -2,6 +2,8 @@ package com.rainbow.server.domain.board.entity
 
 import com.rainbow.server.domain.BaseEntity
 import com.rainbow.server.domain.member.Member
+import org.hibernate.mapping.ForeignKey
+import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -27,7 +29,7 @@ import javax.persistence.ManyToOne
 @Entity
 class Board(
     id: Long? = null,
-    writer: Member,
+    writer: ForeignKey,
     title: String,
     content: String,
 ):BaseEntity() {
@@ -42,7 +44,7 @@ class Board(
     var content: String = content
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val writer: Member = writer
+    val writer: ForeignKey = writer
 }
 
 @Entity

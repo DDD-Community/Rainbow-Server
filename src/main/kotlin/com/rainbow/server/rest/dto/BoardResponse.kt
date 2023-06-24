@@ -11,7 +11,7 @@ import java.util.*
 
 data class BoardResponse(
     var id:Long?,
-    var writer: Long,
+    var writer: Member,
     var title:String,
     var content:String,
     var createdAt: ZonedDateTime,

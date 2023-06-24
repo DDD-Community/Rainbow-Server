@@ -2,8 +2,6 @@ package com.rainbow.server.domain.board.entity
 
 import com.rainbow.server.domain.BaseEntity
 import com.rainbow.server.domain.member.Member
-import org.hibernate.mapping.ForeignKey
-import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -15,21 +13,11 @@ import javax.persistence.ManyToOne
 /***
  * 예시 Entity
  * */
-// @Entity
-// class Board(
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     var id: Long?=null,
-//     var title: String,
-//     var content: String,
-//     @ManyToOne(fetch = FetchType.LAZY)
-//     var member: Member
-// ):BaseEntity()
 
 @Entity
 class Board(
     id: Long? = null,
-    writer: ForeignKey,
+    writer: Member,
     title: String,
     content: String,
 ):BaseEntity() {
@@ -44,25 +32,5 @@ class Board(
     var content: String = content
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val writer: ForeignKey = writer
-}
-
-@Entity
-class BoardImage(
-    originalFileName: String,
-    saveFileName: String,
-    board: Board
-):BaseEntity() {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-
-    @Column(nullable = false)
-    val saveFileName: String = saveFileName
-
-    @Column(nullable = false)
-    val originalFileName: String = originalFileName
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    val board: Board = board
+    val writer: Member = writer
 }

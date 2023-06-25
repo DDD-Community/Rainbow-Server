@@ -8,22 +8,21 @@ import java.util.*
 
 @Service
 class SessionService(private val loginInfoRepository: LoginInfoRepository) {
-    companion object {
-        private const val SESSION_PREFIX = "session:"
-    }
 
     fun storeSessionId(member: Member): LoginInfo{
         val sessionId = UUID.randomUUID().toString()
-        val sessionKey = getSessionKey(sessionId)
-      return loginInfoRepository.save(LoginInfo(sessionKey,member.nickName,member.email))
+      return loginInfoRepository.save(LoginInfo(sessionId,member.nickName,member.email))
     }
 
     fun getSessionId(sessionId: String): LoginInfo? {
-        val sessionKey = getSessionKey(sessionId)
-        return loginInfoRepository.findById(sessionKey).orElse(null)
+        return loginInfoRepository.findById(sessionId).orElse(null)
     }
 
-    private fun getSessionKey(sessionId: String): String {
-        return "$SESSION_PREFIX$sessionId"
+    fun logOut(sessionId: String) {
+        return loginInfoRepository.deleteById(sessionId)
     }
+
+//    private fun getSessionKey(sessionId: String): String {
+//        return "$SESSION_PREFIX$sessionId"
+//    }
 }

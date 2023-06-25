@@ -25,7 +25,7 @@ class KakaoLoginService(
     }
 
     private fun findOrCreateMember(infoResponse: KakaoInfoResponse): Member {
-        return memberRepository.findByEmail(infoResponse.email)  ?.let { it }
+        return memberRepository.findByEmail(infoResponse.email)
             ?: newMember(infoResponse)
     }
 
@@ -38,8 +38,12 @@ class KakaoLoginService(
         return memberRepository.save(member)
     }
 
-    fun logout(code: String): KakaoUserLogout {
-        return client.logout(code)
+    fun logout(sessionKey: String)  {
+        return sessionService.logOut(sessionKey)
     }
+
+//    fun logout(code: String): KakaoUserLogout {
+//        return client.logout(code)
+//    }
 
 }

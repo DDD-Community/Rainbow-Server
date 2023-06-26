@@ -31,11 +31,6 @@ class ImageService(
         val originalFileName = file.originalFilename
         val saveFileName = genSaveFileName(originalFileName)
 
-        // TODO: S3 경로로 변경
-//        val filePath: String = System.getProperty("user.dir")!! // 임시 경로(추후 S3 경로로 변경)
-//        val uploadDir = File(filePath).parent + "/images/"
-//        Files.createDirectories(Paths.get(uploadDir))
-//        uploadImage(uploadDir, file, saveFileName)
         upload(file, saveFileName)
 
         return imageRepository.save(Image(

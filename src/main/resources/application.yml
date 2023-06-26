@@ -10,7 +10,7 @@ spring:
   jpa:
     show_sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
@@ -30,15 +30,14 @@ oauth:
 
 cloud:
   aws:
-    credentials:
-      access_key: {IAM access key}
-      secret_key: {IAM secret key}
     s3:
-      bucket: rainbow-image-upload-s3-bucket
-      dir: image
-
+      bucket: rainbow-github-actions-s3-bucket
+      dir: image/
+    credentials:
+      access-key: ${IAM_ACCESS_KEY}
+      secret-key: ${IAM_SECRET_KEY}
+    region:
+      static: ap-northeast-2
     stack:
       auto: false
 
-    region:
-      static: ap-northeast-2

@@ -28,7 +28,7 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
 
         val cookie = Cookie("sessionKey", info.getSessionKey())
         cookie.path = "/" // 쿠키 경로 설정 (선택 사항)
-        cookie.maxAge = 3600
+        cookie.maxAge = 60*60*24*90
         response.addCookie(cookie)
 
         return ResponseEntity.ok().body(body)

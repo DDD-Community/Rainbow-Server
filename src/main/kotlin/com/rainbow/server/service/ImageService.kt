@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest
 import com.amazonaws.util.IOUtils
 import com.rainbow.server.domain.image.Image
 import com.rainbow.server.domain.image.repository.ImageRepository
+import com.rainbow.server.exception.CustomException
+import com.rainbow.server.exception.ErrorCode
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,7 +31,7 @@ class ImageService(
     @Transactional
     fun saveAll(files: List<MultipartFile>): MutableList<Image> {
         if (files.size>2) {
-
+            throw CustomException(ErrorCode.FILE_LIMIT_EXCEEDED)
         }
         val images = mutableListOf<Image>()
         for (file in files) {

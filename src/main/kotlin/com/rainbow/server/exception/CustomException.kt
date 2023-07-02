@@ -2,9 +2,9 @@ package com.rainbow.server.exception
 
 import org.springframework.http.HttpStatus
 
-open class CustomException {
+open class CustomException(
     val errorCode: ErrorCode
-} : RuntimeException()
+): RuntimeException()
 
 enum class ErrorCode(val status: HttpStatus, val message: String) {
     // 400 - Bad Request

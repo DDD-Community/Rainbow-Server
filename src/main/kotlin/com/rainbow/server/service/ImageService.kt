@@ -27,15 +27,26 @@ class ImageService(
     lateinit var dir: String
 
     @Transactional
-    fun save(file: MultipartFile): Image {
-        val originalFileName = file.originalFilename
-        val saveFileName = genSaveFileName(originalFileName)
+    fun saveAll(files: List<MultipartFile>): MutableList<Image> {
+        if (files.size>2) {
 
-        upload(file, saveFileName)
+        }
+        val images = mutableListOf<Image>()
+        for (file in files) {
+            val originalFileName = file.originalFilename
+            val saveFileName = genSaveFileName(originalFileName)
 
-        return imageRepository.save(Image(
-            originalFileName = originalFileName,
-            saveFileName = saveFileName))
+            upload(file, saveFileName)
+
+            images.add(
+                Image(
+                    originalFileName = originalFileName,
+                    saveFileName = saveFileName
+                )
+            )
+        }
+
+        return imageRepository.saveAll(images)
     }
 
     private fun genSaveFileName(originalFilename: String?): String {
@@ -55,6 +66,8 @@ class ImageService(
 
         s3Client.putObject(PutObjectRequest(bucket, dir + saveFileName, byteArrayIs, objMeta)
             .withCannedAcl(CannedAccessControlList.PublicRead))
+
+        file.inputStream.close()
 
         return s3Client.getUrl(bucket, dir + saveFileName).toString()
     }

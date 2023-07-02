@@ -16,11 +16,9 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import java.net.URI
 
-//@SpringBootTest
 @ExtendWith(MockitoExtension::class, SpringExtension::class)
 @WebMvcTest(ImageController::class)
 @AutoConfigureMockMvc
@@ -37,8 +35,8 @@ class ImageUploadServiceTests {
 
     @Test
     @DisplayName("Image Upload")
-    fun testSave() {
-        val file = MockMultipartFile("file", "test.jpg", "image/jpeg", "test image".toByteArray())
+    fun testSaveAll() {
+        val files = mutableListOf(MockMultipartFile("file", "test.jpg", "image/jpeg", "test image".toByteArray()))
         val saveFileName = "abc123.jpg"
         val imageUrl = "https://rainbow-github-actions-s3-bucket.s3.ap-northeast-2.amazonaws.com/image/abc123.jpg"
         val inputStream = file.inputStream
@@ -47,7 +45,7 @@ class ImageUploadServiceTests {
         `when`(s3Client.putObject(any(PutObjectRequest::class.java))).thenReturn(null)
         `when`(s3Client.getUrl(any(String::class.java), any(String::class.java))).thenReturn(URI(imageUrl).toURL())
 
-        imageService.save(file)
+        imageService.saveAll(file)
 
         verify(imageRepository).save(any(Image::class.java))
         verify(s3Client).putObject(any(PutObjectRequest::class.java))

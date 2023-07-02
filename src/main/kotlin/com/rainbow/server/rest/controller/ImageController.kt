@@ -14,8 +14,8 @@ import java.util.*
 class ImageController(private val imageService: ImageService) {
 
     @PostMapping("/upload")
-    fun postImage(@RequestParam(required=true) file: MultipartFile): ResponseEntity<Any> {
-        val save = imageService.save(file)
+    fun postImage(@RequestParam(required=true) files: List<MultipartFile>): ResponseEntity<Any> {
+        val save = imageService.saveAll(files)
         return ResponseEntity.ok().body(save)
     }
 }

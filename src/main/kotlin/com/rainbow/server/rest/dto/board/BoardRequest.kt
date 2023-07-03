@@ -1,4 +1,4 @@
-package com.rainbow.server.rest.dto
+package com.rainbow.server.rest.dto.board
 
 import com.rainbow.server.domain.board.entity.Board
 /***

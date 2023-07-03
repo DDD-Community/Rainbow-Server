@@ -9,11 +9,13 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "member")
-class Member (email:String,nickName:String
+class Member (email:String,nickName:String,ageRange:String,gender:String
 ):BaseEntity(){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
     var email:String =email
     var nickName:String=nickName
+    var ageRange:String=ageRange
+    var gender:String=gender
 }

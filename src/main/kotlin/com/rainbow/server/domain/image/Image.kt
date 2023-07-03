@@ -1,7 +1,6 @@
 package com.rainbow.server.domain.image
 
 import com.rainbow.server.domain.BaseEntity
-import com.rainbow.server.domain.board.entity.Board
 import javax.persistence.*
 
 @Entity

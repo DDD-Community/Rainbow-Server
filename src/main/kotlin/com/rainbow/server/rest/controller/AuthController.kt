@@ -42,7 +42,7 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
 
 
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     fun logout(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<Any> {
         val sessionKey = getSessionKeyFromCookie(request)
 

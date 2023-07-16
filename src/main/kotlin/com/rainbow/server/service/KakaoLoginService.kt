@@ -1,8 +1,8 @@
 package com.rainbow.server.service
 
 import com.rainbow.server.auth.*
-import com.rainbow.server.config.redis.RefreshToken
-import com.rainbow.server.domain.member.Member
+import com.rainbow.server.config.redis.LoginInfo
+import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.repository.MemberRepository
 import org.springframework.stereotype.Service
 
@@ -13,31 +13,29 @@ class KakaoLoginService(
     private val sessionService: SessionService
 ) {
 
-    fun login(code:String): RefreshToken {
+    fun login(code:String): LoginInfo {
         val accessToken = client.requestAccessToken(code)
         val infoResponse = client.requestOauthInfo(accessToken)
-       findOrCreateMember(infoResponse)
-        sessionService.storeSessionId(infoResponse)
         println(infoResponse)
-        return sessionService.storeSessionId(infoResponse)
+        return sessionService.storeSessionId(findOrCreateMember(infoResponse))
     }
 
-    fun getById(code: String):RefreshToken?{
+    fun getById(code: String):LoginInfo?{
         return sessionService.getSessionId(code)
     }
 
-    private fun findOrCreateMember(infoResponse: KakaoInfoResponse): Long {
-        return memberRepository.findByEmail(infoResponse.email)  ?.let { it.id }
+    private fun findOrCreateMember(infoResponse: KakaoInfoResponse): Member {
+        return memberRepository.findByEmail(infoResponse.email)  ?.let { it }
             ?: newMember(infoResponse)
     }
 
-    private fun newMember(infoResponse: KakaoInfoResponse): Long {
+    private fun newMember(infoResponse: KakaoInfoResponse): Member {
         val member = Member(
             email = infoResponse.email,
             nickName = infoResponse.nickname,
         )
 
-        return memberRepository.save(member).id
+        return memberRepository.save(member)
     }
 
     fun logout(code: String): KakaoUserLogout {

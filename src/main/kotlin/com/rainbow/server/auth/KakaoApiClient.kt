@@ -1,5 +1,6 @@
 package com.rainbow.server.auth
 
+import com.rainbow.server.util.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -11,52 +12,49 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 
 @Component
-class KakaoApiClient(private val restTemplate: RestTemplate)  {
-
-    companion object {
-        private const val GRANT_TYPE = "authorization_code"
-    }
-
+class KakaoApiClient(
+    private val restTemplate: RestTemplate,
     @Value("\${oauth.kakao.url.auth}")
-    private lateinit var authUrl: String
+    private val authUrl: String,
 
     @Value("\${oauth.kakao.url.api}")
-    private lateinit var apiUrl: String
+    private val apiUrl: String,
 
     @Value("\${oauth.kakao.client-id}")
-    private lateinit var clientId: String
+    private val clientId: String,
 
     @Value("\${oauth.kakao.client-secret}")
-    private lateinit var secret: String
+    private val secret: String
+) {
+
+
+    val log = logger()
+
+    fun getRedirectUri(): String {
+        val os = System.getProperty("os.name")
+        log.info("OS : {}", os)
+        if(os.contains("Mac")) return "http://localhost:8080/auth/kakao"
+        return "http://localhost:3000/auth/kakao"
+
+    }
+
 
     fun requestAccessToken(code: String): String {
         val url = "$authUrl/oauth/token"
-
         val httpHeaders = HttpHeaders()
         httpHeaders.contentType = MediaType.APPLICATION_FORM_URLENCODED
-
-//        val body = params.makeBody()
         val body: MultiValueMap<String, String> = LinkedMultiValueMap()
         body.add("code", code)
-        println("위body? $body")
-
-
-        body.add("grant_type", GRANT_TYPE)
+        body.add("grant_type", "authorization_code")
         body.add("client_id", clientId)
-        body.add("client_secret",secret)
-        body.add("redirect_uri","http://43.201.219.27:8080/auth/kakao")
+        body.add("client_secret", secret)
+        body.add("redirect_uri",getRedirectUri())
 
         val request = HttpEntity(body, httpHeaders)
-
-        println("밑body? $body")
-        println("headr? $httpHeaders")
-        restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
+//        restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
 
         val response = restTemplate.postForObject(url, request, KakaoTokens::class.java)
             ?: throw IllegalStateException("KakaoTokens response is null")
-
-        println(response)
-
         return response.accessToken
     }
 

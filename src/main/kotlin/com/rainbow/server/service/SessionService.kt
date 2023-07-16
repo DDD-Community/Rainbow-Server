@@ -1,26 +1,26 @@
 package com.rainbow.server.service
 
-import com.rainbow.server.auth.KakaoInfoResponse
-import com.rainbow.server.config.redis.RefreshToken
-import com.rainbow.server.config.redis.RefreshTokenRepository
+import com.rainbow.server.config.redis.LoginInfo
+import com.rainbow.server.config.redis.LoginInfoRepository
+import com.rainbow.server.domain.member.entity.Member
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class SessionService(private val refreshTokenRepository: RefreshTokenRepository) {
+class SessionService(private val loginInfoRepository: LoginInfoRepository) {
     companion object {
         private const val SESSION_PREFIX = "session:"
     }
 
-    fun storeSessionId(infoResponse: KakaoInfoResponse): RefreshToken{
+    fun storeSessionId(member: Member): LoginInfo{
         val sessionId = UUID.randomUUID().toString()
         val sessionKey = getSessionKey(sessionId)
-      return refreshTokenRepository.save(RefreshToken(sessionKey,infoResponse.nickname,infoResponse.email))
+      return loginInfoRepository.save(LoginInfo(sessionKey,member.nickName,member.email))
     }
 
-    fun getSessionId(sessionId: String): RefreshToken? {
+    fun getSessionId(sessionId: String): LoginInfo? {
         val sessionKey = getSessionKey(sessionId)
-        return refreshTokenRepository.findById(sessionKey).orElse(null)
+        return loginInfoRepository.findById(sessionKey).orElse(null)
     }
 
     private fun getSessionKey(sessionId: String): String {

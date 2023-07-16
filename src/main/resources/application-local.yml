@@ -1,0 +1,31 @@
+spring:
+  redis:
+    port: 6379
+    host: localhost
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    show_sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mariadb://rainbow-server-db.cgchmvhetcl5.ap-northeast-2.rds.amazonaws.com:3306/rainbow_db
+    username: rainbow
+    password: gwon188!!
+    driver-class-name: org.mariadb.jdbc.Driver
+oauth:
+  kakao:
+    client-id: b3ee341ecd11261443a552fa9fbe2d58
+    client-secret: yZVqfZOgfiSuiVYH57BSDEXvpYQrs3eN
+    app-admin-key: 0ee59af7f8f7274ebd91a1b6ed756f26
+    url:
+      auth: https://kauth.kakao.com
+      api: https://kapi.kakao.com
+jwt:
+  secret-key: 4c97e958673eaf841788de6503a9d844b071258d9991bcbf1ef8de9ef55f0949f1eced914099926167caefab2190709a206709e6deba843ba007f0b63ca2c4cb
+  access-duration-mils: 1800000
+  refresh-duration-mils: 1209600000

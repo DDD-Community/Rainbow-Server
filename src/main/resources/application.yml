@@ -24,6 +24,11 @@ oauth:
   kakao:
     client-id: b3ee341ecd11261443a552fa9fbe2d58
     client-secret: yZVqfZOgfiSuiVYH57BSDEXvpYQrs3eN
+    app-admin-key: 0ee59af7f8f7274ebd91a1b6ed756f26
     url:
       auth: https://kauth.kakao.com
       api: https://kapi.kakao.com
+jwt:
+  secret-key: 4c97e958673eaf841788de6503a9d844b071258d9991bcbf1ef8de9ef55f0949f1eced914099926167caefab2190709a206709e6deba843ba007f0b63ca2c4cb
+  access-duration-mils: 1800000
+  refresh-duration-mils: 1209600000

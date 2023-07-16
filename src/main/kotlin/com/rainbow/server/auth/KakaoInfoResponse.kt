@@ -4,7 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class KakaoInfoResponse(
     @JsonProperty("kakao_account")
-    var kakaoAccount: KakaoAccount = KakaoAccount()
+    var kakaoAccount: KakaoAccount = KakaoAccount(),
+
+    @JsonProperty("kakao_profile")
+var kakaoProfile: KakaoProfile = KakaoProfile(),
+
+    @JsonProperty("id")
+    var id:Long
+
+
 ) {
     val email: String
         get() = kakaoAccount.email

@@ -1,21 +1,27 @@
 package com.rainbow.server.domain.member.entity
 
 import com.rainbow.server.domain.BaseEntity
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Table
+import java.time.LocalDate
+import javax.persistence.*
+
+enum class Role { USER, ADMIN }
 
 @Entity
 @Table(name = "member")
-class Member (email:String,nickName:String,ageRange:String,gender:String
-):BaseEntity(){
+class Member(
+    val kaKaoId:Long,
+   val email: String,
+   val gender: String,
+   val birthDate: LocalDate,
+   val password:String,
+   var salary: Double,
+   var nickName: String
+) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-    var email:String =email
-    var nickName:String=nickName
-    var ageRange:String=ageRange
-    var gender:String=gender
+    val id: Long = 0L
+
+    @Enumerated(EnumType.STRING)
+    var role: Role = Role.USER
+        protected set
 }

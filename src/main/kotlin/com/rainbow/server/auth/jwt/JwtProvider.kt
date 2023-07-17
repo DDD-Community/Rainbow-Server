@@ -25,7 +25,7 @@ class JwtProvider(
         val now = Date(System.currentTimeMillis())
         return Jwts.builder()
             .setSubject(member.id.toString())
-            .claim("kakaoMail", member.email)
+            .claim("kaKaoId", member.kaKaoId)
             .setIssuedAt(now)
             .setExpiration(Date(now.time + accessDurationMils))
             .signWith(key)

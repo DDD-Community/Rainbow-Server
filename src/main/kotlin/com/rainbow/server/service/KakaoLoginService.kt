@@ -4,6 +4,8 @@ import com.rainbow.server.auth.*
 import com.rainbow.server.auth.jwt.JwtProvider
 import com.rainbow.server.auth.security.getCurrentLoginUserId
 import com.rainbow.server.config.redis.LoginInfo
+import com.rainbow.server.config.redis.RefreshToken
+import com.rainbow.server.config.redis.RefreshTokenRepository
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.repository.MemberRepository
 import com.rainbow.server.rest.dto.member.JwtDto
@@ -14,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.NullPointerException
+import java.util.*
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +27,7 @@ class KakaoLoginService(
     private val jwtProvider: JwtProvider,
     private val sessionService: SessionService,
     private val passwordEncoder: BCryptPasswordEncoder,
+    private val refreshTokenRepository: RefreshTokenRepository
 ) {
 
     fun getCurrentLoginMember():Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()
@@ -60,8 +65,11 @@ class KakaoLoginService(
             SecurityContextHolder.getContext().authentication =
                 UsernamePasswordAuthenticationToken(username, password)
 
+            val refreshToken = RefreshToken(UUID.randomUUID().toString(), member.id)
+            refreshTokenRepository.save(refreshToken)
+
             // JWT 발급
-            return JwtDto(jwtProvider.generateToken(member))
+            return JwtDto(jwtProvider.generateToken(member),refreshToken.refreshToken)
         }
 
 
@@ -74,14 +82,19 @@ class KakaoLoginService(
 
         SecurityContextHolder.getContext().authentication =
             UsernamePasswordAuthenticationToken(newMember.kaKaoId, newMember.password)
-
-        println("auth"+SecurityContextHolder.getContext().authentication)
-        println("principal"+SecurityContextHolder.getContext().authentication.principal)
+        val refreshToken = RefreshToken(UUID.randomUUID().toString(), newMember.id)
+        refreshTokenRepository.save(refreshToken)
 
 
         // JWT 발급
-        return JwtDto(jwtProvider.generateToken(newMember))
+        return JwtDto(jwtProvider.generateToken(newMember),refreshToken.refreshToken)
 
+    }
+
+    fun generateAccessToken(request:JwtDto):JwtDto{
+        val refreshToken = refreshTokenRepository.findByRefreshToken(request.refreshToken)?:throw NullPointerException("refreshToken 없음")
+        val member = memberRepository.findById(refreshToken.memberId)?.orElseThrow()
+        return JwtDto(jwtProvider.generateToken(member),refreshToken.refreshToken)
     }
 
     fun getById(code: String):LoginInfo?{

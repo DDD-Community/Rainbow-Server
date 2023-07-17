@@ -2,6 +2,7 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
+import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
 import com.rainbow.server.service.KakaoLoginService
@@ -55,7 +56,10 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
         return success(kakaoLoginService.singIn(memberInfo))
     }
 
-
+    @PostMapping("/access-token")
+    fun login(@RequestBody  request: JwtDto): CommonResponse<JwtDto> {
+        return success(kakaoLoginService.generateAccessToken(request))
+    }
 
     @PostMapping("/logout")
     fun logout(): CommonResponse<Boolean> = success(kakaoLoginService.logout())

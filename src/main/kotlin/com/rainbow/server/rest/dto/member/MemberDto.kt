@@ -11,7 +11,8 @@ data class MemberRequestDto(
     val gender: String,
     val kaKaoId:Long
 )
-data class JwtDto(val accessToken: String?)
+data class JwtDto(val accessToken: String?,
+    val refreshToken:String?)
 data class MemberResponseDto(
     val email: String,
     val nickName:String?,

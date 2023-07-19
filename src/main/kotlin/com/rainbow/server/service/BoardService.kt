@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service
  * 예시 Service
  * */
 @Service
-class BoardService(
-    private val boardRepository: BoardRepository) {
+class BoardService(val boardRepository: BoardRepository) {
 
     fun save(boardRequest: BoardRequest): Board {
         return boardRepository.save(boardRequest.of(boardRequest))
@@ -23,11 +22,11 @@ class BoardService(
 
     fun findAll():List<BoardResponse>{
         val boardList=boardRepository.findAll()
-        return boardList.map { board->BoardResponse(board.id, board.writer, board.title, board.content, board.createdAt,board.updatedAt) }
+        return boardList.map { board->BoardResponse(board.id, board.writer, board.title,board.createdAt,board.updatedAt) }
     }
 
     fun update(boardRequest: BoardRequest):BoardResponse{
-        val board = boardRepository.findById(boardRequest.id).get()
+       val board= boardRepository.findById(boardRequest.id).get()
         board.title=boardRequest.title
         return BoardResponse.from(boardRepository.save(board))
     }

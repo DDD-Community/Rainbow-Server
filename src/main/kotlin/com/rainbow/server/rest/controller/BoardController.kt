@@ -1,6 +1,6 @@
 package com.rainbow.server.rest.controller
 
-import com.rainbow.server.rest.dto.BoardRequest
+import com.rainbow.server.rest.dto.board.BoardRequest
 import com.rainbow.server.service.BoardService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

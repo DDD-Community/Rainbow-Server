@@ -1,6 +1,7 @@
 package com.rainbow.server.domain.member.entity
 
 import com.rainbow.server.domain.BaseEntity
+import com.rainbow.server.domain.goal.entity.Goal
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -19,7 +20,16 @@ class Member(
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    val memberId: Long = 0L
+
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
+    protected val goalMutableList:MutableList<Goal> = mutableListOf()
+    val goalList:List<Goal> get()=goalMutableList.toList()
+
+
+    fun addGoalList(goal: Goal){
+        goalMutableList.add(goal)
+    }
 
     @Enumerated(EnumType.STRING)
     var role: Role = Role.USER

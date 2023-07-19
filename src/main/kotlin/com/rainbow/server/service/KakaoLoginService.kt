@@ -65,7 +65,7 @@ class KakaoLoginService(
             SecurityContextHolder.getContext().authentication =
                 UsernamePasswordAuthenticationToken(username, password)
 
-            val refreshToken = RefreshToken(UUID.randomUUID().toString(), member.id)
+            val refreshToken = RefreshToken(UUID.randomUUID().toString(), member.memberId)
             refreshTokenRepository.save(refreshToken)
 
             // JWT 발급
@@ -82,7 +82,7 @@ class KakaoLoginService(
 
         SecurityContextHolder.getContext().authentication =
             UsernamePasswordAuthenticationToken(newMember.kaKaoId, newMember.password)
-        val refreshToken = RefreshToken(UUID.randomUUID().toString(), newMember.id)
+        val refreshToken = RefreshToken(UUID.randomUUID().toString(), newMember.memberId)
         refreshTokenRepository.save(refreshToken)
 
 
@@ -93,7 +93,7 @@ class KakaoLoginService(
 
     fun generateAccessToken(request:JwtDto):JwtDto{
         val refreshToken = refreshTokenRepository.findByRefreshToken(request.refreshToken)?:throw NullPointerException("refreshToken 없음")
-        val member = memberRepository.findById(refreshToken.memberId)?.orElseThrow()
+        val member = memberRepository.findById(refreshToken.memberId).orElseThrow()
         return JwtDto(jwtProvider.generateToken(member),refreshToken.refreshToken)
     }
 

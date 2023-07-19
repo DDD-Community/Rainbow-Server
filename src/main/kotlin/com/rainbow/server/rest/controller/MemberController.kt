@@ -5,6 +5,7 @@ import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
+import com.rainbow.server.service.GoalService
 import com.rainbow.server.service.KakaoLoginService
 import com.rainbow.server.util.logger
 import org.springframework.beans.factory.annotation.Value
@@ -13,13 +14,13 @@ import org.springframework.http.ResponseEntity
 import java.net.URI
 import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.*
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @RestController
-@RequestMapping("/auth")
-class AuthController(private val kakaoLoginService: KakaoLoginService,
-                     @Value("\${oauth.kakao.client-id}")
+@RequestMapping("/member")
+class MemberController(private val kakaoLoginService: KakaoLoginService,
+                       private val goalService: GoalService,
+                       @Value("\${oauth.kakao.client-id}")
                      private val clientId: String) {
 
     val log = logger()
@@ -33,6 +34,11 @@ class AuthController(private val kakaoLoginService: KakaoLoginService,
     @GetMapping("/me")
     fun getCurrentLoginMember():CommonResponse<MemberResponseDto>{
         return success(kakaoLoginService.getCurrentMemberInfo())
+    }
+
+    @GetMapping("/myGoals")
+    fun getGoals(@RequestParam month:String){
+
     }
 
 //    @GetMapping("/kakao")

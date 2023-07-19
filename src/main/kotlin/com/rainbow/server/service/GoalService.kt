@@ -17,7 +17,7 @@ class GoalService (private val goalRepository: GoalRepository,
 
         val goal= Goal(
             cost = goalRequestDto.cost,
-            yearMonth = goalRequestDto.yearMonth,
+            time = goalRequestDto.yearMonth,
             member =member
         )
         goalRepository.save(goal)

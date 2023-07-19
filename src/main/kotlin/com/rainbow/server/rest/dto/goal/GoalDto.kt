@@ -1,11 +1,11 @@
 package com.rainbow.server.rest.dto.goal
 
 import com.rainbow.server.domain.goal.entity.Goal
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class GoalRequestDto(
   val memberId:Long,
-    val yearMonth: LocalDate,
+    val yearMonth: LocalDateTime,
     var cost: Long,
     var id:Long=0
 )

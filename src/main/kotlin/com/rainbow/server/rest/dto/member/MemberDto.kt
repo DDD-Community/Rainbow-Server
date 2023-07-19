@@ -31,5 +31,4 @@ data class MemberResponseDto(
         salary=member.salary,
         kakaoId=member.kaKaoId
     )
-
 }

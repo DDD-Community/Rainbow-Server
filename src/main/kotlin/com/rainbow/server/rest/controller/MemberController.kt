@@ -57,12 +57,12 @@ class MemberController(private val kakaoLoginService: KakaoLoginService,
 //        return ResponseEntity.ok().body(info)
 //    }
 
-    @PostMapping("/signIn")
+    @PostMapping("/signUp")
     fun signIn(@RequestBody memberInfo:MemberRequestDto,response:HttpServletResponse):CommonResponse<Any>{
         return success(kakaoLoginService.singIn(memberInfo))
     }
 
-    @PostMapping("/access-token")
+    @PostMapping("/accessToken")
     fun login(@RequestBody  request: JwtDto): CommonResponse<JwtDto> {
         return success(kakaoLoginService.generateAccessToken(request))
     }

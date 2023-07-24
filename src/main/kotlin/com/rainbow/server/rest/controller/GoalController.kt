@@ -5,6 +5,7 @@ import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.GoalRequestDto
 import com.rainbow.server.rest.dto.goal.GoalResponseDto
 import com.rainbow.server.service.GoalService
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -23,5 +24,10 @@ class GoalController(private val goalService: GoalService) {
     @PutMapping("/updateGoal")
     fun updateGoal(@RequestBody goalRequestDto: GoalRequestDto):CommonResponse<GoalResponseDto>{
         return success(goalService.updateGoal(goalRequestDto))
+    }
+
+    @GetMapping("/yearTest")
+    fun getYearly():CommonResponse<HashMap<Int,List<GoalResponseDto>>>{
+        return success(goalService.getYearlyGoals())
     }
 }

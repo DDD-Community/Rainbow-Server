@@ -1,5 +1,6 @@
 package com.rainbow.server.service
 
+
 import com.rainbow.server.auth.*
 import com.rainbow.server.auth.jwt.JwtProvider
 import com.rainbow.server.auth.security.getCurrentLoginUserId
@@ -21,13 +22,14 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-class KakaoLoginService(
+class MemberService(
     private val client: KakaoApiClient,
     private val memberRepository: MemberRepository,
     private val jwtProvider: JwtProvider,
     private val sessionService: SessionService,
     private val passwordEncoder: BCryptPasswordEncoder,
-    private val refreshTokenRepository: RefreshTokenRepository
+    private val refreshTokenRepository: RefreshTokenRepository,
+
 ) {
 
     fun getCurrentLoginMember():Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()
@@ -73,11 +75,11 @@ class KakaoLoginService(
         }
 
 
-        return MemberResponseDto(nickName = infoResponse.kakaoProfile.nickname, kakaoId = username, email = infoResponse.email, birthDate = null, salary = 0.0, gender = infoResponse.kakaoAccount.gender)
+        return MemberResponseDto(nickName = infoResponse.kakaoProfile.nickname, kakaoId = username, email = infoResponse.email, birthDate = null, salaryStart = 0, salaryEnd = 0, gender = infoResponse.kakaoAccount.gender)
 
     }
     @Transactional
-    fun singIn(member:MemberRequestDto):JwtDto{
+    fun singUp(member:MemberRequestDto):JwtDto{
        val newMember= newMember(member)
 
         SecurityContextHolder.getContext().authentication =
@@ -101,6 +103,85 @@ class KakaoLoginService(
         return sessionService.getSessionId(code)
     }
 
+
+    fun getSuggestedMemberList(){
+        val member=getCurrentLoginMember()
+        val memberSet:MutableSet<Member> = mutableSetOf()
+        val allSimilarMembers=memberRepository.findSuggestedMemberList(member)
+        //memberRepository.findMemberListBySalary(member.salaryStart, member.salaryEnd)
+        val salaryMemberList= mutableListOf<Member>()
+        val birthDateList= mutableListOf<Member>()
+        val newBies=memberRepository.findNewbies()
+        if(newBies.isNotEmpty()){
+            newBies.stream().map { m->memberSet.add(m) }
+        }
+        if(allSimilarMembers.isNotEmpty()){
+           allSimilarMembers.stream().map { m->{
+               if(m.salaryStart==member.salaryStart) salaryMemberList.add(m)
+               if(m.birthDate == member.birthDate) birthDateList.add(m)
+           } }
+        }
+        if(salaryMemberList.isNotEmpty()){
+            val nowSize=memberSet.size
+            while(true){
+                val setSize=memberSet.size
+
+                if((setSize-nowSize)>5) break
+            }
+        }
+
+
+
+    }
+
+    fun getRandomFriends():List<MemberResponseDto>{
+        val member=getCurrentLoginMember()
+        val allSimilarMembers=memberRepository.findSuggestedMemberList(member)
+       val arr= makeRandomNumbs(allSimilarMembers.size)
+        val friendsList= mutableListOf<MemberResponseDto>()
+        arr.forEach { n->friendsList.add(MemberResponseDto(allSimilarMembers[n])) }
+        return friendsList
+    }
+
+    private fun makeRandomNumbs(n:Int):IntArray{
+        var randNum= IntArray(5)
+        //구하고자하는 랜덤번호 3가지를 넣을 정수 배열을 선언한다.
+
+        var switch = BooleanArray(n)
+        //switch는 10개의 공간이 모두 0으로 채워진 배열이라고 가정한다.
+
+        for (i in switch.indices){
+            switch[i] = false
+            // 스위치가 false라는 말은 값이 배열에 있는 값이 전부 0 으로 세팅 되었다는 말이다.
+        }
+
+        var w =0
+        while(w<5){
+            //뽑고 싶은 랜덤 번호의 숫자가 3개이므로 w은 <3으로 설정한다.
+
+            var r = (Math.random() * n).toInt()
+            //var r은 1~9 사이에서 랜덤으로 뽑힌 숫자이다.
+
+            if(!switch[r]){
+                switch[r] =true
+                //switch[r] 번째는 초기에 false, 즉 0으로 세팅되었으므로 if문의 조건문으로 성립된다.
+                //조건이 성립된후, r번째에 있는 switch 배열의 값은 true로 변한다.
+
+                randNum[w] = r + 1
+                //r은 1에서 9까지의 값이므로 1을 더한다. 그리하여 최대값을 10으로 만든다.
+                //제일 처음 선언헌 랜덤번호 배열에 r+1의 값을 대입한다.
+
+                w++
+            }
+        }
+        for(i in randNum.indices){
+            println("randNum[$i] = ${randNum[i]}")
+        }
+
+    return randNum
+    }
+
+
     private fun findMember(infoResponse: KakaoInfoResponse): Member? {
         return memberRepository.findByEmail(infoResponse.email)
 
@@ -112,7 +193,8 @@ class KakaoLoginService(
             password = passwordEncoder.encode(member.email),
             nickName = member.nickName,
             birthDate = member.birthDate,
-            salary = member.salary,
+            salaryStart = member.salaryStart,
+            salaryEnd = member.salaryEnd,
             gender = member.gender,
             kaKaoId =member.kaKaoId
         )

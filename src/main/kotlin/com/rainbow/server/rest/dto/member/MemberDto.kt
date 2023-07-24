@@ -7,7 +7,8 @@ data class MemberRequestDto(
     val email: String,
     val nickName:String,
     val birthDate: LocalDate,
-    val salary:Double,
+    val salaryStart: Int,
+    val salaryEnd: Int,
     val gender: String,
     val kaKaoId:Long
 )
@@ -19,7 +20,8 @@ data class MemberResponseDto(
 //    val ageRange: String?,
     val birthDate: LocalDate?,
     val gender: String?,
-    val salary: Double?,
+    val salaryStart: Int?,
+    val salaryEnd: Int?,
     val kakaoId:Long
 ){
 //    constructor (email: String) : this(email, null, null,null,null)
@@ -28,7 +30,8 @@ data class MemberResponseDto(
         nickName=member.nickName,
         birthDate=member.birthDate,
         gender=member.gender,
-        salary=member.salary,
+        salaryStart=member.salaryStart,
+        salaryEnd=member.salaryEnd,
         kakaoId=member.kaKaoId
     )
 }

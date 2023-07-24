@@ -55,7 +55,7 @@ class SecurityConfig(
         .and()
         .authorizeRequests()
         .antMatchers(
-            "/auth/**"
+            "/member/**"
         ).permitAll()
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
         // Swagger 설정

@@ -1,7 +1,7 @@
 package com.rainbow.server.domain.board.entity
 
 import com.rainbow.server.domain.BaseEntity
-import com.rainbow.server.domain.member.Member
+import com.rainbow.server.domain.member.entity.Member
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType

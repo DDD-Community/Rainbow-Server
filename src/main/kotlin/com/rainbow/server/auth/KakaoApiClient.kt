@@ -37,7 +37,7 @@ class KakaoApiClient(
         val os = System.getProperty("os.name")
         log.info("OS : {}", os)
         if(os.contains("Mac")) return "http://localhost:8080/member/login"
-        return "http://localhost:3000/auth/kakao"
+        return "http://localhost:3000/member/kakao"
 
     }
 

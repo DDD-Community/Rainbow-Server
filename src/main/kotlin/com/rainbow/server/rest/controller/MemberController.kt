@@ -3,6 +3,7 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
+import com.rainbow.server.rest.dto.member.DuplicateCheck
 import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
@@ -31,6 +32,17 @@ class MemberController(private val memberService: MemberService,
         log.info(code)
         return success(memberService.login(code))
     }
+
+    @PostMapping("/checkEmail")
+    fun checkEmail(@RequestBody email:DuplicateCheck):Boolean{
+        return memberService.checkEmail(email.data)
+    }
+
+    @PostMapping("/checkNickName")
+    fun checkNickName(@RequestBody nickName: DuplicateCheck):Boolean{
+        return memberService.checkNickName(nickName.data)
+    }
+
 
     @GetMapping("/me")
     fun getCurrentLoginMember():CommonResponse<MemberResponseDto>{

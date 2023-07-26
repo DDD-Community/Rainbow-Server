@@ -13,13 +13,16 @@ class Goal(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     val member: Member,
-    val time: LocalDate
+    val time: LocalDate,
+
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
     var paidAmount: Int=0
+
+    var savedCost:Int=0
 
 
     fun updateCost(cost:Int){

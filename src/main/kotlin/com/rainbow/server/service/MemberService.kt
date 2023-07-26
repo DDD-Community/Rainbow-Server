@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.NullPointerException
 import java.util.*
+import kotlin.collections.HashSet
 
 @Service
 @Transactional(readOnly = true)
@@ -111,40 +112,49 @@ class MemberService(
         //memberRepository.findMemberListBySalary(member.salaryStart, member.salaryEnd)
         val salaryMemberList= mutableListOf<Member>()
         val birthDateList= mutableListOf<Member>()
-        val newBies=memberRepository.findNewbies()
-        if(newBies.isNotEmpty()){
-            newBies.stream().map { m->memberSet.add(m) }
-        }
-        if(allSimilarMembers.isNotEmpty()){
-           allSimilarMembers.stream().map { m->{
-               if(m.salaryStart==member.salaryStart) salaryMemberList.add(m)
-               if(m.birthDate == member.birthDate) birthDateList.add(m)
-           } }
-        }
-        if(salaryMemberList.isNotEmpty()){
-            val nowSize=memberSet.size
-            while(true){
-                val setSize=memberSet.size
 
-                if((setSize-nowSize)>5) break
-            }
-        }
+
+        val newBies=memberRepository.findNewbies()
+//        if(newBies.isNotEmpty()){
+//            newBies.stream().map { m->memberSet.add(m) }
+//        }
+//        if(allSimilarMembers.isNotEmpty()){
+//           allSimilarMembers.stream().map { m->{
+//               if(m.salaryStart==member.salaryStart) salaryMemberList.add(m)
+//               if(m.birthDate == member.birthDate) birthDateList.add(m)
+//           } }
+//        }
+//        if(salaryMemberList.isNotEmpty()){
+//            val nowSize=memberSet.size
+//            while(true){
+//                val setSize=memberSet.size
+//
+//                if((setSize-nowSize)>5) break
+//            }
+//        }
 
 
 
     }
 
-    fun getRandomFriends():List<MemberResponseDto>{
+    fun getRandomFriends():HashSet<MemberResponseDto>{
         val member=getCurrentLoginMember()
         val allSimilarMembers=memberRepository.findSuggestedMemberList(member)
        val arr= makeRandomNumbs(allSimilarMembers.size)
         val friendsList= mutableListOf<MemberResponseDto>()
-        arr.forEach { n->friendsList.add(MemberResponseDto(allSimilarMembers[n])) }
-        return friendsList
+        val friendsSet=HashSet<MemberResponseDto>()
+        val newBies=memberRepository.findNewbies()
+//        arr.forEach { n->friendsList.add(MemberResponseDto(allSimilarMembers[n])) }
+        arr.forEach { n->friendsSet.add(MemberResponseDto(allSimilarMembers[n])) }
+        newBies.forEach { m->friendsSet.add(MemberResponseDto(m)) }
+
+
+
+        return friendsSet
     }
 
     private fun makeRandomNumbs(n:Int):IntArray{
-        var randNum= IntArray(5)
+        var randNum= IntArray(15)
         //구하고자하는 랜덤번호 3가지를 넣을 정수 배열을 선언한다.
 
         var switch = BooleanArray(n)
@@ -206,6 +216,14 @@ class MemberService(
 
     fun logout(): Boolean {
         return client.logout(getCurrentLoginMember().kaKaoId)
+    }
+
+    fun checkEmail(email:String):Boolean{
+        return memberRepository.existsByEmail(email)
+    }
+
+    fun checkNickName(nickName:String):Boolean{
+        return memberRepository.existsByNickName(nickName)
     }
 
 }

@@ -3,6 +3,7 @@ package com.rainbow.server.domain.member.repository
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.entity.QMember.member
+import com.rainbow.server.domain.member.entity.QFollow.follow
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MemberRepository: JpaRepository<Member, Long>, MemberRepositoryCustom {
     fun findByEmail(email: String): Member?
+
+    fun existsByEmail(email:String):Boolean
+    fun existsByNickName(nickName:String):Boolean
 
 }
 
@@ -29,15 +33,19 @@ interface MemberRepository: JpaRepository<Member, Long>, MemberRepositoryCustom 
 
         override fun findSuggestedMemberList(standardMember: Member):List<Member> {
          return   queryFactory.selectFrom(member)
+             .join(follow).on(member.memberId.eq(follow.toMember))
                 .where((member.salaryStart.eq(standardMember.salaryStart).and(member.salaryEnd.eq(standardMember.salaryEnd)))
-                    .or(member.birthDate.eq(standardMember.birthDate))
+                    .or(member.birthDate.eq(standardMember.birthDate)).and(!follow.fromMember.eq(standardMember.memberId)).and(
+                        !member.memberId.eq(standardMember.memberId))
                     )
                 .fetch()
         }
 
         override fun findMemberListBySalary(salaryStart: Int, salaryEnd: Int):List<Member> {
-         return   queryFactory.selectFrom(member)
+         return   queryFactory.select(member)
+             .from(member)
                 .limit(5)
+
                 .where(member.salaryStart.eq(salaryStart),
                     member.salaryEnd.eq(salaryEnd))
                 .fetch()
@@ -45,7 +53,7 @@ interface MemberRepository: JpaRepository<Member, Long>, MemberRepositoryCustom 
 
         override fun findNewbies(): List<Member> {
             return queryFactory.selectFrom(member)
-                .limit(5)
+                .limit(10)
                 .orderBy(member.createdAt.desc())
                 .fetch()
         }

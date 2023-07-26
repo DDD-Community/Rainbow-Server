@@ -35,3 +35,7 @@ data class MemberResponseDto(
         kakaoId=member.kaKaoId
     )
 }
+
+data class DuplicateCheck(
+    var data:String
+)

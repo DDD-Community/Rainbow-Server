@@ -14,14 +14,22 @@ data class GoalResponseDto(
     var cost:Int,
     var paidAmount:Int,
     var id:Long,
-    var time:LocalDate
+    var time:LocalDate,
+    var savedCost: Int
+
 ){
+
     constructor(goal: Goal):this(
         cost=goal.cost,
         paidAmount=goal.paidAmount,
         id=goal.id,
-        time=goal.time
+        time=goal.time,
+       savedCost=goal.savedCost
     )
+
+    fun updateSavedCost(savedCost:Int){
+        this.savedCost=savedCost
+    }
 }
 
 data class TotalSavedCost(

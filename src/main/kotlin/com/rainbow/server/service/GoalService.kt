@@ -14,6 +14,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Calendar
 import java.util.Date
+import java.util.Objects
 import kotlin.streams.toList
 
 @Service
@@ -58,7 +59,7 @@ class GoalService (private val goalRepository: GoalRepository,
         return TotalSavedCost(sinceSignUp  =sinceDate, savedCost = savedCost)
     }
 
-    fun getYearlyGoals():HashMap<Int, List<GoalResponseDto>>{
+    fun getYearlyGoals(): List<Any>{
 //        var goalList=getCurrentLoginMember().goalList
 //        var yearList=goalRepository.findAllYears(getCurrentLoginMember())
         val member=getCurrentLoginMember()
@@ -71,17 +72,24 @@ class GoalService (private val goalRepository: GoalRepository,
 
         val yearDifference= maxYear?.minus(startYear)
 
+        var mapList= mutableListOf<Any>()
+        var totalSavedMap=HashMap<Int,Int>()
+
         var yearMap= HashMap<Int, List<GoalResponseDto>>()
         for(i:Int in 0..yearDifference!!){
             val countStart=YearMonth.of(startCountYear,1).atDay(1)
             val countEnd=YearMonth.of(startCountYear, 12).atEndOfMonth()
             yearMap[startCountYear] =goalRepository.findByMemberIdAndTimeBetween(countStart,countEnd,member.memberId).stream().map { g->GoalResponseDto(g) }.toList().sortedBy { it.time }
+            var sum=0
+            yearMap[startCountYear]?.stream()?.forEach { g->sum+=g.savedCost}
+            totalSavedMap[startCountYear]=sum
             startCountYear++
         }
 
+    mapList.add(yearMap)
+    mapList.add(totalSavedMap)
 
-
-    return yearMap
+    return mapList
 
 
     }

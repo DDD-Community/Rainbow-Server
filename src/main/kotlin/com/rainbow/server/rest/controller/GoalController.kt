@@ -27,7 +27,7 @@ class GoalController(private val goalService: GoalService) {
     }
 
     @GetMapping("/yearTest")
-    fun getYearly():CommonResponse<HashMap<Int,List<GoalResponseDto>>>{
+    fun getYearly():CommonResponse<Any>{
         return success(goalService.getYearlyGoals())
     }
 }

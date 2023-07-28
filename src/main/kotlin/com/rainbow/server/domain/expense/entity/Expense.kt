@@ -3,7 +3,6 @@ package com.rainbow.server.domain.expense.entity
 import com.rainbow.server.domain.BaseEntity
 import com.rainbow.server.domain.image.Image
 import com.rainbow.server.domain.member.entity.Member
-import java.sql.Date
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -43,6 +42,7 @@ class Expense(
     @Column(nullable = false)
     val content: String = content
 
+    // TODO: ManyToMany 제거 후 직접 연결
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "custom_category",

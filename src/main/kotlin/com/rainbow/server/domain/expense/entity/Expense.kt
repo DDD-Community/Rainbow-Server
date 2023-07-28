@@ -1,6 +1,7 @@
 package com.rainbow.server.domain.expense.entity
 
 import com.rainbow.server.domain.BaseEntity
+import com.rainbow.server.domain.image.Image
 import com.rainbow.server.domain.member.entity.Member
 import java.sql.Date
 import java.time.LocalDate
@@ -23,9 +24,11 @@ class Expense(
     var id: Long = id
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     val member: Member = member
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goal_id")
     val goal: Goal = goal
 
     @Column() // TODO: length 몇으로 설정할 것인지
@@ -42,11 +45,35 @@ class Expense(
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "expense_category",
+        name = "custom_category",
         joinColumns = [JoinColumn(name = "expense_id")],
         inverseJoinColumns = [JoinColumn(name = "category_id")]
     )
     val categories: Set<Category> = HashSet()
+
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//        name = ""
+//    )
+}
+
+@Entity
+@Table(name = "Expense_Image")
+class ExpenseImage(
+    id: Long,
+    image: Image,
+    expense: Expense,
+): BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = id
+
+    @OneToMany(fetch = FetchType.LAZY)
+    val expense: Expense = expense
+
+    @OneToOne(fetch = FetchType.LAZY)
+    val image: Image = image
+
 }
 
 @Entity

@@ -13,7 +13,7 @@ data class GoalRequestDto(
 data class GoalResponseDto(
     var cost:Int,
     var paidAmount:Int,
-    var id:Long,
+    var goalId:Long,
     var time:LocalDate,
     var savedCost: Int
 
@@ -22,7 +22,7 @@ data class GoalResponseDto(
     constructor(goal: Goal):this(
         cost=goal.cost,
         paidAmount=goal.paidAmount,
-        id=goal.id,
+        goalId=goal.goalId,
         time=goal.time,
        savedCost=goal.savedCost
     )

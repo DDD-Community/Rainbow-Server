@@ -18,7 +18,7 @@ class Goal(
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    val goalId: Long = 0
 
     var paidAmount: Int=0
 

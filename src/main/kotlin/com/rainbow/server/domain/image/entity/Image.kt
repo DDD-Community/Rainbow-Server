@@ -1,6 +1,7 @@
-package com.rainbow.server.domain.image
+package com.rainbow.server.domain.image.entity
 
 import com.rainbow.server.domain.BaseEntity
+import com.rainbow.server.domain.expense.entity.Expense
 import javax.persistence.*
 
 @Entity
@@ -8,6 +9,9 @@ import javax.persistence.*
 class Image(
     id: Long? = null,
     originalFileName: String?,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="expenseId")
+    val expense: Expense,
     saveFileName: String
 ):BaseEntity() {
     @Id
@@ -19,4 +23,6 @@ class Image(
 
     @Column(nullable = false)
     val saveFileName: String = saveFileName
+
+
 }

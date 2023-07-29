@@ -1,6 +1,7 @@
 package com.rainbow.server.domain.goal.entity
 
 import com.rainbow.server.domain.BaseEntity
+import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.member.entity.Member
 import java.time.LocalDate
 import javax.persistence.*
@@ -24,6 +25,10 @@ class Goal(
 
     var savedCost:Int=0
 
+
+    @OneToMany(mappedBy = "goal", cascade = [CascadeType.ALL], orphanRemoval = true)
+    protected val expenseMutableList:MutableList<Expense> = mutableListOf()
+    val expenseList:List<Expense> get()=expenseMutableList.toList()
 
     fun updateCost(cost:Int){
         this.cost=cost

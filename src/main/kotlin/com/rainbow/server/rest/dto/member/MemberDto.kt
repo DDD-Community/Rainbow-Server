@@ -1,14 +1,14 @@
 package com.rainbow.server.rest.dto.member
 
 import com.rainbow.server.domain.member.entity.Member
+import com.rainbow.server.domain.member.entity.Salary
 import java.time.LocalDate
 
 data class MemberRequestDto(
     val email: String,
     val nickName:String,
     val birthDate: LocalDate,
-    val salaryStart: Int,
-    val salaryEnd: Int,
+    val salary: Int,
     val gender: String,
     val kaKaoId:Long
 )
@@ -20,8 +20,7 @@ data class MemberResponseDto(
 //    val ageRange: String?,
     val birthDate: LocalDate?,
     val gender: String?,
-    val salaryStart: Int?,
-    val salaryEnd: Int?,
+    val salary: Int?,
     val kakaoId:Long
 ){
 //    constructor (email: String) : this(email, null, null,null,null)
@@ -30,8 +29,7 @@ data class MemberResponseDto(
         nickName=member.nickName,
         birthDate=member.birthDate,
         gender=member.gender,
-        salaryStart=member.salaryStart,
-        salaryEnd=member.salaryEnd,
+        salary=member.salary,
         kakaoId=member.kaKaoId
     )
 }
@@ -39,3 +37,13 @@ data class MemberResponseDto(
 data class DuplicateCheck(
     var data:String
 )
+
+data class SalaryDto(
+    val salaryRange:String,
+    val idx:Int
+){
+    constructor(salary:Salary):this(
+        salaryRange=salary.salaryRange,
+        idx=salary.idx
+    )
+}

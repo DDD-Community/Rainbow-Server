@@ -34,7 +34,7 @@ interface MemberRepository: JpaRepository<Member, Long>, MemberRepositoryCustom 
         override fun findSuggestedMemberList(standardMember: Member):List<Member> {
          return   queryFactory.selectFrom(member)
              .join(follow).on(member.memberId.eq(follow.toMember))
-                .where((member.salaryStart.eq(standardMember.salaryStart).and(member.salaryEnd.eq(standardMember.salaryEnd)))
+                .where((member.salary.eq(standardMember.salary))
                     .or(member.birthDate.eq(standardMember.birthDate)).and(!follow.fromMember.eq(standardMember.memberId)).and(
                         !member.memberId.eq(standardMember.memberId))
                     )
@@ -45,9 +45,7 @@ interface MemberRepository: JpaRepository<Member, Long>, MemberRepositoryCustom 
          return   queryFactory.select(member)
              .from(member)
                 .limit(5)
-
-                .where(member.salaryStart.eq(salaryStart),
-                    member.salaryEnd.eq(salaryEnd))
+                .where(member.salary.eq(salaryStart))
                 .fetch()
         }
 

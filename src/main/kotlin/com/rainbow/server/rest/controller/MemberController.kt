@@ -3,10 +3,7 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
-import com.rainbow.server.rest.dto.member.DuplicateCheck
-import com.rainbow.server.rest.dto.member.JwtDto
-import com.rainbow.server.rest.dto.member.MemberRequestDto
-import com.rainbow.server.rest.dto.member.MemberResponseDto
+import com.rainbow.server.rest.dto.member.*
 import com.rainbow.server.service.GoalService
 import com.rainbow.server.service.MemberService
 import com.rainbow.server.util.logger
@@ -56,8 +53,13 @@ class MemberController(private val memberService: MemberService,
 
 
     @GetMapping("/myGoals")
-    fun getGoals(@RequestParam month:String){
+    fun getGoals(@RequestParam month:String):CommonResponse<List<Any>>{
+        return success(goalService.getYearlyGoals())
+    }
 
+    @GetMapping("/salary")
+    fun getSalary():CommonResponse<List<SalaryDto>>{
+        return success(memberService.getSalaryRange())
     }
 
 
@@ -94,6 +96,7 @@ class MemberController(private val memberService: MemberService,
     fun findById(code: String): ResponseEntity<Any>{
         return ResponseEntity.ok(memberService.getById(code))
     }
+
 
 
 

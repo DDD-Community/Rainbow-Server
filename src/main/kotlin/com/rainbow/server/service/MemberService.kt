@@ -9,9 +9,11 @@ import com.rainbow.server.config.redis.RefreshToken
 import com.rainbow.server.config.redis.RefreshTokenRepository
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.repository.MemberRepository
+import com.rainbow.server.domain.member.repository.SalaryRepository
 import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
+import com.rainbow.server.rest.dto.member.SalaryDto
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.lang.NullPointerException
 import java.util.*
 import kotlin.collections.HashSet
+import kotlin.streams.toList
 
 @Service
 @Transactional(readOnly = true)
@@ -30,6 +33,7 @@ class MemberService(
     private val sessionService: SessionService,
     private val passwordEncoder: BCryptPasswordEncoder,
     private val refreshTokenRepository: RefreshTokenRepository,
+    private val salaryRepository: SalaryRepository
 
 ) {
 
@@ -76,7 +80,7 @@ class MemberService(
         }
 
 
-        return MemberResponseDto(nickName = infoResponse.kakaoProfile.nickname, kakaoId = username, email = infoResponse.email, birthDate = null, salaryStart = 0, salaryEnd = 0, gender = infoResponse.kakaoAccount.gender)
+        return MemberResponseDto(nickName = infoResponse.kakaoProfile.nickname, kakaoId = username, email = infoResponse.email, birthDate = null, salary = 0,  gender = infoResponse.kakaoAccount.gender)
 
     }
     @Transactional
@@ -203,8 +207,7 @@ class MemberService(
             password = passwordEncoder.encode(member.email),
             nickName = member.nickName,
             birthDate = member.birthDate,
-            salaryStart = member.salaryStart,
-            salaryEnd = member.salaryEnd,
+            salary = member.salary,
             gender = member.gender,
             kaKaoId =member.kaKaoId
         )
@@ -224,6 +227,10 @@ class MemberService(
 
     fun checkNickName(nickName:String):Boolean{
         return memberRepository.existsByNickName(nickName)
+    }
+
+    fun getSalaryRange():List<SalaryDto>{
+        return salaryRepository.findAll().stream().map { s->SalaryDto(s) }.toList()
     }
 
 }

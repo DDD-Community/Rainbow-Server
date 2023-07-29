@@ -13,7 +13,6 @@ import java.time.LocalDate
  * */
 @Repository
 interface GoalRepository: JpaRepository<Goal, Long> ,GoalCustomRepository{
-
 }
 
 interface GoalCustomRepository{
@@ -22,6 +21,8 @@ interface GoalCustomRepository{
     fun findByMemberIdAndTimeBetween(startDate:LocalDate,endDate:LocalDate,memberId: Long):List<Goal>
 
     fun findMaxDate(): LocalDate?
+
+    fun findByMemberAndTime(memberId:Long,time:LocalDate):Goal?
 }
 
 
@@ -43,5 +44,11 @@ class GoalRepositoryImpl (private val queryFactory: JPAQueryFactory
         return queryFactory.selectFrom(goal)
             .where(goal.time.between(startDate,endDate).and(goal.member.memberId.eq(memberId)))
             .fetch()
+    }
+
+    override fun findByMemberAndTime(memberId: Long, time: LocalDate): Goal? {
+        return queryFactory.selectFrom(goal)
+            .where((goal.time.eq(time)).and(goal.member.memberId.eq(memberId)))
+            .fetchOne()
     }
 }

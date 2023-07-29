@@ -26,6 +26,11 @@ class GoalController(private val goalService: GoalService) {
         return success(goalService.updateGoal(goalRequestDto))
     }
 
+    @GetMapping("/currentMonth")
+    fun getCurrentMonth():CommonResponse<GoalResponseDto?>{
+      return success(goalService.getCurrentMonth())
+    }
+
     @GetMapping("/yearTest")
     fun getYearly():CommonResponse<Any>{
         return success(goalService.getYearlyGoals())

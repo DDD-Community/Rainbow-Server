@@ -3,7 +3,9 @@ package com.rainbow.server
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.rainbow.server.domain.image.repository.ImageRepository
+import com.rainbow.server.domain.member.repository.MemberRepository
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.mock.web.MockMultipartFile
@@ -26,6 +28,9 @@ class ImageUploadTest {
     private lateinit var imageRepository: ImageRepository
 
     @Autowired
+    private lateinit var memberRepository: MemberRepository
+
+    @Autowired
     private lateinit var s3Client: AmazonS3Client
 
     @Value("\${cloud.aws.s3.bucket}")
@@ -45,7 +50,7 @@ class ImageUploadTest {
     }
 
     @AfterEach
-    fun cleanup() {
+    fun cleanUp() {
         val objectName1 = "image1.jpg"
         val objectName2 = "image2.jpg"
 

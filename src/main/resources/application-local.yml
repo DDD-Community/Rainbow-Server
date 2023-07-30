@@ -32,11 +32,11 @@ jwt:
 
 cloud:
   aws:
+    credentials:
+      access_key: {IAM access key}
+      secret_key: {IAM secret key}
     s3:
-      bucket:
-        credentials:
-          access_key: {IAM access key}
-          secret_key: {IAM secret key}
+      bucket: rainbow-image-upload-s3-bucket
 
     stack:
       auto: false

@@ -31,8 +31,8 @@ class ExpenseService(
         val year = expenseRequest.date.year
         val goalDate = LocalDate.of(year, month, 1)
         val goal = goalRepository.findByMemberAndTime(currentMember.memberId, goalDate)
-        var customCategory =
-            customCategoryRepository.findByNameAndMember(expenseRequest.categoryName, currentMember.memberId).let {
+        val customCategory =
+            customCategoryRepository.findByNameAndMember(expenseRequest.categoryName, currentMember).let {
                val category=categoryRepository.findByName(expenseRequest.categoryName)
                 customCategoryRepository.save(
                     CustomCategory(

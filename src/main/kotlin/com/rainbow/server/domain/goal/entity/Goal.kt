@@ -23,7 +23,7 @@ class Goal(
 
     var paidAmount: Int=0
 
-    var savedCost:Int=0
+    var savedCost:Int=cost
 
 
     @OneToMany(mappedBy = "goal", cascade = [CascadeType.ALL], orphanRemoval = true)

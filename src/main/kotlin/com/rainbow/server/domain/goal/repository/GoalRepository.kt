@@ -22,7 +22,7 @@ interface GoalCustomRepository{
 
     fun findMaxDate(): LocalDate?
 
-    fun findByMemberAndTime(memberId:Long,time:LocalDate):Goal?
+    fun findByMemberAndTime(memberId:Long,time:LocalDate):Goal
 }
 
 
@@ -46,9 +46,9 @@ class GoalRepositoryImpl (private val queryFactory: JPAQueryFactory
             .fetch()
     }
 
-    override fun findByMemberAndTime(memberId: Long, time: LocalDate): Goal? {
+    override fun findByMemberAndTime(memberId: Long, time: LocalDate): Goal{
         return queryFactory.selectFrom(goal)
             .where((goal.time.eq(time)).and(goal.member.memberId.eq(memberId)))
-            .fetchOne()
+            .fetchFirst()
     }
 }

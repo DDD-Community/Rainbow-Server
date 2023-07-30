@@ -66,6 +66,7 @@ class ExpenseImage(
 @Table(name="Category")
 class Category(
     name: String,
+    imagePath:String
 ): BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +74,8 @@ class Category(
 
     @Column(nullable = false)
     val name: String = name
+
+    var imagePath:String=imagePath
 
     @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val customCategoryMutableList:MutableList<CustomCategory> = mutableListOf()
@@ -85,12 +88,14 @@ class Category(
 @Table(name="CustomCategory")
 class CustomCategory(
     name: String,
+    status:Boolean,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     val member: Member,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="categoryId")
-    val category: Category
+    val category: Category?,
+    imagePath: String
 ): BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -99,6 +104,10 @@ class CustomCategory(
     @Column(nullable = false)
     val name: String = name
 
+    @Column(nullable = false)
+    val status: Boolean = status
+
+    var imagePath:String=imagePath
 
     @OneToMany(mappedBy = "customCategory", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val expenseMutableList:MutableList<Expense> = mutableListOf()

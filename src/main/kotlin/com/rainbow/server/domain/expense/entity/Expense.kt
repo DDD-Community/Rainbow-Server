@@ -8,6 +8,7 @@ import javax.persistence.*
 import com.rainbow.server.domain.goal.entity.Goal
 
 @Entity
+@Table(name="daily_expense")
 class DailyExpense(
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "memberId")
     val member: Member,
@@ -35,7 +36,7 @@ class DailyExpense(
 }
 
 @Entity
-@Table(name="Expense")
+@Table(name="expense")
 class Expense(
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name ="customCategoryId" )
@@ -56,24 +57,10 @@ class Expense(
     protected val imageMutableList:MutableList<Image> = mutableListOf()
     val imageList:List<Image> get()=imageMutableList.toList()
 
-
-    // TODO: ManyToMany 제거 후 직접 연결
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//        name = "custom_category",
-//        joinColumns = [JoinColumn(name = "expense_id")],
-//        inverseJoinColumns = [JoinColumn(name = "category_id")]
-//    )
-//    val categories: Set<Category> = HashSet()
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//        name = ""
-//    )
 }
 
 @Entity
-@Table(name = "Expense_Image")
+@Table(name = "expense_image")
 class ExpenseImage(
     image: Image,
     expense: Expense,
@@ -88,7 +75,7 @@ class ExpenseImage(
 }
 
 @Entity
-@Table(name="Category")
+@Table(name="category")
 class Category(
     name: String,
     imagePath:String
@@ -110,7 +97,7 @@ class Category(
 }
 
 @Entity
-@Table(name="CustomCategory")
+@Table(name="custom_category")
 class CustomCategory(
     name: String,
     status:Boolean,

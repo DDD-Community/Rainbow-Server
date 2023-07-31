@@ -8,17 +8,42 @@ import javax.persistence.*
 import com.rainbow.server.domain.goal.entity.Goal
 
 @Entity
-@Table(name="Expense")
-class Expense(
+class DailyExpense(
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "memberId")
     val member: Member,
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "goalId")
     val goal: Goal,
+    @Column()
+    val comment: String? = null,
+    @Column(nullable = false)
+    val date: LocalDate,
+){
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val dailyExpenseId: Long = 0L
+
+
+    @OneToMany(mappedBy = "dailyExpense", cascade = [CascadeType.ALL], orphanRemoval = true)
+    protected val expenseMutableList:MutableList<Expense> = mutableListOf()
+    val expenseList:List<Expense> get()=expenseMutableList.toList()
+
+    fun addExpense(expense: Expense){
+        expenseMutableList.add(expense)
+    }
+
+
+}
+
+@Entity
+@Table(name="Expense")
+class Expense(
+
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name ="customCategoryId" )
     val customCategory: CustomCategory,
     // TODO: length 몇으로 설정할 것인지
-    @Column() val comment: String? = null,
-    @Column(nullable = false) val date: LocalDate,
+
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name ="dailyExpenseId" )
+    val dailyExpense: DailyExpense,
     @Column(nullable = false) val amount: Int,
     @Column(nullable = false) val content: String
 
@@ -114,5 +139,8 @@ class CustomCategory(
     val expenseList:List<Expense> get()=expenseMutableList.toList()
 
 
+    fun addExpenseList(expense: Expense){
+        expenseMutableList.add(expense)
+    }
 
 }

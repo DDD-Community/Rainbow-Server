@@ -1,7 +1,7 @@
 package com.rainbow.server.domain.member.entity
 
 import com.rainbow.server.domain.BaseEntity
-import com.rainbow.server.domain.expense.entity.Expense
+import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.goal.entity.Goal
 import java.time.LocalDate
 import javax.persistence.*
@@ -28,8 +28,8 @@ class Member(
     val goalList:List<Goal> get()=goalMutableList.toList()
 
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
-    protected val expenseMutableList:MutableList<Expense> = mutableListOf()
-    val expenseList:List<Expense> get()=expenseMutableList.toList()
+    protected val dailyExpenseMutableList:MutableList<DailyExpense> = mutableListOf()
+    val dailyExpenseList:List<DailyExpense> get()=dailyExpenseMutableList.toList()
 
 
 

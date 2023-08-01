@@ -36,6 +36,11 @@ class Goal(
 
     fun updatePaidAmountAndSavedCost(amount:Int){
         this.paidAmount+=amount
+
+    }
+
+    fun modifyPaidAmountAndSavedCost(amount:Int,newAmount:Int){
+        this.paidAmount-=(amount-newAmount)
         savedCost=cost-paidAmount
     }
 

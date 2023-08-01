@@ -45,17 +45,28 @@ class Expense(
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name ="dailyExpenseId" )
     val dailyExpense: DailyExpense,
-    @Column(nullable = false) val amount: Int,
-    @Column(nullable = false) val content: String
+    amount: Int,
+    content: String
 
 ): BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val expenseId: Long = 0L
 
+    @Column(nullable = false)
+    var amount:Int=amount
+
+    @Column(nullable = false)
+    var content:String=content
+
     @OneToMany(mappedBy = "expense", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val imageMutableList:MutableList<Image> = mutableListOf()
     val imageList:List<Image> get()=imageMutableList.toList()
+
+    fun modifyExpense(amount: Int,content:String){
+        this.amount=amount
+        this.content=content
+    }
 
 }
 

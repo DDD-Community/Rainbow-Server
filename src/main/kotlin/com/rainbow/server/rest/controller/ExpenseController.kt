@@ -5,10 +5,12 @@ import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
+import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
 import com.rainbow.server.service.ExpenseService
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -35,4 +37,15 @@ class ExpenseController(
     fun getDailyExpense(@RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)date:LocalDate):CommonResponse<DailyExpenseResponse>{
         return success(expenseService.getDailyExpense(date))
     }
+
+    @GetMapping("/countCategory")
+    fun countCategory():Boolean{
+        return expenseService.countCustomCategory()
+    }
+
+    @PutMapping("/modify")
+    fun modifyExpense(@RequestBody updateExpenseRequest: UpdateExpenseRequest){
+        expenseService.modifyExpense(updateExpenseRequest)
+    }
+
 }

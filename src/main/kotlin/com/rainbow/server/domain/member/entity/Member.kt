@@ -1,6 +1,7 @@
 package com.rainbow.server.domain.member.entity
 
 import com.rainbow.server.domain.BaseEntity
+import com.rainbow.server.domain.expense.entity.CustomCategory
 import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.goal.entity.Goal
 import java.time.LocalDate
@@ -31,7 +32,9 @@ class Member(
     protected val dailyExpenseMutableList:MutableList<DailyExpense> = mutableListOf()
     val dailyExpenseList:List<DailyExpense> get()=dailyExpenseMutableList.toList()
 
-
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
+    protected val customCategoryMutableList:MutableList<CustomCategory> = mutableListOf()
+    val customCategoryList:List<CustomCategory> get()=customCategoryMutableList.toList()
 
     fun addGoalList(goal: Goal){
         goalMutableList.add(goal)

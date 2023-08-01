@@ -27,7 +27,6 @@ class ExpenseService(
 ) {
 
 
-    //TODO: 이 method는 goal 이랑 엮인게 있어서 일단 제가 만들겠습니다.
     @Transactional
     fun createExpense(expenseRequest: ExpenseRequest) {
         val currentMember = memberService.getCurrentLoginMember()
@@ -88,6 +87,11 @@ class ExpenseService(
         )
     }
 
+    fun countCustomCategory():Boolean{
+        val currentMember=memberService.getCurrentLoginMember()
+        return currentMember.customCategoryList.size < 30
+    }
+
 
     fun getDailyExpense(date:LocalDate):DailyExpenseResponse{
         val currentMember = memberService.getCurrentLoginMember()
@@ -96,8 +100,13 @@ class ExpenseService(
     }
 
 
-    fun updateExpense(expenseRequest: UpdateExpenseRequest) {
-        var expense = expenseRepository.findById(expenseRequest.id)
+    fun modifyExpense(expenseRequest: UpdateExpenseRequest) {
+        var expense = expenseRepository.findById(expenseRequest.id).orElseThrow()
+        var goal=expense.dailyExpense.goal
+        goal.modifyPaidAmountAndSavedCost(expense.amount,expenseRequest.amount)
+        expense.modifyExpense(expenseRequest.amount,expenseRequest.content)
+        goalRepository.save(goal)
+        expenseRepository.save(expense)
     }
 
 }

@@ -35,7 +35,9 @@ data class CustomCategoryRequest(
 )
 
 data class UpdateExpenseRequest(
-    val id:Long
+    val id:Long,
+    var amount:Int,
+    val content:String
 )
 
 data class DailyExpenseResponse(

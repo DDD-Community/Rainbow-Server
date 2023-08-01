@@ -6,6 +6,7 @@ import com.rainbow.server.domain.expense.repository.CategoryRepository
 import com.rainbow.server.domain.expense.repository.CustomCategoryRepository
 import com.rainbow.server.domain.expense.repository.ExpenseRepository
 import com.rainbow.server.domain.goal.repository.GoalRepository
+import com.rainbow.server.rest.dto.expense.CommentRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
 import org.springframework.stereotype.Service
@@ -65,6 +66,13 @@ class ExpenseService(
     fun createCustomCategory(customCategoryRequest: CustomCategoryRequest){
         val currentMember = memberService.getCurrentLoginMember()
         customCategoryRepository.save(CustomCategory(name = customCategoryRequest.name, status =customCategoryRequest.status, member = currentMember, category = null, imagePath =  customCategoryRequest.imagePath))
+    }
+
+
+    @Transactional
+    fun createComment(expenseId: Long, commentRequest: CommentRequest) {
+        val expense: Expense = expenseRepository.findById(expenseId).orElseThrow()
+        expense.updateComment(comment = commentRequest.comment)
     }
 
 }

@@ -20,3 +20,8 @@ data class CustomCategoryRequest(
     val status:Boolean,
     val imagePath:String
 )
+
+// TODO: naming 괜찮은지 체크 부탁드립니다.
+data class CommentRequest(
+    var comment: String,
+)

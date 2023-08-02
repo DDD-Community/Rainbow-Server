@@ -34,10 +34,7 @@ data class MemberResponseDto(
     )
 }
 
-data class DuplicateCheck(
-    var data:String
-)
-
+data class CheckDuplicateResponse(val isDuplicated:Boolean)
 data class SalaryDto(
     val salaryRange:String,
     val idx:Int

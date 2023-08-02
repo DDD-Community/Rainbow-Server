@@ -4,16 +4,12 @@ package com.rainbow.server.service
 import com.rainbow.server.auth.*
 import com.rainbow.server.auth.jwt.JwtProvider
 import com.rainbow.server.auth.security.getCurrentLoginUserId
-import com.rainbow.server.config.redis.LoginInfo
 import com.rainbow.server.config.redis.RefreshToken
 import com.rainbow.server.config.redis.RefreshTokenRepository
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.repository.MemberRepository
 import com.rainbow.server.domain.member.repository.SalaryRepository
-import com.rainbow.server.rest.dto.member.JwtDto
-import com.rainbow.server.rest.dto.member.MemberRequestDto
-import com.rainbow.server.rest.dto.member.MemberResponseDto
-import com.rainbow.server.rest.dto.member.SalaryDto
+import com.rainbow.server.rest.dto.member.*
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -104,9 +100,7 @@ class MemberService(
         return JwtDto(jwtProvider.generateToken(member),refreshToken.refreshToken)
     }
 
-    fun getById(code: String):LoginInfo?{
-        return sessionService.getSessionId(code)
-    }
+
 
 
     fun getSuggestedMemberList(){
@@ -221,13 +215,10 @@ class MemberService(
         return client.logout(getCurrentLoginMember().kaKaoId)
     }
 
-    fun checkEmail(email:String):Boolean{
-        return memberRepository.existsByEmail(email)
-    }
+    fun checkEmail(email:String):CheckDuplicateResponse=CheckDuplicateResponse(memberRepository.existsByEmail(email))
 
-    fun checkNickName(nickName:String):Boolean{
-        return memberRepository.existsByNickName(nickName)
-    }
+    fun checkNickName(nickName:String):CheckDuplicateResponse=CheckDuplicateResponse(memberRepository.existsByNickName(nickName)
+    )
 
     fun getSalaryRange():List<SalaryDto>{
         return salaryRepository.findAll().stream().map { s->SalaryDto(s) }.toList()

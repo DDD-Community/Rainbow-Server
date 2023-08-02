@@ -30,15 +30,13 @@ class MemberController(private val memberService: MemberService,
         return success(memberService.login(code))
     }
 
-    @PostMapping("/checkEmail")
-    fun checkEmail(@RequestBody email: DuplicateCheck): Boolean {
-        return memberService.checkEmail(email.data)
-    }
+    @GetMapping
+    fun checkEmail(@RequestParam ("email") email: String):CommonResponse<CheckDuplicateResponse> =success(memberService.checkEmail(email))
 
-    @PostMapping("/checkNickName")
-    fun checkNickName(@RequestBody nickName: DuplicateCheck): Boolean {
-        return memberService.checkNickName(nickName.data)
-    }
+
+    @GetMapping
+    fun checkNickname(@RequestParam ("nickname") nickname: String):  CommonResponse<CheckDuplicateResponse>  =success(memberService.checkNickName(nickname))
+
 
 
     @GetMapping("/me")

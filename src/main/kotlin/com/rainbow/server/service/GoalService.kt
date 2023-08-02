@@ -32,15 +32,14 @@ class GoalService(
         goalRepository.save(goal)
     }
 
-    fun getCurrentMonth(): GoalResponseDto? {
+    fun getCurrentMonth(date: LocalDate): GoalResponseDto? {
         val currentMember = memberService.getCurrentLoginMember()
-        val currentMonth = LocalDate.now()
-        return GoalResponseDto(goalRepository.findByMemberAndTime(currentMember.memberId, currentMonth))
+        return GoalResponseDto(goalRepository.findByMemberAndTime(currentMember.memberId, date))
     }
 
 
-    fun updateGoal(goalRequestDto: GoalRequestDto): GoalResponseDto {
-        val goal = goalRepository.findById(goalRequestDto.id).orElseThrow()
+    fun updateGoal(id:Long,goalRequestDto: GoalRequestDto): GoalResponseDto {
+        val goal = goalRepository.findById(id).orElseThrow()
         goal.updateCost(goalRequestDto.cost)
         return GoalResponseDto(goalRepository.save(goal))
     }

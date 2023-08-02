@@ -9,42 +9,42 @@ import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
 import com.rainbow.server.service.ExpenseService
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
 @RestController
-@RequestMapping("/expense")
+@RequestMapping("/expenses")
 class ExpenseController(
     private val expenseService: ExpenseService
 ) {
 
-    @PostMapping("/save")
+    @PostMapping
     fun createExpense(@RequestBody expenseRequest: ExpenseRequest){
         expenseService.createExpense(expenseRequest)
     }
 
-    @PostMapping("/create/customCategory")
+    @PostMapping("/custom-category")
     fun createCustomCategory(@RequestBody customCategoryRequest: CustomCategoryRequest){
         expenseService.createCustomCategory(customCategoryRequest)
     }
 
-    @GetMapping("/getDailyExpense")
-    fun getDailyExpense(@RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)date:LocalDate):CommonResponse<DailyExpenseResponse>{
+    @GetMapping("/{date}")
+    fun getDailyExpense(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)date:LocalDate):CommonResponse<DailyExpenseResponse>{
         return success(expenseService.getDailyExpense(date))
     }
 
-    @GetMapping("/countCategory")
-    fun countCategory():Boolean{
+    @GetMapping("/category/count")
+    fun isUnderMaxCustomCategoryCount():Boolean{
         return expenseService.countCustomCategory()
     }
 
-    @PutMapping("/modify")
-    fun modifyExpense(@RequestBody updateExpenseRequest: UpdateExpenseRequest){
+    @PutMapping("/{expenseId}")
+    fun modifyExpense(@PathVariable expenseId:Long,@RequestBody updateExpenseRequest: UpdateExpenseRequest){
         expenseService.modifyExpense(updateExpenseRequest)
     }
 

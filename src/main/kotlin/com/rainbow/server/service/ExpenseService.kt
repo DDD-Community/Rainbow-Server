@@ -1,6 +1,5 @@
 package com.rainbow.server.service
 
-import com.rainbow.server.domain.expense.entity.CustomCategory
 import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.expense.repository.CategoryRepository
@@ -26,6 +25,8 @@ class ExpenseService(
     private val memberService: MemberService
 ) {
 
+    private val maxCategorySize:Int=30
+
 
     @Transactional
     fun createExpense(expenseRequest: ExpenseRequest) {
@@ -38,13 +39,7 @@ class ExpenseService(
         val customCategory =
             customCategoryRepository.findByNameAndMember(expenseRequest.categoryName, currentMember) ?: run {
                 val category = categoryRepository.findByName(expenseRequest.categoryName)
-                val newCustomCategory = customCategoryRepository.save(CustomCategory(
-                    name = expenseRequest.categoryName,
-                    status = expenseRequest.categoryStatus,
-                    member = currentMember,
-                    category = category,
-                    imagePath = category.imagePath
-                ))
+                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember,category))
                 newCustomCategory
             }
 
@@ -76,20 +71,12 @@ class ExpenseService(
     @Transactional
     fun createCustomCategory(customCategoryRequest: CustomCategoryRequest) {
         val currentMember = memberService.getCurrentLoginMember()
-        customCategoryRepository.save(
-            CustomCategory(
-                name = customCategoryRequest.name,
-                status = customCategoryRequest.status,
-                member = currentMember,
-                category = null,
-                imagePath = customCategoryRequest.imagePath
-            )
-        )
+        customCategoryRepository.save(customCategoryRequest.to(currentMember))
     }
 
     fun countCustomCategory():Boolean{
         val currentMember=memberService.getCurrentLoginMember()
-        return currentMember.customCategoryList.size < 30
+        return currentMember.customCategoryList.size < maxCategorySize
     }
 
 
@@ -101,8 +88,8 @@ class ExpenseService(
 
 
     fun modifyExpense(expenseRequest: UpdateExpenseRequest) {
-        var expense = expenseRepository.findById(expenseRequest.id).orElseThrow()
-        var goal=expense.dailyExpense.goal
+        val expense = expenseRepository.findById(expenseRequest.id).orElseThrow()
+        val goal=expense.dailyExpense.goal
         goal.modifyPaidAmountAndSavedCost(expense.amount,expenseRequest.amount)
         expense.modifyExpense(expenseRequest.amount,expenseRequest.content)
         goalRepository.save(goal)

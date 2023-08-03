@@ -25,8 +25,7 @@ class ExpenseService(
     private val memberService: MemberService
 ) {
 
-    private val maxCategorySize:Int=30
-
+    private val maxCategorySize: Int = 30
 
     @Transactional
     fun createExpense(expenseRequest: ExpenseRequest) {
@@ -39,10 +38,9 @@ class ExpenseService(
         val customCategory =
             customCategoryRepository.findByNameAndMember(expenseRequest.categoryName, currentMember) ?: run {
                 val category = categoryRepository.findByName(expenseRequest.categoryName)
-                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember,category))
+                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember, category))
                 newCustomCategory
             }
-
 
         val dailyExpense = dailyExpenseRepository.findByDateAndMember(expenseRequest.date, currentMember) ?: run {
             val newDailyExpense = DailyExpense(
@@ -54,7 +52,6 @@ class ExpenseService(
             newDailyExpense
         }
 
-
         val expense = Expense(
             amount = expenseRequest.amount,
             content = expenseRequest.content,
@@ -64,9 +61,7 @@ class ExpenseService(
         dailyExpense.addExpense(expense)
         customCategory.addExpenseList(expense)
         dailyExpenseRepository.save(dailyExpense)
-
     }
-
 
     @Transactional
     fun createCustomCategory(customCategoryRequest: CustomCategoryRequest) {
@@ -74,26 +69,23 @@ class ExpenseService(
         customCategoryRepository.save(customCategoryRequest.to(currentMember))
     }
 
-    fun countCustomCategory():Boolean{
-        val currentMember=memberService.getCurrentLoginMember()
+    fun countCustomCategory(): Boolean {
+        val currentMember = memberService.getCurrentLoginMember()
         return currentMember.customCategoryList.size < maxCategorySize
     }
 
-
-    fun getDailyExpense(date:LocalDate):DailyExpenseResponse{
+    fun getDailyExpense(date: LocalDate): DailyExpenseResponse {
         val currentMember = memberService.getCurrentLoginMember()
-        val dailyExpense=dailyExpenseRepository.findByDateAndMember(date,currentMember)
-      return  DailyExpenseResponse(dailyExpense)
+        val dailyExpense = dailyExpenseRepository.findByDateAndMember(date, currentMember)
+        return DailyExpenseResponse(dailyExpense)
     }
-
 
     fun modifyExpense(expenseRequest: UpdateExpenseRequest) {
         val expense = expenseRepository.findById(expenseRequest.id).orElseThrow()
-        val goal=expense.dailyExpense.goal
-        goal.modifyPaidAmountAndSavedCost(expense.amount,expenseRequest.amount)
-        expense.modifyExpense(expenseRequest.amount,expenseRequest.content)
+        val goal = expense.dailyExpense.goal
+        goal.modifyPaidAmountAndSavedCost(expense.amount, expenseRequest.amount)
+        expense.modifyExpense(expenseRequest.amount, expenseRequest.content)
         goalRepository.save(goal)
         expenseRepository.save(expense)
     }
-
 }

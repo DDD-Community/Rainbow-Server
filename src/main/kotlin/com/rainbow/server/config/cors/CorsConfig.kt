@@ -15,6 +15,4 @@ class CorsConfig : WebMvcConfigurer {
             .allowCredentials(true) // 자격 증명 허용
             .maxAge(3600) // CORS preflight 요청 결과 캐싱 시간 (초 단위)
     }
-
-
 }

@@ -1,10 +1,9 @@
 package com.rainbow.server.auth.security
 
-import com.rainbow.server.auth.jwt.JwtFilter
-import com.rainbow.server.auth.jwt.JwtProvider
 import com.rainbow.server.auth.jwt.JwtAccessDeniedHandler
 import com.rainbow.server.auth.jwt.JwtAuthenticationEntryPoint
-
+import com.rainbow.server.auth.jwt.JwtFilter
+import com.rainbow.server.auth.jwt.JwtProvider
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -83,7 +82,6 @@ class SecurityConfig(
         .authenticated()
         .and()
         .build()
-
 }
 
 class JwtSecurityConfig(private val jwtProvider: JwtProvider) :

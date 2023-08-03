@@ -21,13 +21,13 @@ class GoalService(
 
     val log = logger()
 
-
     fun createGoal(goalRequestDto: GoalRequestDto) {
         val currentMember = memberService.getCurrentLoginMember()
         val goal = Goal(
             cost = goalRequestDto.cost,
             time = goalRequestDto.yearMonth,
-            member = currentMember
+            member = currentMember,
+            savedCost = goalRequestDto.cost
         )
         goalRepository.save(goal)
     }
@@ -37,8 +37,7 @@ class GoalService(
         return GoalResponseDto(goalRepository.findByMemberAndTime(currentMember.memberId, date))
     }
 
-
-    fun updateGoal(id:Long,goalRequestDto: GoalRequestDto): GoalResponseDto {
+    fun updateGoal(id: Long, goalRequestDto: GoalRequestDto): GoalResponseDto {
         val goal = goalRepository.findById(id).orElseThrow()
         goal.updateCost(goalRequestDto.cost)
         return GoalResponseDto(goalRepository.save(goal))
@@ -94,9 +93,5 @@ class GoalService(
         mapList.add(totalSavedMap)
 
         return mapList
-
-
     }
-
-
 }

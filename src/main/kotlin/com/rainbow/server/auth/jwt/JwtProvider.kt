@@ -2,9 +2,9 @@ package com.rainbow.server.auth.jwt
 
 import com.rainbow.server.auth.security.PrincipalDetailsService
 import com.rainbow.server.domain.member.entity.Member
+import com.rainbow.server.util.logger
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import com.rainbow.server.util.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -52,7 +52,6 @@ class JwtProvider(
             .parseClaimsJws(token)
             .body
 
-
         val userDetails = principalDetailsService.loadUserByUsername(userId = body.subject)
         return UsernamePasswordAuthenticationToken(
             userDetails.username,
@@ -60,5 +59,4 @@ class JwtProvider(
             userDetails.authorities
         )
     }
-
 }

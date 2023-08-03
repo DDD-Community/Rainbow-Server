@@ -7,16 +7,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.multipart.MaxUploadSizeExceededException
 
-
 const val uploadLimitMessage = "파일 업로드 용량 제한을 초과했습니다."
 
 open class CustomException(
     val errorCode: ErrorCode
-): RuntimeException()
+) : RuntimeException()
 
 enum class ErrorCode(val status: HttpStatus, val message: String) {
     // 400 - Bad Request
-    FILE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 갯수 제한을 초과했습니다."),
+//    FILE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 갯수 제한을 초과했습니다.")
 }
 
 @RestControllerAdvice

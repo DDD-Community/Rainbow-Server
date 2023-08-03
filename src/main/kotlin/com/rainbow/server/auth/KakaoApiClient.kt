@@ -30,17 +30,14 @@ class KakaoApiClient(
     private val appAdminKey: String
 ) {
 
-
     val log = logger()
 
     fun getRedirectUri(): String {
         val os = System.getProperty("os.name")
         log.info("OS : {}", os)
-        if(os.contains("Mac")) return "http://localhost:8080/member/login"
+        if (os.contains("Mac")) return "http://localhost:8080/member/login"
         return "http://localhost:3000/member/kakao"
-
     }
-
 
     fun requestAccessToken(code: String): String {
         val url = "$authUrl/oauth/token"
@@ -51,7 +48,7 @@ class KakaoApiClient(
         body.add("grant_type", "authorization_code")
         body.add("client_id", clientId)
         body.add("client_secret", secret)
-        body.add("redirect_uri",getRedirectUri())
+        body.add("redirect_uri", getRedirectUri())
 
         val request = HttpEntity(body, httpHeaders)
 //        restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
@@ -73,7 +70,6 @@ class KakaoApiClient(
 
         val request = HttpEntity(body, httpHeaders)
 
-
         return restTemplate.postForObject(url, request, KakaoInfoResponse::class.java)
             ?: throw IllegalStateException("KakaoInfoResponse is null")
     }
@@ -90,11 +86,9 @@ class KakaoApiClient(
         body.add("target_id", kaKaoId.toString())
         val request = HttpEntity(body, httpHeaders)
         restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
-        val response= restTemplate.postForObject(url, request, KakaoUserLogout::class.java)
+        val response = restTemplate.postForObject(url, request, KakaoUserLogout::class.java)
             ?: throw IllegalStateException("KakaoInfoResponse is null")
 
         return response.id == kaKaoId
     }
-
-
 }

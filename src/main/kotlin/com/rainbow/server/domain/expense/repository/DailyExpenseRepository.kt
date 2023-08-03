@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
 @Repository
-interface DailyExpenseRepository:JpaRepository<DailyExpense,Long> {
-    fun findByDateAndMember(date:LocalDate,member: Member):DailyExpense?
+interface DailyExpenseRepository : JpaRepository<DailyExpense, Long> {
+    fun findByDateAndMember(date: LocalDate, member: Member): DailyExpense?
 }

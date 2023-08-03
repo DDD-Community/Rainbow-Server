@@ -2,9 +2,9 @@ package com.rainbow.server.auth.jwt
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.util.getIp
+import com.rainbow.server.util.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import com.rainbow.server.util.logger
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint

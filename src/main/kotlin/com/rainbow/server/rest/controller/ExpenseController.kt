@@ -24,28 +24,31 @@ class ExpenseController(
 ) {
 
     @PostMapping
-    fun createExpense(@RequestBody expenseRequest: ExpenseRequest){
+    fun createExpense(@RequestBody expenseRequest: ExpenseRequest) {
         expenseService.createExpense(expenseRequest)
     }
 
     @PostMapping("/custom-category")
-    fun createCustomCategory(@RequestBody customCategoryRequest: CustomCategoryRequest){
+    fun createCustomCategory(@RequestBody customCategoryRequest: CustomCategoryRequest) {
         expenseService.createCustomCategory(customCategoryRequest)
     }
 
     @GetMapping("/{date}")
-    fun getDailyExpense(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)date:LocalDate):CommonResponse<DailyExpenseResponse>{
+    fun getDailyExpense(
+        @PathVariable
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        date: LocalDate
+    ): CommonResponse<DailyExpenseResponse> {
         return success(expenseService.getDailyExpense(date))
     }
 
     @GetMapping("/category/count")
-    fun isUnderMaxCustomCategoryCount():Boolean{
+    fun isUnderMaxCustomCategoryCount(): Boolean {
         return expenseService.countCustomCategory()
     }
 
     @PutMapping("/{expenseId}")
-    fun modifyExpense(@PathVariable expenseId:Long,@RequestBody updateExpenseRequest: UpdateExpenseRequest){
+    fun modifyExpense(@PathVariable expenseId: Long, @RequestBody updateExpenseRequest: UpdateExpenseRequest) {
         expenseService.modifyExpense(updateExpenseRequest)
     }
-
 }

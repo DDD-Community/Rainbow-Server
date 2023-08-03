@@ -20,25 +20,29 @@ import java.time.LocalDate
 class GoalController(private val goalService: GoalService) {
 
     @PostMapping
-    fun createGoal(@RequestBody goalRequestDto: GoalRequestDto){
+    fun createGoal(@RequestBody goalRequestDto: GoalRequestDto) {
         goalService.createGoal(goalRequestDto)
     }
 
     @PutMapping("/{id}")
-    fun updateGoal(@PathVariable id:Long,@RequestBody goalRequestDto: GoalRequestDto):CommonResponse<GoalResponseDto>{
-        return success(goalService.updateGoal(id,goalRequestDto))
+    fun updateGoal(@PathVariable id: Long, @RequestBody goalRequestDto: GoalRequestDto): CommonResponse<GoalResponseDto> {
+        return success(goalService.updateGoal(id, goalRequestDto))
     }
 
     @GetMapping("/{date}")
-    fun getCurrentMonth(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date:LocalDate):CommonResponse<GoalResponseDto?>{
-      return success(goalService.getCurrentMonth(date))
+    fun getCurrentMonth(
+        @PathVariable
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        date: LocalDate
+    ): CommonResponse<GoalResponseDto?> {
+        return success(goalService.getCurrentMonth(date))
     }
 
     /*
     * 연도별 데이터 조회 테스트 메소드
     * */
     @GetMapping("/yearTest")
-    fun getYearly():CommonResponse<Any>{
+    fun getYearly(): CommonResponse<Any> {
         return success(goalService.getYearlyGoals())
     }
 }

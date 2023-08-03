@@ -30,7 +30,6 @@ class PrincipalDetailsService(
     private val memberRepository: MemberRepository
 ) : UserDetailsService {
 
-
     override fun loadUserByUsername(userId: String) = PrincipalDetails(
         memberRepository.findById(userId.toLong())
             .orElseThrow()
@@ -38,9 +37,10 @@ class PrincipalDetailsService(
 }
 
 // principal 에는 username (User PK 값) 이 문자열로 들어있다
-fun getCurrentLoginUserId() = (SecurityContextHolder
-    .getContext()
-    .authentication
-    .principal as String)
+fun getCurrentLoginUserId() = (
+    SecurityContextHolder
+        .getContext()
+        .authentication
+        .principal as String
+    )
     .toLong()
-

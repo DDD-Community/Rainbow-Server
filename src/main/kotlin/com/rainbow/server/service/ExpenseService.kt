@@ -70,9 +70,9 @@ class ExpenseService(
 
 
     @Transactional
-    fun createComment(expenseId: Long, commentRequest: CommentRequest) {
+    fun createComment(expenseId: Long, commentRequest: CommentRequest): Expense {
         val expense: Expense = expenseRepository.findById(expenseId).orElseThrow()
-        expense.updateComment(comment = commentRequest.comment)
+        return expense.updateComment(comment = commentRequest.comment)
     }
 
 }

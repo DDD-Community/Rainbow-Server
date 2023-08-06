@@ -11,7 +11,7 @@ import com.rainbow.server.domain.goal.entity.Goal
 @Table(name="Expense")
 class Expense(
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name ="customCategoryId" )
-    val customCategory: CustomCategory,
+    val customCategory: CustomCategory?,
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "memberId")
     val member: Member,
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "goalId")
@@ -32,8 +32,9 @@ class Expense(
     protected val imageMutableList:MutableList<Image> = mutableListOf()
     val imageList:List<Image> get()=imageMutableList.toList()
 
-    fun updateComment(comment: String?) {
+    fun updateComment(comment: String?): Expense {
         this.comment = comment
+        return this
     }
 
 }

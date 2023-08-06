@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.rainbow.server.domain.image.repository.ImageRepository
 import com.rainbow.server.domain.member.repository.MemberRepository
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.mock.web.MockMultipartFile

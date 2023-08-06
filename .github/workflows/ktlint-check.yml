@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 1
-      - name: Run ktlint with reviewdog
-        uses: ScaCap/action-ktlint@v1.7.3
+      - name: ktlint
+        uses: ScaCap/action-ktlint@master
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-check # Change reporter

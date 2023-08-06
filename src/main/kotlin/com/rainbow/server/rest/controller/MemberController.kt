@@ -3,7 +3,11 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
-import com.rainbow.server.rest.dto.member.*
+import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
+import com.rainbow.server.rest.dto.member.JwtDto
+import com.rainbow.server.rest.dto.member.MemberRequestDto
+import com.rainbow.server.rest.dto.member.MemberResponseDto
+import com.rainbow.server.rest.dto.member.SalaryDto
 import com.rainbow.server.service.GoalService
 import com.rainbow.server.service.MemberService
 import com.rainbow.server.util.logger
@@ -11,7 +15,13 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 import javax.servlet.http.HttpServletResponse
 
@@ -32,10 +42,10 @@ class MemberController(
         return success(memberService.login(code))
     }
 
-    @GetMapping
+    @GetMapping("/email/check")
     fun checkEmail(@RequestParam("email") email: String): CommonResponse<CheckDuplicateResponse> = success(memberService.checkEmail(email))
 
-    @GetMapping
+    @GetMapping("/nickname/check")
     fun checkNickname(@RequestParam("nickname") nickname: String): CommonResponse<CheckDuplicateResponse> = success(memberService.checkNickName(nickname))
 
     @GetMapping("/me")
@@ -59,7 +69,7 @@ class MemberController(
     }
 
     @GetMapping("/salary/{id}")
-    fun getMySalary(@PathVariable id:Long){
+    fun getMySalary(@PathVariable id: Long) {
         memberService.getMySalary(id)
     }
 

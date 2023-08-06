@@ -1,57 +1,56 @@
 package com.rainbow.server.config.swagger
-import org.slf4j.LoggerFactory
-import org.springframework.boot.info.BuildProperties
+
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.ResponseEntity
-import org.springframework.http.server.ServerHttpRequest
-import org.springframework.http.server.ServerHttpResponse
-import org.springframework.web.server.ServerWebExchange
-import org.springframework.web.server.WebSession
 import springfox.documentation.builders.ApiInfoBuilder
+import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.service.ApiInfo
+import springfox.documentation.service.ApiKey
+import springfox.documentation.service.AuthorizationScope
 import springfox.documentation.service.Contact
+import springfox.documentation.service.SecurityReference
 import springfox.documentation.spi.DocumentationType
+import springfox.documentation.spi.service.contexts.SecurityContext
 import springfox.documentation.spring.web.plugins.Docket
-import springfox.documentation.swagger2.annotations.EnableSwagger2
-import java.util.*
 
 @Configuration
-@EnableSwagger2
-class SwaggerConfig(
-    private val buildProperties: BuildProperties
-) {
-    private val logger = LoggerFactory.getLogger(this::class.java)
+class SwaggerConfig {
+    private fun apiKey(): ApiKey = ApiKey(
+        "Authorization",
+        "Authorization",
+        "header"
+    )
+
+    private fun defaultAuth() = listOf(
+        SecurityReference(
+            "Authorization",
+            arrayOf(
+                AuthorizationScope("global", "accessEverything")
+            )
+        )
+    )
+
+    private fun securityContext() = SecurityContext.builder()
+        .securityReferences(defaultAuth())
+        .build()
 
     @Bean
-    fun api(): Docket {
-        logger.debug("Starting Swagger...")
+    fun swagger(): Docket = Docket(DocumentationType.OAS_30)
+        .useDefaultResponseMessages(false)
+        .securityContexts(listOf(securityContext()))
+        .securitySchemes(listOf(apiKey()))
+        .forCodeGeneration(true)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.rainbow.server.rest"))
+        .paths(PathSelectors.any())
+        .build()
+        .apiInfo(apiInfo())
+        .enable(true)
 
-        return Docket(DocumentationType.SWAGGER_2)
-            .enable(true)
-            .useDefaultResponseMessages(false)
-            .ignoredParameterTypes(
-                WebSession::class.java,
-                ServerHttpRequest::class.java,
-                ServerHttpResponse::class.java,
-                ServerWebExchange::class.java
-            )
-            .genericModelSubstitutes(
-                Optional::class.java,
-                ResponseEntity::class.java
-            )
-            .select()
-            .apis(RequestHandlerSelectors.basePackage("com.rainbow.server.rest"))
-            .build().apiInfo(apiEndPointsInfo())
-    }
-
-    private fun apiEndPointsInfo(): ApiInfo {
-        return ApiInfoBuilder()
-            .title(buildProperties.name)
-            .description("무지개 API swagger doc")
-            .contact(Contact("ChoJiWon", "https://github.com/Jiwon-cho", "gwon188@gmail.com"))
-            .version(buildProperties.version)
-            .build()
-    }
+    private fun apiInfo(): ApiInfo = ApiInfoBuilder()
+        .title("RainBow Server Api")
+        .description("무지개 API swagger doc")
+        .contact(Contact("ChoJiWon", "https://github.com/Jiwon-cho", "gwon188@gmail.com"))
+        .build()
 }

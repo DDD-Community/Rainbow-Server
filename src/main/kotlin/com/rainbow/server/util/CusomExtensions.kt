@@ -13,5 +13,3 @@ fun HttpServletRequest.getIp(): String = this.getHeader("X-Forwarded-For")
     ?: this.getHeader("HTTP_CLIENT_IP")
     ?: this.getHeader("HTTP_X_FORWARDED_FOR")
     ?: this.remoteAddr
-
-fun String.toDotFormat() = this.split(" ")[0].replace("-", ".")

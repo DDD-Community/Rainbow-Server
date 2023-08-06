@@ -1,3 +1,4 @@
+/*
 package com.rainbow.server.exception
 
 import com.rainbow.server.rest.dto.ErrorResponse
@@ -41,3 +42,4 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE.value()).body(errorResponse)
     }
 }
+*/

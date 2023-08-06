@@ -4,7 +4,14 @@ import com.rainbow.server.domain.BaseEntity
 import com.rainbow.server.domain.expense.entity.CustomCategory
 import com.rainbow.server.domain.goal.entity.Goal
 import java.time.LocalDate
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.OneToMany
 
 enum class Role { USER }
 
@@ -25,7 +32,6 @@ class Member(
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val goalMutableList: MutableList<Goal> = mutableListOf()
     val goalList: List<Goal> get() = goalMutableList.toList()
-
 
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val customCategoryMutableList: MutableList<CustomCategory> = mutableListOf()

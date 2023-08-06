@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -51,7 +50,6 @@ class KakaoApiClient(
         body.add("redirect_uri", getRedirectUri())
 
         val request = HttpEntity(body, httpHeaders)
-//        restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
 
         val response = restTemplate.postForObject(url, request, KakaoTokens::class.java)
             ?: throw IllegalStateException("KakaoTokens response is null")
@@ -85,8 +83,7 @@ class KakaoApiClient(
         body.add("target_id_type", "user_id")
         body.add("target_id", kaKaoId.toString())
         val request = HttpEntity(body, httpHeaders)
-        restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
-        val response = restTemplate.postForObject(url, request, KakaoUserLogout::class.java)
+        val response = restTemplate.postForObject(url, request, KaKaoUserLogout::class.java)
             ?: throw IllegalStateException("KakaoInfoResponse is null")
 
         return response.id == kaKaoId

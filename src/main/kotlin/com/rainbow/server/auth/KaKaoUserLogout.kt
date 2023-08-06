@@ -1,7 +1,5 @@
 package com.rainbow.server.auth
 
-
-
-data class KakaoUserLogout(
+data class KaKaoUserLogout(
     val id: Long
 )

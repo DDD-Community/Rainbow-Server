@@ -2,7 +2,6 @@ package com.rainbow.server.domain.member.repository
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.rainbow.server.domain.member.entity.Member
-import com.rainbow.server.domain.member.entity.QFollow.follow
 import com.rainbow.server.domain.member.entity.QMember.member
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -19,7 +18,7 @@ interface MemberRepository : JpaRepository<Member, Long>, MemberRepositoryCustom
 }
 
 interface MemberRepositoryCustom {
-    fun findSuggestedMemberList(standardMember: Member): List<Member>
+//    fun findSuggestedMemberList(standardMember: Member): List<Member>
 
     fun findMemberListBySalary(salaryStart: Int, salaryEnd: Int): List<Member>
 
@@ -30,17 +29,17 @@ class MemberRepositoryImpl(
     private val queryFactory: JPAQueryFactory
 ) : MemberRepositoryCustom {
 
-    override fun findSuggestedMemberList(standardMember: Member): List<Member> {
-        return queryFactory.selectFrom(member)
-            .join(follow).on(member.memberId.eq(follow.toMember))
-            .where(
-                (member.salary.eq(standardMember.salary))
-                    .or(member.birthDate.eq(standardMember.birthDate)).and(!follow.fromMember.eq(standardMember.memberId)).and(
-                        !member.memberId.eq(standardMember.memberId)
-                    )
-            )
-            .fetch()
-    }
+//    override fun findSuggestedMemberList(standardMember: Member): List<Member> {
+//        return queryFactory.selectFrom(member)
+//            .join(follow).on(member.memberId.eq(follow.toMember))
+//            .where(
+//                (member.salary.eq(standardMember.salary))
+//                    .or(member.birthDate.eq(standardMember.birthDate)).and(!follow.fromMember.eq(standardMember.memberId)).and(
+//                        !member.memberId.eq(standardMember.memberId)
+//                    )
+//            )
+//            .fetch()
+//    }
 
     override fun findMemberListBySalary(salaryStart: Int, salaryEnd: Int): List<Member> {
         return queryFactory.select(member)

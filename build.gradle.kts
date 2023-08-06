@@ -41,8 +41,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:2.7.12")
 
     // Swagger
-    implementation("io.springfox:springfox-swagger2:2.9.2")
-    implementation("io.springfox:springfox-swagger-ui:2.9.2")
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
+    implementation("io.springfox:springfox-swagger-ui:3.0.0")
 
     // jwt
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
@@ -57,11 +57,10 @@ dependencies {
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
-    implementation("org.apache.httpcomponents:httpclient:4.5")
     implementation("com.google.code.gson:gson:2.9.0")
 
     // s3
-    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+//    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.5.RELEASE")
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

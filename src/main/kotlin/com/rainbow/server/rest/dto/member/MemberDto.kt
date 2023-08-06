@@ -40,11 +40,11 @@ data class CheckDuplicateResponse(val isDuplicated: Boolean)
 data class SalaryDto(
     val salaryRange: String,
     val idx: Int,
-    val salaryId:Long
+    val salaryId: Long
 ) {
     constructor(salary: Salary) : this(
         salaryRange = salary.salaryRange,
         idx = salary.idx,
-        salaryId=salary.salaryId
+        salaryId = salary.salaryId
     )
 }

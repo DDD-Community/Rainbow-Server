@@ -26,13 +26,9 @@ data class GoalResponseDto(
         time = goal.time,
         savedCost = goal.savedCost
     )
-
-
 }
 
 data class TotalSavedCost(
     var sinceSignUp: Int,
     var savedCost: Int
 )
-
-

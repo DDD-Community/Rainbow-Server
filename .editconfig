@@ -8,6 +8,7 @@ indent_size = 4
 insert_final_newline = true
 max_line_length = 120
 tab_width = 4
+no_trailing_comma = true
 disabled_rules = no-wildcard-imports,import-ordering,comment-spacing
 
 # .editorconfig

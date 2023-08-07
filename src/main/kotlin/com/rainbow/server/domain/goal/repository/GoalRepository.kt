@@ -25,7 +25,7 @@ interface GoalCustomRepository {
 }
 
 class GoalRepositoryImpl(
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
 ) : GoalCustomRepository {
     override fun findAllYears(member: Member): List<LocalDate> {
         return queryFactory.selectDistinct(goal.time)

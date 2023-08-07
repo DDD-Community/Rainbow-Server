@@ -26,7 +26,7 @@ interface MemberRepositoryCustom {
 }
 
 class MemberRepositoryImpl(
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
 ) : MemberRepositoryCustom {
 
 //    override fun findSuggestedMemberList(standardMember: Member): List<Member> {

@@ -31,7 +31,7 @@ class MemberController(
     private val memberService: MemberService,
     private val goalService: GoalService,
     @Value("\${oauth.kakao.client-id}")
-    private val clientId: String
+    private val clientId: String,
 ) {
 
     val log = logger()

@@ -37,7 +37,7 @@ class ExpenseController(
     fun getDailyExpense(
         @PathVariable
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        date: LocalDate
+        date: LocalDate,
     ): CommonResponse<DailyExpenseResponse> {
         return success(expenseService.getDailyExpense(date))
     }

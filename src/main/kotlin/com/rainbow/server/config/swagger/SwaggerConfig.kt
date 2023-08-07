@@ -19,16 +19,16 @@ class SwaggerConfig {
     private fun apiKey(): ApiKey = ApiKey(
         "Authorization",
         "Authorization",
-        "header"
+        "header",
     )
 
     private fun defaultAuth() = listOf(
         SecurityReference(
             "Authorization",
             arrayOf(
-                AuthorizationScope("global", "accessEverything")
+                AuthorizationScope("global", "accessEverything"),
             ),
-        )
+        ),
     )
 
     private fun securityContext() = SecurityContext.builder()

@@ -23,7 +23,7 @@ class Member(
     val birthDate: LocalDate,
     val password: String,
     var salary: Int,
-    var nickName: String
+    var nickName: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -27,7 +27,7 @@ class DailyExpense(
     @Column()
     val comment: String? = null,
     @Column(nullable = false)
-    val date: LocalDate
+    val date: LocalDate,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +54,7 @@ class Expense(
     @JoinColumn(name = "dailyExpenseId")
     val dailyExpense: DailyExpense,
     @Column(nullable = false) var amount: Int,
-    @Column(nullable = false) var content: String
+    @Column(nullable = false) var content: String,
 
 ) : BaseEntity() {
     @Id
@@ -74,7 +74,7 @@ class Expense(
 @Entity
 class Category(
     name: String,
-    imagePath: String
+    imagePath: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

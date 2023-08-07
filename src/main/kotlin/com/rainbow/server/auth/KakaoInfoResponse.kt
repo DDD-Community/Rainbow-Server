@@ -10,7 +10,7 @@ data class KakaoInfoResponse(
     var kakaoProfile: KakaoProfile = KakaoProfile(),
 
     @JsonProperty("id")
-    var id: Long
+    var id: Long,
 
 ) {
     val email: String

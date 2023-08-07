@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne
 class Image(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expenseId")
-    val expense: Expense
+    val expense: Expense,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass
     value = [
         "createdAt, updatedAt",
     ],
-    allowGetters = true
+    allowGetters = true,
 )
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseEntity {

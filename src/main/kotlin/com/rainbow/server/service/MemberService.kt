@@ -190,7 +190,7 @@ class MemberService(
             birthDate = member.birthDate,
             salary = member.salary,
             gender = member.gender,
-            kaKaoId = member.kaKaoId
+            kaKaoId = member.kaKaoId,
         )
 
         return memberRepository.save(newMember)
@@ -203,7 +203,7 @@ class MemberService(
     fun checkEmail(email: String): CheckDuplicateResponse = CheckDuplicateResponse(memberRepository.existsByEmail(email))
 
     fun checkNickName(nickName: String): CheckDuplicateResponse = CheckDuplicateResponse(
-        memberRepository.existsByNickName(nickName)
+        memberRepository.existsByNickName(nickName),
     )
 
     fun getSalaryRange(): List<SalaryDto> {

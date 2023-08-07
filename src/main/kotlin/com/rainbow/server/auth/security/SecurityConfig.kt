@@ -57,7 +57,7 @@ class SecurityConfig(
             "/member/**",
             "**",
             "/**",
-            "/**/**"
+            "/**/**",
         ).permitAll()
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
         // Swagger 설정

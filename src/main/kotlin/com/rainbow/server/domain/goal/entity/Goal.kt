@@ -18,7 +18,7 @@ class Goal(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     val member: Member,
-    val time: LocalDate
+    val time: LocalDate,
 
 ) : BaseEntity() {
     @Id

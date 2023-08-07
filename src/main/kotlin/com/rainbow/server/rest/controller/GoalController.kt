@@ -33,14 +33,11 @@ class GoalController(private val goalService: GoalService) {
     fun getCurrentMonth(
         @PathVariable
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        date: LocalDate
+        date: LocalDate,
     ): CommonResponse<GoalResponseDto?> {
         return success(goalService.getCurrentMonth(date))
     }
 
-    /*
-    * 연도별 데이터 조회 테스트 메소드
-    * */
     @GetMapping("/yearTest")
     fun getYearly(): CommonResponse<Any> {
         return success(goalService.getYearlyGoals())

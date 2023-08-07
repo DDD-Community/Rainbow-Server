@@ -7,7 +7,7 @@ data class GoalRequestDto(
     val memberId: Int,
     val yearMonth: LocalDate,
     var cost: Int,
-    var id: Long = 0
+    var id: Long = 0,
 )
 
 data class GoalResponseDto(
@@ -24,7 +24,7 @@ data class GoalResponseDto(
         paidAmount = goal.paidAmount,
         goalId = goal.goalId,
         time = goal.time,
-        savedCost = goal.savedCost
+        savedCost = goal.savedCost,
     )
 }
 

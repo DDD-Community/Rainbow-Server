@@ -8,7 +8,7 @@ import javax.persistence.Id
 @Entity
 class Salary(
     val salaryRange: String,
-    val idx: Int
+    val idx: Int,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

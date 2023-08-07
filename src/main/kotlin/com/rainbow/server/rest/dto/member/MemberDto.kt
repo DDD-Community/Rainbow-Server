@@ -10,11 +10,11 @@ data class MemberRequestDto(
     val birthDate: LocalDate,
     val salary: Int,
     val gender: String,
-    val kaKaoId: Long
+    val kaKaoId: Long,
 )
 data class JwtDto(
     val accessToken: String?,
-    val refreshToken: String?
+    val refreshToken: String?,
 )
 data class MemberResponseDto(
     val email: String,
@@ -23,7 +23,7 @@ data class MemberResponseDto(
     val birthDate: LocalDate?,
     val gender: String?,
     val salary: Int?,
-    val kakaoId: Long
+    val kakaoId: Long,
 ) {
 //    constructor (email: String) : this(email, null, null,null,null)
     constructor(member: Member) : this(
@@ -32,7 +32,7 @@ data class MemberResponseDto(
         birthDate = member.birthDate,
         gender = member.gender,
         salary = member.salary,
-        kakaoId = member.kaKaoId
+        kakaoId = member.kaKaoId,
     )
 }
 
@@ -40,11 +40,11 @@ data class CheckDuplicateResponse(val isDuplicated: Boolean)
 data class SalaryDto(
     val salaryRange: String,
     val idx: Int,
-    val salaryId: Long
+    val salaryId: Long,
 ) {
     constructor(salary: Salary) : this(
         salaryRange = salary.salaryRange,
         idx = salary.idx,
-        salaryId = salary.salaryId
+        salaryId = salary.salaryId,
     )
 }

@@ -47,7 +47,7 @@ class ExpenseService(
                 member = currentMember,
                 goal = goal,
                 comment = expenseRequest.comment,
-                date = expenseRequest.date
+                date = expenseRequest.date,
             )
             newDailyExpense
         }
@@ -56,7 +56,7 @@ class ExpenseService(
             amount = expenseRequest.amount,
             content = expenseRequest.content,
             customCategory = customCategory,
-            dailyExpense = dailyExpense
+            dailyExpense = dailyExpense,
         )
         dailyExpense.addExpense(expense)
         customCategory.addExpenseList(expense)

@@ -27,7 +27,7 @@ class GoalService(
             cost = goalRequestDto.cost,
             time = goalRequestDto.yearMonth,
             member = currentMember,
-            savedCost = goalRequestDto.cost
+            savedCost = goalRequestDto.cost,
         )
         goalRepository.save(goal)
     }

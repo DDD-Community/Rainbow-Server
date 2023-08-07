@@ -10,5 +10,5 @@ data class RefreshToken(
     @Id
     @Indexed
     val refreshToken: String,
-    val memberId: Long
+    val memberId: Long,
 ) : Serializable

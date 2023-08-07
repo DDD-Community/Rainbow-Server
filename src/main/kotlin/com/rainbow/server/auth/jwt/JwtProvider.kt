@@ -10,13 +10,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.security.Key
-import java.util.*
+import java.util.Date
 
 @Component
 class JwtProvider(
     @Value("\${jwt.secret-key}") private val secretKey: String,
     @Value("\${jwt.access-duration-mils}") private val accessDurationMils: Long,
-    private val principalDetailsService: PrincipalDetailsService
+    private val principalDetailsService: PrincipalDetailsService,
 ) {
     val key: Key = Keys.hmacShaKeyFor(secretKey.toByteArray())
     val log = logger()
@@ -56,7 +56,7 @@ class JwtProvider(
         return UsernamePasswordAuthenticationToken(
             userDetails.username,
             userDetails.password,
-            userDetails.authorities
+            userDetails.authorities,
         )
     }
 }

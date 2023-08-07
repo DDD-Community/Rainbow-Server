@@ -20,7 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.NullPointerException
-import java.util.*
+import java.util.UUID
 import kotlin.streams.toList
 
 @Service
@@ -31,8 +31,7 @@ class MemberService(
     private val jwtProvider: JwtProvider,
     private val passwordEncoder: BCryptPasswordEncoder,
     private val refreshTokenRepository: RefreshTokenRepository,
-    private val salaryRepository: SalaryRepository
-
+    private val salaryRepository: SalaryRepository,
 ) {
 
     fun getCurrentLoginMember(): Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()

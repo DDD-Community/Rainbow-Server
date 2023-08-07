@@ -100,7 +100,7 @@ class CustomCategory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId")
     val category: Category?,
-    imagePath: String
+    imagePath: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

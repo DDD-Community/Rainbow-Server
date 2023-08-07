@@ -19,5 +19,5 @@ data class KakaoTokens(
     var refreshTokenExpiresIn: String = "",
 
     @JsonProperty("scope")
-    var scope: String = ""
+    var scope: String = "",
 )

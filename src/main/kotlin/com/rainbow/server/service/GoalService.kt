@@ -16,7 +16,7 @@ import kotlin.streams.toList
 @Service
 class GoalService(
     private val goalRepository: GoalRepository,
-    private val memberService: MemberService
+    private val memberService: MemberService,
 ) {
 
     val log = logger()

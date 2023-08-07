@@ -22,7 +22,7 @@ class ExpenseService(
     private val goalRepository: GoalRepository,
     private val categoryRepository: CategoryRepository,
     private val customCategoryRepository: CustomCategoryRepository,
-    private val memberService: MemberService
+    private val memberService: MemberService,
 ) {
 
     private val maxCategorySize: Int = 30

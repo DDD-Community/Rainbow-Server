@@ -20,7 +20,7 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/expenses")
 class ExpenseController(
-    private val expenseService: ExpenseService
+    private val expenseService: ExpenseService,
 ) {
 
     @PostMapping

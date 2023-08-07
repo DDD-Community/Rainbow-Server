@@ -27,7 +27,7 @@ class SwaggerConfig {
             "Authorization",
             arrayOf(
                 AuthorizationScope("global", "accessEverything")
-            )
+            ),
         )
     )
 

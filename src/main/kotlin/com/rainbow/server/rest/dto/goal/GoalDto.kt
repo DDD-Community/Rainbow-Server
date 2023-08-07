@@ -15,7 +15,7 @@ data class GoalResponseDto(
     var paidAmount: Int,
     var goalId: Long,
     var time: LocalDate,
-    var savedCost: Int
+    var savedCost: Int,
 
 ) {
 
@@ -30,5 +30,5 @@ data class GoalResponseDto(
 
 data class TotalSavedCost(
     var sinceSignUp: Int,
-    var savedCost: Int
+    var savedCost: Int,
 )

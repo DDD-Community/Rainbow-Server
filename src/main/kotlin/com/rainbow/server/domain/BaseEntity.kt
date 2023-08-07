@@ -13,7 +13,7 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 @JsonIgnoreProperties(
     value = [
-        "createdAt, updatedAt"
+        "createdAt, updatedAt",
     ],
     allowGetters = true
 )

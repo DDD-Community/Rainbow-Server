@@ -21,11 +21,11 @@ data class KakaoInfoResponse(
         var profile: KakaoProfile = KakaoProfile(),
         var email: String = "",
         var ageRange: String = "",
-        var gender: String = ""
+        var gender: String = "",
     )
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class KakaoProfile(
-        var nickname: String = ""
+        var nickname: String = "",
     )
 }

@@ -18,7 +18,7 @@ class JwtAuthenticationEntryPoint(private val objectMapper: ObjectMapper) : Auth
     override fun commence(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        e: AuthenticationException
+        e: AuthenticationException,
     ) {
         log.warn("{} {} {} (401) - {}", request.getIp(), request.method, request.requestURI, e.message)
         response.contentType = MediaType.APPLICATION_JSON_VALUE
@@ -26,8 +26,8 @@ class JwtAuthenticationEntryPoint(private val objectMapper: ObjectMapper) : Auth
         response.status = HttpStatus.UNAUTHORIZED.value()
         val body = objectMapper.writeValueAsString(
             CommonResponse<Any>(
-                message = "authentication failed, please recheck JWT."
-            )
+                message = "authentication failed, please recheck JWT.",
+            ),
         )
         response.writer.write(body)
     }
@@ -39,7 +39,7 @@ class JwtAccessDeniedHandler(private val objectMapper: ObjectMapper) : AccessDen
     override fun handle(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        e: AccessDeniedException
+        e: AccessDeniedException,
     ) {
         log.warn("(403) Access is not granted = {}", e.message)
         response.contentType = MediaType.APPLICATION_JSON_VALUE
@@ -47,8 +47,8 @@ class JwtAccessDeniedHandler(private val objectMapper: ObjectMapper) : AccessDen
         response.status = HttpStatus.FORBIDDEN.value()
         val body = objectMapper.writeValueAsString(
             CommonResponse<Any>(
-                message = "access denied, user is not granted."
-            )
+                message = "access denied, user is not granted.",
+            ),
         )
         response.writer.write(body)
     }

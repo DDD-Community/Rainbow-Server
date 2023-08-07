@@ -27,12 +27,12 @@ class PrincipalDetails(private val member: Member) : UserDetails {
 
 @Service
 class PrincipalDetailsService(
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
 ) : UserDetailsService {
 
     override fun loadUserByUsername(userId: String) = PrincipalDetails(
         memberRepository.findById(userId.toLong())
-            .orElseThrow()
+            .orElseThrow(),
     )
 }
 

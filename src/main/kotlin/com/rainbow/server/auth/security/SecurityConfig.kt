@@ -22,7 +22,7 @@ import org.springframework.security.web.firewall.StrictHttpFirewall
 class SecurityConfig(
     private val jwtProvider: JwtProvider,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
-    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler
+    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
 ) {
 
     @Bean
@@ -76,7 +76,7 @@ class SecurityConfig(
             "/swagger-ui/**",
             "/",
             "/csrf",
-            "/error"
+            "/error",
         ).permitAll()
         .anyRequest()
         .authenticated()
@@ -89,7 +89,7 @@ class JwtSecurityConfig(private val jwtProvider: JwtProvider) :
     override fun configure(http: HttpSecurity) {
         http.addFilterBefore(
             JwtFilter(jwtProvider),
-            UsernamePasswordAuthenticationFilter::class.java
+            UsernamePasswordAuthenticationFilter::class.java,
         )
     }
 }

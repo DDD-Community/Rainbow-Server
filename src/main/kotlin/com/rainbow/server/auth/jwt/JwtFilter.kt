@@ -19,7 +19,7 @@ class JwtFilter(private val jwtProvider: JwtProvider) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val jwt = request.getToken()
 

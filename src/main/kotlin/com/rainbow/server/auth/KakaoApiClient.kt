@@ -26,7 +26,7 @@ class KakaoApiClient(
     private val secret: String,
 
     @Value("\${oauth.kakao.app-admin-key}")
-    private val appAdminKey: String
+    private val appAdminKey: String,
 ) {
 
     val log = logger()

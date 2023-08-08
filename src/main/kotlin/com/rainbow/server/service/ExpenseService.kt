@@ -10,6 +10,7 @@ import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
+import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
 import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -48,6 +49,7 @@ class ExpenseService(
                 goal = goal,
                 comment = expenseRequest.comment,
                 date = expenseRequest.date,
+                imagePath = expenseRequest.imagePath,
             )
             newDailyExpense
         }
@@ -87,5 +89,17 @@ class ExpenseService(
         expense.modifyExpense(expenseRequest.amount, expenseRequest.content)
         goalRepository.save(goal)
         expenseRepository.save(expense)
+    }
+
+    fun updateDailyCharacter(id: Long, updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+        val dailyExpense = dailyExpenseRepository.findById(id).orElseThrow()
+        updateDailyExpenseRequest.imagePath?.let { dailyExpense.updateCharacter(it) }
+        dailyExpenseRepository.save(dailyExpense)
+    }
+
+    fun updateDailyComment(id: Long, updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+        val dailyExpense = dailyExpenseRepository.findById(id).orElseThrow()
+        updateDailyExpenseRequest.comment?.let { dailyExpense.updateComment(it) }
+        dailyExpenseRepository.save(dailyExpense)
     }
 }

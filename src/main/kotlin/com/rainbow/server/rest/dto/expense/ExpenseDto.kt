@@ -14,7 +14,7 @@ data class ExpenseRequest(
     val categoryStatus: Boolean,
     val comment: String,
     val content: String,
-
+    val imagePath: String,
 ) {
     fun toCustom(currentMember: Member, category: Category): CustomCategory {
         return CustomCategory(
@@ -61,6 +61,11 @@ data class UpdateExpenseRequest(
     val id: Long,
     var amount: Int,
     val content: String,
+)
+
+data class UpdateDailyExpenseRequest(
+    val comment: String?,
+    val imagePath: String?,
 )
 
 data class DailyExpenseResponse(

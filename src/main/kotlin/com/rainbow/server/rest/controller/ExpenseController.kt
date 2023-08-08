@@ -5,6 +5,7 @@ import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
+import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
 import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
 import com.rainbow.server.service.ExpenseService
 import org.springframework.format.annotation.DateTimeFormat
@@ -50,5 +51,15 @@ class ExpenseController(
     @PutMapping("/{expenseId}")
     fun modifyExpense(@PathVariable expenseId: Long, @RequestBody updateExpenseRequest: UpdateExpenseRequest) {
         expenseService.modifyExpense(updateExpenseRequest)
+    }
+
+    @PutMapping("/{dailyId}/character")
+    fun updateDailyCharacter(@PathVariable dailyId: Long, @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+        expenseService.updateDailyCharacter(dailyId, updateDailyExpenseRequest)
+    }
+
+    @PutMapping("/{dailyId}/comment")
+    fun updateDailyComment(@PathVariable dailyId: Long, @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+        expenseService.updateDailyComment(dailyId, updateDailyExpenseRequest)
     }
 }

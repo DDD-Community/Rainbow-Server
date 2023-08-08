@@ -25,9 +25,10 @@ class DailyExpense(
     @JoinColumn(name = "goalId")
     val goal: Goal,
     @Column()
-    val comment: String? = null,
+    var comment: String? = null,
     @Column(nullable = false)
     val date: LocalDate,
+    var imagePath: String,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,14 @@ class DailyExpense(
 
     fun addExpense(expense: Expense) {
         expenseMutableList.add(expense)
+    }
+
+    fun updateCharacter(imagePath: String) {
+        this.imagePath = imagePath
+    }
+
+    fun updateComment(comment: String?) {
+        this.comment = comment
     }
 }
 

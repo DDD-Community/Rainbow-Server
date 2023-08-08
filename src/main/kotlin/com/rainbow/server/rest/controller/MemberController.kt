@@ -3,24 +3,36 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
-import com.rainbow.server.rest.dto.member.*
+import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
+import com.rainbow.server.rest.dto.member.JwtDto
+import com.rainbow.server.rest.dto.member.MemberRequestDto
+import com.rainbow.server.rest.dto.member.MemberResponseDto
+import com.rainbow.server.rest.dto.member.SalaryDto
 import com.rainbow.server.service.GoalService
 import com.rainbow.server.service.MemberService
 import com.rainbow.server.util.logger
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import org.springframework.http.HttpHeaders
-import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletResponse
 
 @RestController
-@RequestMapping("/member")
-class MemberController(private val memberService: MemberService,
-                       private val goalService: GoalService,
-                       @Value("\${oauth.kakao.client-id}")
-                     private val clientId: String) {
+@RequestMapping("/members")
+class MemberController(
+    private val memberService: MemberService,
+    private val goalService: GoalService,
+    @Value("\${oauth.kakao.client-id}")
+    private val clientId: String,
+) {
 
     val log = logger()
 
@@ -30,38 +42,36 @@ class MemberController(private val memberService: MemberService,
         return success(memberService.login(code))
     }
 
-    @PostMapping("/checkEmail")
-    fun checkEmail(@RequestBody email:DuplicateCheck):Boolean{
-        return memberService.checkEmail(email.data)
-    }
+    @GetMapping("/email/check")
+    fun checkEmail(@RequestParam("email") email: String): CommonResponse<CheckDuplicateResponse> = success(memberService.checkEmail(email))
 
-    @PostMapping("/checkNickName")
-    fun checkNickName(@RequestBody nickName: DuplicateCheck):Boolean{
-        return memberService.checkNickName(nickName.data)
-    }
-
+    @GetMapping("/nickname/check")
+    fun checkNickname(@RequestParam("nickname") nickname: String): CommonResponse<CheckDuplicateResponse> = success(memberService.checkNickName(nickname))
 
     @GetMapping("/me")
-    fun getCurrentLoginMember():CommonResponse<MemberResponseDto>{
+    fun getCurrentLoginMember(): CommonResponse<MemberResponseDto> {
         return success(memberService.getCurrentMemberInfo())
     }
 
-    @GetMapping("/savedCost")
-    fun getSavedCost():CommonResponse<TotalSavedCost>{
+    @GetMapping("/me/saved-cost")
+    fun getSavedCost(): CommonResponse<TotalSavedCost> {
         return success(goalService.getSavedCost())
     }
 
-
-    @GetMapping("/myGoals")
-    fun getGoals(@RequestParam month:String):CommonResponse<List<Any>>{
+    @GetMapping("/me/goals")
+    fun getGoals(@RequestParam month: String): CommonResponse<List<Any>> {
         return success(goalService.getYearlyGoals())
     }
 
     @GetMapping("/salary")
-    fun getSalary():CommonResponse<List<SalaryDto>>{
+    fun getSalary(): CommonResponse<List<SalaryDto>> {
         return success(memberService.getSalaryRange())
     }
 
+    @GetMapping("/salary/{id}")
+    fun getMySalary(@PathVariable id: Long) {
+        memberService.getMySalary(id)
+    }
 
 //    @GetMapping("/suggestedMemberList")
 //    fun getSuggestedMemberList(){
@@ -69,12 +79,12 @@ class MemberController(private val memberService: MemberService,
 //    }
 
     @PostMapping("/signUp")
-    fun signIn(@RequestBody memberInfo:MemberRequestDto,response:HttpServletResponse):CommonResponse<Any>{
+    fun signIn(@RequestBody memberInfo: MemberRequestDto, response: HttpServletResponse): CommonResponse<Any> {
         return success(memberService.singUp(memberInfo))
     }
 
     @PostMapping("/accessToken")
-    fun login(@RequestBody  request: JwtDto): CommonResponse<JwtDto> {
+    fun login(@RequestBody request: JwtDto): CommonResponse<JwtDto> {
         return success(memberService.generateAccessToken(request))
     }
 
@@ -82,58 +92,12 @@ class MemberController(private val memberService: MemberService,
     fun logout(): CommonResponse<Boolean> = success(memberService.logout())
 
     @GetMapping("/kakao/signin")
-    fun kakaoBackendSignPage(
-    ): ResponseEntity<*> {
-        val redirectUrl = "https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=http://localhost:8080/member/login&response_type=code"
+    fun kakaoBackendSignPage(): ResponseEntity<*> {
+        val redirectUrl =
+            "https://kauth.kakao.com/oauth/authorize?client_id=$clientId&redirect_uri=http://localhost:8080/member/login&response_type=code"
         val uri = URI(redirectUrl)
         val headers = HttpHeaders()
         headers.location = uri
         return ResponseEntity<Any>(headers, HttpStatus.SEE_OTHER)
     }
-
-
-    @GetMapping("/get")
-    fun findById(code: String): ResponseEntity<Any>{
-        return ResponseEntity.ok(memberService.getById(code))
-    }
-
-
-
-
-    //    @GetMapping("/kakao")
-//    fun loginKakao(@RequestParam("code") code:String,response:HttpServletResponse): ResponseEntity<Any> {
-//
-//        val info=kakaoLoginService.kaKaoLogin(code)
-//        val body= info.sessionKey
-//        if(body!=null){
-//            val cookie = Cookie("sessionKey", info.sessionKey  )
-//            cookie.path = "/" // 쿠키 경로 설정 (선택 사항)
-//            cookie.maxAge = 60*60*24*90
-//            response.addCookie(cookie)
-//            return ResponseEntity.ok().body(info)
-//        }
-//
-//        return ResponseEntity.ok().body(info)
-//    }
-
-    //    fun logout(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<Any> {
-//        val sessionKey = getSessionKeyFromCookie(request)
-//
-//        // Redis에서 세션 정보 삭제
-//        sessionKey?.let { kakaoLoginService.logout(it) }
-//
-//        // 쿠키 삭제
-//        val cookie = Cookie("sessionKey", "")
-//        cookie.maxAge = 0
-//        cookie.path = "/"
-//        response.addCookie(cookie)
-//
-//        return ResponseEntity.ok().build()
-//    }
-
-
-//    @GetMapping("/kakao/logout")
-//    fun logoutKakao(code: String): ResponseEntity<KakaoUserLogout> {
-//        return ResponseEntity.ok(kakaoLoginService.logout(code))
-//    }
 }

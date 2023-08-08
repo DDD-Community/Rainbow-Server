@@ -2,21 +2,21 @@ package com.rainbow.server.auth.jwt
 
 import com.rainbow.server.auth.security.PrincipalDetailsService
 import com.rainbow.server.domain.member.entity.Member
+import com.rainbow.server.util.logger
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import com.rainbow.server.util.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.security.Key
-import java.util.*
+import java.util.Date
 
 @Component
 class JwtProvider(
     @Value("\${jwt.secret-key}") private val secretKey: String,
     @Value("\${jwt.access-duration-mils}") private val accessDurationMils: Long,
-    private val principalDetailsService: PrincipalDetailsService
+    private val principalDetailsService: PrincipalDetailsService,
 ) {
     val key: Key = Keys.hmacShaKeyFor(secretKey.toByteArray())
     val log = logger()
@@ -52,13 +52,11 @@ class JwtProvider(
             .parseClaimsJws(token)
             .body
 
-
         val userDetails = principalDetailsService.loadUserByUsername(userId = body.subject)
         return UsernamePasswordAuthenticationToken(
             userDetails.username,
             userDetails.password,
-            userDetails.authorities
+            userDetails.authorities,
         )
     }
-
 }

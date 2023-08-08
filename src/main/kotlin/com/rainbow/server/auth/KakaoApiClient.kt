@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -27,20 +26,17 @@ class KakaoApiClient(
     private val secret: String,
 
     @Value("\${oauth.kakao.app-admin-key}")
-    private val appAdminKey: String
+    private val appAdminKey: String,
 ) {
-
 
     val log = logger()
 
     fun getRedirectUri(): String {
         val os = System.getProperty("os.name")
         log.info("OS : {}", os)
-        if(os.contains("Mac")) return "http://localhost:8080/member/login"
+        if (os.contains("Mac")) return "http://localhost:8080/member/login"
         return "http://localhost:3000/member/kakao"
-
     }
-
 
     fun requestAccessToken(code: String): String {
         val url = "$authUrl/oauth/token"
@@ -51,10 +47,9 @@ class KakaoApiClient(
         body.add("grant_type", "authorization_code")
         body.add("client_id", clientId)
         body.add("client_secret", secret)
-        body.add("redirect_uri",getRedirectUri())
+        body.add("redirect_uri", getRedirectUri())
 
         val request = HttpEntity(body, httpHeaders)
-//        restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
 
         val response = restTemplate.postForObject(url, request, KakaoTokens::class.java)
             ?: throw IllegalStateException("KakaoTokens response is null")
@@ -73,7 +68,6 @@ class KakaoApiClient(
 
         val request = HttpEntity(body, httpHeaders)
 
-
         return restTemplate.postForObject(url, request, KakaoInfoResponse::class.java)
             ?: throw IllegalStateException("KakaoInfoResponse is null")
     }
@@ -89,12 +83,9 @@ class KakaoApiClient(
         body.add("target_id_type", "user_id")
         body.add("target_id", kaKaoId.toString())
         val request = HttpEntity(body, httpHeaders)
-        restTemplate.requestFactory = HttpComponentsClientHttpRequestFactory()
-        val response= restTemplate.postForObject(url, request, KakaoUserLogout::class.java)
+        val response = restTemplate.postForObject(url, request, KaKaoUserLogout::class.java)
             ?: throw IllegalStateException("KakaoInfoResponse is null")
 
         return response.id == kaKaoId
     }
-
-
 }

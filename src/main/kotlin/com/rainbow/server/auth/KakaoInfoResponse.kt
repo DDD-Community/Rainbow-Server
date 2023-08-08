@@ -7,11 +7,10 @@ data class KakaoInfoResponse(
     var kakaoAccount: KakaoAccount = KakaoAccount(),
 
     @JsonProperty("kakao_profile")
-var kakaoProfile: KakaoProfile = KakaoProfile(),
+    var kakaoProfile: KakaoProfile = KakaoProfile(),
 
     @JsonProperty("id")
-    var id:Long
-
+    var id: Long,
 
 ) {
     val email: String
@@ -22,11 +21,11 @@ var kakaoProfile: KakaoProfile = KakaoProfile(),
         var profile: KakaoProfile = KakaoProfile(),
         var email: String = "",
         var ageRange: String = "",
-        var gender: String = ""
+        var gender: String = "",
     )
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class KakaoProfile(
-        var nickname: String = ""
+        var nickname: String = "",
     )
 }

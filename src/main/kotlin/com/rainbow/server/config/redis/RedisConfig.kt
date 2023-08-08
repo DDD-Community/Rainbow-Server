@@ -8,8 +8,10 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate
 
 @Configuration
-class RedisConfig(@Value("\${spring.redis.host}") private val redisHost: String,
-                  @Value("\${spring.redis.port}") private val redisPort: Int) {
+class RedisConfig(
+    @Value("\${spring.redis.host}") private val redisHost: String,
+    @Value("\${spring.redis.port}") private val redisPort: Int,
+) {
 
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {

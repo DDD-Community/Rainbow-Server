@@ -13,8 +13,9 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 @JsonIgnoreProperties(
     value = [
-        "createdAt, updatedAt"
-    ], allowGetters = true
+        "createdAt, updatedAt",
+    ],
+    allowGetters = true,
 )
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseEntity {

@@ -5,34 +5,41 @@ import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.GoalRequestDto
 import com.rainbow.server.rest.dto.goal.GoalResponseDto
 import com.rainbow.server.service.GoalService
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @RestController
-@RequestMapping("/goal")
+@RequestMapping("/goals")
 class GoalController(private val goalService: GoalService) {
 
-    @PostMapping("/createGoal")
-    fun createGoal(@RequestBody goalRequestDto: GoalRequestDto){
+    @PostMapping
+    fun createGoal(@RequestBody goalRequestDto: GoalRequestDto) {
         goalService.createGoal(goalRequestDto)
     }
 
-    @PutMapping("/updateGoal")
-    fun updateGoal(@RequestBody goalRequestDto: GoalRequestDto):CommonResponse<GoalResponseDto>{
-        return success(goalService.updateGoal(goalRequestDto))
+    @PutMapping("/{id}")
+    fun updateGoal(@PathVariable id: Long, @RequestBody goalRequestDto: GoalRequestDto): CommonResponse<GoalResponseDto> {
+        return success(goalService.updateGoal(id, goalRequestDto))
     }
 
-    @GetMapping("/currentMonth")
-    fun getCurrentMonth():CommonResponse<GoalResponseDto?>{
-      return success(goalService.getCurrentMonth())
+    @GetMapping("/{date}")
+    fun getCurrentMonth(
+        @PathVariable
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        date: LocalDate,
+    ): CommonResponse<GoalResponseDto?> {
+        return success(goalService.getCurrentMonth(date))
     }
 
     @GetMapping("/yearTest")
-    fun getYearly():CommonResponse<Any>{
+    fun getYearly(): CommonResponse<Any> {
         return success(goalService.getYearlyGoals())
     }
 }

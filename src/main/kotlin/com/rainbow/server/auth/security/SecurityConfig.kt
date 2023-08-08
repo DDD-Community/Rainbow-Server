@@ -1,10 +1,9 @@
 package com.rainbow.server.auth.security
 
-import com.rainbow.server.auth.jwt.JwtFilter
-import com.rainbow.server.auth.jwt.JwtProvider
 import com.rainbow.server.auth.jwt.JwtAccessDeniedHandler
 import com.rainbow.server.auth.jwt.JwtAuthenticationEntryPoint
-
+import com.rainbow.server.auth.jwt.JwtFilter
+import com.rainbow.server.auth.jwt.JwtProvider
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,7 +22,7 @@ import org.springframework.security.web.firewall.StrictHttpFirewall
 class SecurityConfig(
     private val jwtProvider: JwtProvider,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
-    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler
+    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
 ) {
 
     @Bean
@@ -55,7 +54,10 @@ class SecurityConfig(
         .and()
         .authorizeRequests()
         .antMatchers(
-            "/member/**"
+            "/member/**",
+            "**",
+            "/**",
+            "/**/**",
         ).permitAll()
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
         // Swagger 설정
@@ -74,13 +76,12 @@ class SecurityConfig(
             "/swagger-ui/**",
             "/",
             "/csrf",
-            "/error"
+            "/error",
         ).permitAll()
         .anyRequest()
         .authenticated()
         .and()
         .build()
-
 }
 
 class JwtSecurityConfig(private val jwtProvider: JwtProvider) :
@@ -88,7 +89,7 @@ class JwtSecurityConfig(private val jwtProvider: JwtProvider) :
     override fun configure(http: HttpSecurity) {
         http.addFilterBefore(
             JwtFilter(jwtProvider),
-            UsernamePasswordAuthenticationFilter::class.java
+            UsernamePasswordAuthenticationFilter::class.java,
         )
     }
 }

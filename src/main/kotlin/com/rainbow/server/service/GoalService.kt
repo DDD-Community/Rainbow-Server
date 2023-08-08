@@ -16,31 +16,29 @@ import kotlin.streams.toList
 @Service
 class GoalService(
     private val goalRepository: GoalRepository,
-    private val memberService: MemberService
+    private val memberService: MemberService,
 ) {
 
     val log = logger()
-
 
     fun createGoal(goalRequestDto: GoalRequestDto) {
         val currentMember = memberService.getCurrentLoginMember()
         val goal = Goal(
             cost = goalRequestDto.cost,
             time = goalRequestDto.yearMonth,
-            member = currentMember
+            member = currentMember,
+            savedCost = goalRequestDto.cost,
         )
         goalRepository.save(goal)
     }
 
-    fun getCurrentMonth(): GoalResponseDto? {
+    fun getCurrentMonth(date: LocalDate): GoalResponseDto? {
         val currentMember = memberService.getCurrentLoginMember()
-        val currentMonth = LocalDate.now()
-        return GoalResponseDto(goalRepository.findByMemberAndTime(currentMember.memberId, currentMonth))
+        return GoalResponseDto(goalRepository.findByMemberAndTime(currentMember.memberId, date))
     }
 
-
-    fun updateGoal(goalRequestDto: GoalRequestDto): GoalResponseDto {
-        val goal = goalRepository.findById(goalRequestDto.id).orElseThrow()
+    fun updateGoal(id: Long, goalRequestDto: GoalRequestDto): GoalResponseDto {
+        val goal = goalRepository.findById(id).orElseThrow()
         goal.updateCost(goalRequestDto.cost)
         return GoalResponseDto(goalRepository.save(goal))
     }
@@ -95,9 +93,5 @@ class GoalService(
         mapList.add(totalSavedMap)
 
         return mapList
-
-
     }
-
-
 }

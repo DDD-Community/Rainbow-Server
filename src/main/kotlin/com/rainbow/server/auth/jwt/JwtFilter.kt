@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse
 class JwtFilter(private val jwtProvider: JwtProvider) : OncePerRequestFilter() {
 
     private fun HttpServletRequest.getToken(): String? {
-        return  this.getHeader("Authorization")
+        return this.getHeader("Authorization")
 //        rawToken
 //        return if/ (rawToken != null && rawToken.startsWith("Bearer"))
 //            rawToken.replace("Bearer ", "")
@@ -19,7 +19,7 @@ class JwtFilter(private val jwtProvider: JwtProvider) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val jwt = request.getToken()
 

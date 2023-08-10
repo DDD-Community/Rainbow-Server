@@ -8,6 +8,7 @@ import com.rainbow.server.domain.expense.repository.DailyExpenseRepository
 import com.rainbow.server.domain.expense.repository.ExpenseRepository
 import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
+import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
 import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
@@ -15,6 +16,8 @@ import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
+import kotlin.streams.toList
 
 @Service
 class ExpenseService(
@@ -49,7 +52,7 @@ class ExpenseService(
                 goal = goal,
                 comment = expenseRequest.comment,
                 date = expenseRequest.date,
-                imagePath = expenseRequest.imagePath,
+                dailyCharacter = expenseRequest.dailyCharacter,
             )
             newDailyExpense
         }
@@ -101,5 +104,15 @@ class ExpenseService(
         val dailyExpense = dailyExpenseRepository.findById(id).orElseThrow()
         updateDailyExpenseRequest.comment?.let { dailyExpense.updateComment(it) }
         dailyExpenseRepository.save(dailyExpense)
+    }
+
+    fun getAllDaysCharacters(date: LocalDate): List<DailyCharacter>? {
+        val currentMember = memberService.getCurrentLoginMember()
+        val dailyExpenseList = dailyExpenseRepository.findAllByMemberAndDateBetween(
+            currentMember,
+            date,
+            date.with(TemporalAdjusters.lastDayOfMonth()),
+        )
+        return dailyExpenseList?.stream()?.map { e -> DailyCharacter(e) }?.toList()?.sortedBy { it.date }
     }
 }

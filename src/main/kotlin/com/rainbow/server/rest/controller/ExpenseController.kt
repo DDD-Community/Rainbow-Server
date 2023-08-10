@@ -3,6 +3,7 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
+import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
 import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
@@ -54,12 +55,27 @@ class ExpenseController(
     }
 
     @PutMapping("/{dailyId}/character")
-    fun updateDailyCharacter(@PathVariable dailyId: Long, @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+    fun updateDailyCharacter(
+        @PathVariable dailyId: Long,
+        @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest
+    ) {
         expenseService.updateDailyCharacter(dailyId, updateDailyExpenseRequest)
     }
 
     @PutMapping("/{dailyId}/comment")
-    fun updateDailyComment(@PathVariable dailyId: Long, @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+    fun updateDailyComment(
+        @PathVariable dailyId: Long,
+        @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest
+    ) {
         expenseService.updateDailyComment(dailyId, updateDailyExpenseRequest)
+    }
+
+    @GetMapping("/{date}/characters")
+    fun getAllDaysCharacters(
+        @PathVariable
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        date: LocalDate,
+    ): CommonResponse<List<DailyCharacter?>> {
+        return success(expenseService.getAllDaysCharacters(date))
     }
 }

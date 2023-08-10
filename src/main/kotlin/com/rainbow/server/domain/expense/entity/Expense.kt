@@ -28,7 +28,7 @@ class DailyExpense(
     var comment: String? = null,
     @Column(nullable = false)
     val date: LocalDate,
-    var imagePath: String,
+    var dailyCharacter: String,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,8 +42,8 @@ class DailyExpense(
         expenseMutableList.add(expense)
     }
 
-    fun updateCharacter(imagePath: String) {
-        this.imagePath = imagePath
+    fun updateCharacter(dailyCharacter: String) {
+        this.dailyCharacter = dailyCharacter
     }
 
     fun updateComment(comment: String?) {

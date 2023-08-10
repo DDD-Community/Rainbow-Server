@@ -14,7 +14,7 @@ data class ExpenseRequest(
     val categoryStatus: Boolean,
     val comment: String,
     val content: String,
-    val imagePath: String,
+    val dailyCharacter: String,
 ) {
     fun toCustom(currentMember: Member, category: Category): CustomCategory {
         return CustomCategory(
@@ -77,5 +77,15 @@ data class DailyExpenseResponse(
         comment = dailyExpense?.comment,
         date = dailyExpense?.date,
         expenseList = dailyExpense?.expenseList?.map { ExpenseResponse(it) },
+    )
+}
+
+data class DailyCharacter(
+    var character: String?,
+    var date: LocalDate?,
+) {
+    constructor(expense: DailyExpense?) : this (
+        character = expense?.dailyCharacter,
+        date = expense?.date,
     )
 }

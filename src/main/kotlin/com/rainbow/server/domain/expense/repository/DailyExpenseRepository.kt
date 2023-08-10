@@ -9,4 +9,6 @@ import java.time.LocalDate
 @Repository
 interface DailyExpenseRepository : JpaRepository<DailyExpense, Long> {
     fun findByDateAndMember(date: LocalDate, member: Member): DailyExpense?
+
+    fun findAllByMemberAndDateBetween(member: Member, startDate: LocalDate, endDate: LocalDate): List<DailyExpense>?
 }

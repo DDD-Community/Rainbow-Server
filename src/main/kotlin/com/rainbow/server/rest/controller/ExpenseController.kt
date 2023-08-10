@@ -6,6 +6,7 @@ import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
+import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
 import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
 import com.rainbow.server.service.ExpenseService
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
@@ -77,5 +79,10 @@ class ExpenseController(
         date: LocalDate,
     ): CommonResponse<List<DailyCharacter?>> {
         return success(expenseService.getAllDaysCharacters(date))
+    }
+
+    @GetMapping
+    fun getAllExpensesByContent(@RequestParam(name = "content") content: String): CommonResponse<List<ExpenseResponse>?> {
+        return success(expenseService.getAllExpensesByContent(content))
     }
 }

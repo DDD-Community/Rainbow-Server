@@ -11,6 +11,7 @@ import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
+import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
 import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
 import org.springframework.stereotype.Service
@@ -114,5 +115,11 @@ class ExpenseService(
             date.with(TemporalAdjusters.lastDayOfMonth()),
         )
         return dailyExpenseList?.stream()?.map { e -> DailyCharacter(e) }?.toList()?.sortedBy { it.date }
+    }
+
+    fun getAllExpensesByContent(content: String): List<ExpenseResponse>? {
+        val currentMember = memberService.getCurrentLoginMember()
+        val expenseList = expenseRepository.getAllExpensesByContent(content, currentMember)
+        return expenseList?.stream()?.map { e -> ExpenseResponse(e) }?.toList()
     }
 }

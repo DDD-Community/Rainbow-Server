@@ -32,12 +32,14 @@ data class ExpenseResponse(
     val categoryName: String?,
     val categoryStatus: Boolean?,
     val content: String?,
+    val expenseId: Long?,
 ) {
     constructor(expense: Expense?) : this(
         amount = expense?.amount,
         categoryName = expense?.customCategory?.name,
         categoryStatus = expense?.customCategory?.status,
         content = expense?.content,
+        expenseId = expense?.expenseId,
     )
 }
 

@@ -20,8 +20,8 @@ class ExpenseRepositoryImpl(
     override fun getAllExpensesByContent(content: String, member: Member): List<Expense>? {
         return queryFactory.selectFrom(expense).where(
             (expense.dailyExpense.member.memberId.eq(member.memberId)).and(
-                expense.content.contains(content)
-            )
+                expense.content.contains(content),
+            ),
         ).fetch()
     }
 }

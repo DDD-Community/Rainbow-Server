@@ -59,7 +59,7 @@ class ExpenseController(
     @PutMapping("/{dailyId}/character")
     fun updateDailyCharacter(
         @PathVariable dailyId: Long,
-        @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest
+        @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest,
     ) {
         expenseService.updateDailyCharacter(dailyId, updateDailyExpenseRequest)
     }
@@ -67,7 +67,7 @@ class ExpenseController(
     @PutMapping("/{dailyId}/comment")
     fun updateDailyComment(
         @PathVariable dailyId: Long,
-        @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest
+        @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest,
     ) {
         expenseService.updateDailyComment(dailyId, updateDailyExpenseRequest)
     }

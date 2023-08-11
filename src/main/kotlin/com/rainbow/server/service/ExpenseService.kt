@@ -97,7 +97,7 @@ class ExpenseService(
 
     fun updateDailyCharacter(id: Long, updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
         val dailyExpense = dailyExpenseRepository.findById(id).orElseThrow()
-        updateDailyExpenseRequest.imagePath?.let { dailyExpense.updateCharacter(it) }
+        updateDailyExpenseRequest.dailyCharacter?.let { dailyExpense.updateCharacter(it) }
         dailyExpenseRepository.save(dailyExpense)
     }
 

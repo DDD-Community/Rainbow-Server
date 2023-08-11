@@ -22,7 +22,7 @@ data class ExpenseRequest(
             status = this.categoryStatus,
             member = currentMember,
             category = category,
-            imagePath = category.imagePath,
+            customCategoryImage = category.categoryImage,
         )
     }
 }
@@ -46,7 +46,7 @@ data class ExpenseResponse(
 data class CustomCategoryRequest(
     val name: String,
     val status: Boolean,
-    val imagePath: String,
+    val customCategoryImage: String,
 ) {
     fun to(currentMember: Member): CustomCategory {
         return CustomCategory(
@@ -54,7 +54,7 @@ data class CustomCategoryRequest(
             status = this.status,
             member = currentMember,
             category = null,
-            imagePath = this.imagePath,
+            customCategoryImage = this.customCategoryImage,
         )
     }
 }
@@ -67,7 +67,7 @@ data class UpdateExpenseRequest(
 
 data class UpdateDailyExpenseRequest(
     val comment: String?,
-    val imagePath: String?,
+    val dailyCharacter: String?,
 )
 
 data class DailyExpenseResponse(

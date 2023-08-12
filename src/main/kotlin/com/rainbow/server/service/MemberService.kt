@@ -207,7 +207,7 @@ class MemberService(
     )
 
     fun getSalaryRange(): List<SalaryDto> {
-        return salaryRepository.findAll().stream().map { s -> SalaryDto(s) }.toList()
+        return salaryRepository.findAll().stream().map { s -> SalaryDto(s) }.toList().sortedBy { it.idx }
     }
 
     fun getMySalary(id: Long) {

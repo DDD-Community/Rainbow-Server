@@ -25,9 +25,10 @@ class DailyExpense(
     @JoinColumn(name = "goalId")
     val goal: Goal,
     @Column()
-    val comment: String? = null,
+    var comment: String? = null,
     @Column(nullable = false)
     val date: LocalDate,
+    var dailyCharacter: String,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,14 @@ class DailyExpense(
 
     fun addExpense(expense: Expense) {
         expenseMutableList.add(expense)
+    }
+
+    fun updateCharacter(dailyCharacter: String) {
+        this.dailyCharacter = dailyCharacter
+    }
+
+    fun updateComment(comment: String?) {
+        this.comment = comment
     }
 }
 
@@ -74,7 +83,7 @@ class Expense(
 @Entity
 class Category(
     name: String,
-    imagePath: String,
+    categoryImage: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,7 +92,7 @@ class Category(
     @Column(nullable = false)
     val name: String = name
 
-    var imagePath: String = imagePath
+    var categoryImage: String = categoryImage
 
     @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val customCategoryMutableList: MutableList<CustomCategory> = mutableListOf()
@@ -100,7 +109,7 @@ class CustomCategory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId")
     val category: Category?,
-    imagePath: String,
+    customCategoryImage: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -112,7 +121,7 @@ class CustomCategory(
     @Column(nullable = false)
     val status: Boolean = status
 
-    var imagePath: String = imagePath
+    var customCategoryImage: String = customCategoryImage
 
     @OneToMany(mappedBy = "customCategory", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val expenseMutableList: MutableList<Expense> = mutableListOf()

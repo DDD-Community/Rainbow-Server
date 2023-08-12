@@ -14,7 +14,7 @@ data class ExpenseRequest(
     val categoryStatus: Boolean,
     val comment: String,
     val content: String,
-
+    val dailyCharacter: String,
 ) {
     fun toCustom(currentMember: Member, category: Category): CustomCategory {
         return CustomCategory(
@@ -22,7 +22,7 @@ data class ExpenseRequest(
             status = this.categoryStatus,
             member = currentMember,
             category = category,
-            imagePath = category.imagePath,
+            customCategoryImage = category.categoryImage,
         )
     }
 }
@@ -32,19 +32,21 @@ data class ExpenseResponse(
     val categoryName: String?,
     val categoryStatus: Boolean?,
     val content: String?,
+    val expenseId: Long?,
 ) {
     constructor(expense: Expense?) : this(
         amount = expense?.amount,
         categoryName = expense?.customCategory?.name,
         categoryStatus = expense?.customCategory?.status,
         content = expense?.content,
+        expenseId = expense?.expenseId,
     )
 }
 
 data class CustomCategoryRequest(
     val name: String,
     val status: Boolean,
-    val imagePath: String,
+    val customCategoryImage: String,
 ) {
     fun to(currentMember: Member): CustomCategory {
         return CustomCategory(
@@ -52,7 +54,7 @@ data class CustomCategoryRequest(
             status = this.status,
             member = currentMember,
             category = null,
-            imagePath = this.imagePath,
+            customCategoryImage = this.customCategoryImage,
         )
     }
 }
@@ -61,6 +63,11 @@ data class UpdateExpenseRequest(
     val id: Long,
     var amount: Int,
     val content: String,
+)
+
+data class UpdateDailyExpenseRequest(
+    val comment: String?,
+    val dailyCharacter: String?,
 )
 
 data class DailyExpenseResponse(
@@ -72,5 +79,15 @@ data class DailyExpenseResponse(
         comment = dailyExpense?.comment,
         date = dailyExpense?.date,
         expenseList = dailyExpense?.expenseList?.map { ExpenseResponse(it) },
+    )
+}
+
+data class DailyCharacter(
+    var character: String?,
+    var date: LocalDate?,
+) {
+    constructor(expense: DailyExpense?) : this (
+        character = expense?.dailyCharacter,
+        date = expense?.date,
     )
 }

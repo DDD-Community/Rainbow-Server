@@ -22,6 +22,8 @@ interface MemberRepositoryCustom {
 
     fun findMemberListBySalary(salaryStart: Int, salaryEnd: Int): List<Member>
 
+    fun findAllByNickName(nickName: String): List<Member>?
+
     fun findNewbies(): List<Member>
 }
 
@@ -41,6 +43,11 @@ class MemberRepositoryImpl(
 //            .fetch()
 //    }
 
+    override fun findAllByNickName(nickName: String): List<Member>? {
+        return queryFactory.selectFrom(member)
+            .where(member.nickName.contains(nickName))
+            .fetch()
+    }
     override fun findMemberListBySalary(salaryStart: Int, salaryEnd: Int): List<Member> {
         return queryFactory.select(member)
             .from(member)

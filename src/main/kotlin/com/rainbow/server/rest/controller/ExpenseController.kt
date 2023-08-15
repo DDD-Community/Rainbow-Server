@@ -3,6 +3,7 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
+import com.rainbow.server.rest.dto.expense.CustomCategoryResponse
 import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
@@ -37,18 +38,28 @@ class ExpenseController(
         expenseService.createCustomCategory(customCategoryRequest)
     }
 
+    @PutMapping("/custom-category/{id}")
+    fun updateCustomCategory(@PathVariable(name = "id")id: Long, @RequestBody customCategoryRequest: CustomCategoryRequest) {
+        expenseService.updateCustomCategory(id, customCategoryRequest)
+    }
+
     @GetMapping("/{date}")
     fun getDailyExpense(
         @PathVariable
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         date: LocalDate,
     ): CommonResponse<DailyExpenseResponse> {
-        return success(expenseService.getDailyExpense(date))
+        return success(expenseService.createOrReadDailyExpense(date))
     }
 
     @GetMapping("/category/count")
     fun isUnderMaxCustomCategoryCount(): Boolean {
         return expenseService.countCustomCategory()
+    }
+
+    @GetMapping("/category/{id}")
+    fun getCategoryInfo(@PathVariable(name = "id")id: Long): CommonResponse<CustomCategoryResponse> {
+        return success(expenseService.getCustomCategory(id))
     }
 
     @PutMapping("/{expenseId}")
@@ -57,19 +68,11 @@ class ExpenseController(
     }
 
     @PutMapping("/{dailyId}/character")
-    fun updateDailyCharacter(
+    fun updateDailyCharacterAndComment(
         @PathVariable dailyId: Long,
         @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest,
     ) {
-        expenseService.updateDailyCharacter(dailyId, updateDailyExpenseRequest)
-    }
-
-    @PutMapping("/{dailyId}/comment")
-    fun updateDailyComment(
-        @PathVariable dailyId: Long,
-        @RequestBody updateDailyExpenseRequest: UpdateDailyExpenseRequest,
-    ) {
-        expenseService.updateDailyComment(dailyId, updateDailyExpenseRequest)
+        expenseService.updateDailyCharacterAndComment(dailyId, updateDailyExpenseRequest)
     }
 
     @GetMapping("/{date}/characters")
@@ -82,7 +85,11 @@ class ExpenseController(
     }
 
     @GetMapping
-    fun getAllExpensesByContent(@RequestParam(name = "content") content: String): CommonResponse<List<ExpenseResponse>?> {
-        return success(expenseService.getAllExpensesByContent(content))
+    fun getAllExpensesByContent(
+        @RequestParam(name = "content") content: String,
+        @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        date: LocalDate,
+    ): CommonResponse<List<ExpenseResponse>?> {
+        return success(expenseService.getAllExpensesByContent(date, content))
     }
 }

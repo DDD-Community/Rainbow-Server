@@ -6,21 +6,22 @@ import com.rainbow.server.domain.expense.entity.QExpense.expense
 import com.rainbow.server.domain.member.entity.Member
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 
 @Repository
 interface ExpenseRepository : JpaRepository<Expense, Long>, CustomExpenseRepository
 
 interface CustomExpenseRepository {
-    fun getAllExpensesByContent(content: String, member: Member): List<Expense>?
+    fun getAllExpensesByContentAndDateBetween(content: String, startDate: LocalDate, endDate: LocalDate, member: Member): List<Expense>?
 }
 
 class ExpenseRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
 ) : CustomExpenseRepository {
-    override fun getAllExpensesByContent(content: String, member: Member): List<Expense>? {
+    override fun getAllExpensesByContentAndDateBetween(content: String, startDate: LocalDate, endDate: LocalDate, member: Member): List<Expense>? {
         return queryFactory.selectFrom(expense).where(
             (expense.dailyExpense.member.memberId.eq(member.memberId)).and(
-                expense.content.contains(content),
+                expense.content.contains(content).and(expense.dailyExpense.date.between(startDate, endDate)),
             ),
         ).fetch()
     }

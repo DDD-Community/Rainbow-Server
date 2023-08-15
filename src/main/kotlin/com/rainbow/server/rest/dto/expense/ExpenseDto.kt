@@ -1,31 +1,21 @@
 package com.rainbow.server.rest.dto.expense
 
-import com.rainbow.server.domain.expense.entity.Category
 import com.rainbow.server.domain.expense.entity.CustomCategory
 import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.member.entity.Member
 import java.time.LocalDate
+import kotlin.streams.toList
 
 data class ExpenseRequest(
     var amount: Int,
     var date: LocalDate,
-    val categoryName: String,
+    val categoryId: Long,
     val categoryStatus: Boolean,
     val comment: String,
     val content: String,
-    val dailyCharacter: String,
-) {
-    fun toCustom(currentMember: Member, category: Category): CustomCategory {
-        return CustomCategory(
-            name = this.categoryName,
-            status = this.categoryStatus,
-            member = currentMember,
-            category = category,
-            customCategoryImage = category.categoryImage,
-        )
-    }
-}
+    val dailyExpenseId: Long,
+)
 
 data class ExpenseResponse(
     var amount: Int?,
@@ -53,10 +43,19 @@ data class CustomCategoryRequest(
             name = this.name,
             status = this.status,
             member = currentMember,
-            category = null,
             customCategoryImage = this.customCategoryImage,
         )
     }
+}
+
+data class CustomCategoryResponse(
+    val categoryId: Long,
+    val expenseList: List<ExpenseResponse>?,
+) {
+    constructor(customCategory: CustomCategory) : this(
+        categoryId = customCategory.customCategoryId,
+        expenseList = customCategory.expenseList.stream().map { e -> ExpenseResponse(e) }.toList()
+    )
 }
 
 data class UpdateExpenseRequest(
@@ -66,19 +65,28 @@ data class UpdateExpenseRequest(
 )
 
 data class UpdateDailyExpenseRequest(
-    val comment: String?,
-    val dailyCharacter: String?,
+    val comment: String,
+    val dailyCharacter: String,
+)
+
+data class DailyExpenseRequest(
+    val id: Long = 0L,
+    val date: LocalDate,
 )
 
 data class DailyExpenseResponse(
+    val dailyExpenseId: Long,
     val comment: String?,
     val date: LocalDate?,
+    val dailyCharacter: String?,
     val expenseList: List<ExpenseResponse>?,
 ) {
-    constructor(dailyExpense: DailyExpense?) : this(
-        comment = dailyExpense?.comment,
-        date = dailyExpense?.date,
-        expenseList = dailyExpense?.expenseList?.map { ExpenseResponse(it) },
+    constructor(dailyExpense: DailyExpense) : this(
+        dailyExpenseId = dailyExpense.dailyExpenseId,
+        comment = dailyExpense.comment,
+        date = dailyExpense.date,
+        dailyCharacter = dailyExpense.dailyCharacter,
+        expenseList = dailyExpense.expenseList.map { ExpenseResponse(it) },
     )
 }
 

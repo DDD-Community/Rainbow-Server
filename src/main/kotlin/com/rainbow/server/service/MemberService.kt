@@ -6,10 +6,15 @@ import com.rainbow.server.auth.jwt.JwtProvider
 import com.rainbow.server.auth.security.getCurrentLoginUserId
 import com.rainbow.server.config.redis.RefreshToken
 import com.rainbow.server.config.redis.RefreshTokenRepository
+import com.rainbow.server.domain.member.entity.Follow
 import com.rainbow.server.domain.member.entity.Member
+import com.rainbow.server.domain.member.repository.FollowRepository
 import com.rainbow.server.domain.member.repository.MemberRepository
 import com.rainbow.server.domain.member.repository.SalaryRepository
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
+import com.rainbow.server.rest.dto.member.FollowingRequest
+import com.rainbow.server.rest.dto.member.FriendDetailResponse
+import com.rainbow.server.rest.dto.member.FriendSearchResponse
 import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
@@ -32,6 +37,7 @@ class MemberService(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val salaryRepository: SalaryRepository,
+    private val followRepository: FollowRepository,
 ) {
 
     fun getCurrentLoginMember(): Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()
@@ -182,6 +188,10 @@ class MemberService(
         return memberRepository.findByEmail(infoResponse.email)
     }
 
+    fun findByNickName(nickName: String): List<FriendSearchResponse>? {
+        return memberRepository.findAllByNickName(nickName)?.stream()?.map { m -> FriendSearchResponse(m, isFriendOrNot(m.memberId)) }?.toList()
+    }
+
     private fun newMember(member: MemberRequestDto): Member {
         val newMember = Member(
             email = member.email,
@@ -212,5 +222,29 @@ class MemberService(
 
     fun getMySalary(id: Long) {
         salaryRepository.findById(id)
+    }
+
+    @Transactional
+    fun followMember(followingId: FollowingRequest) {
+        val follow = Follow(fromMember = getCurrentLoginUserId(), toMember = followingId.followingId)
+        followRepository.save(follow)
+    }
+
+    fun getAllFollowingNames(): List<String?> {
+        return followRepository.finAllByFromMemberWithMember(getCurrentLoginUserId())
+    }
+
+    fun isFriendOrNot(checkId: Long): Boolean {
+        return followRepository.existsByFromMemberAndToMember(getCurrentLoginUserId(), checkId)
+    }
+
+    fun getAnotherMemberInfo(memberId: Long): FriendDetailResponse {
+        val anotherMember = memberRepository.findById(memberId).orElseThrow()
+        val goal = anotherMember.goalList.maxByOrNull { it.time }
+        val isFriend = isFriendOrNot(anotherMember.memberId)
+//        if(!isFriend)){
+//
+//        }
+        return FriendDetailResponse(anotherMember, isFriend, goal)
     }
 }

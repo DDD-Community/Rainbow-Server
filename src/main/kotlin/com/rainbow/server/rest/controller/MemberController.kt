@@ -4,6 +4,9 @@ import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
+import com.rainbow.server.rest.dto.member.FollowingRequest
+import com.rainbow.server.rest.dto.member.FriendDetailResponse
+import com.rainbow.server.rest.dto.member.FriendSearchResponse
 import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
@@ -90,6 +93,31 @@ class MemberController(
 
     @PostMapping("/logout")
     fun logout(): CommonResponse<Boolean> = success(memberService.logout())
+
+    @GetMapping("/search")
+    fun findByNickName(@RequestParam(name = "nickname")nickname: String): CommonResponse<List<FriendSearchResponse>?> {
+        return success(memberService.findByNickName(nickname))
+    }
+
+    @GetMapping("/{memberId}")
+    fun getFeedById(@PathVariable(name = "memberId")memberId: Long): CommonResponse<FriendDetailResponse> {
+        return success(memberService.getAnotherMemberInfo(memberId))
+    }
+
+    @PostMapping("/following")
+    fun followMember(@RequestBody followingId: FollowingRequest) {
+        memberService.followMember(followingId)
+    }
+
+    @GetMapping("/following/names")
+    fun getAllFollowingNames(): CommonResponse<List<String?>> {
+        return success(memberService.getAllFollowingNames())
+    }
+
+    @GetMapping("/following/check")
+    fun checkFriend(id: Long): Boolean {
+        return memberService.isFriendOrNot(id)
+    }
 
     @GetMapping("/kakao/signin")
     fun kakaoBackendSignPage(): ResponseEntity<*> {

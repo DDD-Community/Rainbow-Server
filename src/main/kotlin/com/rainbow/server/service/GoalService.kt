@@ -39,7 +39,7 @@ class GoalService(
 
     fun updateGoal(id: Long, goalRequestDto: GoalRequestDto): GoalResponseDto {
         val goal = goalRepository.findById(id).orElseThrow()
-        goal.updateCost(goalRequestDto.cost)
+        goal.updateCostAndSavedCost(goalRequestDto.cost)
         return GoalResponseDto(goalRepository.save(goal))
     }
 

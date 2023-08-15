@@ -4,6 +4,8 @@ import com.rainbow.server.domain.BaseEntity
 import com.rainbow.server.domain.goal.entity.Goal
 import com.rainbow.server.domain.image.entity.Image
 import com.rainbow.server.domain.member.entity.Member
+import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
+import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
 import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -24,11 +26,11 @@ class DailyExpense(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goalId")
     val goal: Goal,
-    @Column()
+    @Column(length = 30)
     var comment: String? = null,
     @Column(nullable = false)
     val date: LocalDate,
-    var dailyCharacter: String,
+    var dailyCharacter: String? = null,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,12 +44,9 @@ class DailyExpense(
         expenseMutableList.add(expense)
     }
 
-    fun updateCharacter(dailyCharacter: String) {
-        this.dailyCharacter = dailyCharacter
-    }
-
-    fun updateComment(comment: String?) {
-        this.comment = comment
+    fun updateCharacterAndComment(updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+        this.dailyCharacter = updateDailyExpenseRequest.dailyCharacter
+        this.comment = updateDailyExpenseRequest.comment
     }
 }
 
@@ -57,7 +56,6 @@ class Expense(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customCategoryId")
     val customCategory: CustomCategory,
-    // TODO: length 몇으로 설정할 것인지
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dailyExpenseId")
@@ -81,34 +79,12 @@ class Expense(
 }
 
 @Entity
-class Category(
-    name: String,
-    categoryImage: String,
-) : BaseEntity() {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val categoryId: Long = 0L
-
-    @Column(nullable = false)
-    val name: String = name
-
-    var categoryImage: String = categoryImage
-
-    @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL], orphanRemoval = true)
-    protected val customCategoryMutableList: MutableList<CustomCategory> = mutableListOf()
-    val customCategoryList: List<CustomCategory> get() = customCategoryMutableList.toList()
-}
-
-@Entity
 class CustomCategory(
     name: String,
     status: Boolean,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     val member: Member,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId")
-    val category: Category?,
     customCategoryImage: String,
 ) : BaseEntity() {
     @Id
@@ -116,10 +92,10 @@ class CustomCategory(
     val customCategoryId: Long = 0L
 
     @Column(nullable = false)
-    val name: String = name
+    var name: String = name
 
     @Column(nullable = false)
-    val status: Boolean = status
+    var status: Boolean = status
 
     var customCategoryImage: String = customCategoryImage
 
@@ -127,7 +103,9 @@ class CustomCategory(
     protected val expenseMutableList: MutableList<Expense> = mutableListOf()
     val expenseList: List<Expense> get() = expenseMutableList.toList()
 
-    fun addExpenseList(expense: Expense) {
-        expenseMutableList.add(expense)
+    fun updateCustomCategory(categoryRequest: CustomCategoryRequest) {
+        this.name = categoryRequest.name
+        this.status = categoryRequest.status
+        this.customCategoryImage = categoryRequest.customCategoryImage
     }
 }

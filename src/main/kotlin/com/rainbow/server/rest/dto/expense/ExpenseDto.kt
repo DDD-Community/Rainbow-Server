@@ -45,7 +45,7 @@ data class CustomCategoryRequest(
             name = this.name,
             status = this.status,
             member = currentMember,
-            customCategoryImage = this.customCategoryImage,
+           // customCategoryImage = this.customCategoryImage,
         )
     }
 }

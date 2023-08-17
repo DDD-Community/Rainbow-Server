@@ -76,10 +76,10 @@ class MemberController(
         memberService.getMySalary(id)
     }
 
-//    @GetMapping("/suggestedMemberList")
-//    fun getSuggestedMemberList(){
-//        success(memberService.getSuggestedMemberList())
-//    }
+    @GetMapping("/suggestedMemberList")
+    fun getSuggestedMemberList(): CommonResponse<List<MemberResponseDto>> {
+        return success(memberService.getFriendRecommendations())
+    }
 
     @PostMapping("/signUp")
     fun signIn(@RequestBody memberInfo: MemberRequestDto, response: HttpServletResponse): CommonResponse<Any> {

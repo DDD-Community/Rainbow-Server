@@ -82,7 +82,14 @@ class MemberService(
             return JwtDto(jwtProvider.generateToken(member), refreshToken.refreshToken)
         }
 
-        return MemberResponseDto(nickName = infoResponse.kakaoProfile.nickname, kakaoId = username, email = infoResponse.email, birthDate = null, salary = 0, gender = infoResponse.kakaoAccount.gender)
+        return MemberResponseDto(
+            nickName = infoResponse.kakaoProfile.nickname,
+            kakaoId = username,
+            email = infoResponse.email,
+            birthDate = null,
+            salary = 0,
+            gender = infoResponse.kakaoAccount.gender
+        )
     }
 
     @Transactional
@@ -99,9 +106,39 @@ class MemberService(
     }
 
     fun generateAccessToken(request: JwtDto): JwtDto {
-        val refreshToken = refreshTokenRepository.findByRefreshToken(request.refreshToken) ?: throw NullPointerException("refreshToken 없음")
+        val refreshToken = refreshTokenRepository.findByRefreshToken(request.refreshToken)
+            ?: throw NullPointerException("refreshToken 없음")
         val member = memberRepository.findById(refreshToken.memberId).orElseThrow()
         return JwtDto(jwtProvider.generateToken(member), refreshToken.refreshToken)
+    }
+
+    fun getFriendRecommendations(): List<MemberResponseDto> {
+        val currentMember = getCurrentLoginMember() // 현재 로그인한 멤버를 가져오는 로직
+
+        val maxRecommendedPerCategory = 4
+
+        val targetTotalCount = maxRecommendedPerCategory * 4
+
+        val recommendedMembers = mutableSetOf<Member>()
+
+        val agePredicate = memberRepository.getAgePredicate(currentMember.birthDate)
+        val similarAgeMembers =
+            memberRepository.fetchMembersForCondition(agePredicate, recommendedMembers, maxRecommendedPerCategory, currentMember)
+        recommendedMembers.addAll(similarAgeMembers)
+
+        val salaryPredicate = memberRepository.getSalaryPredicate(currentMember.salary)
+        val similarSalaryMembers =
+            memberRepository.fetchMembersForCondition(salaryPredicate, recommendedMembers, maxRecommendedPerCategory, currentMember)
+        recommendedMembers.addAll(similarSalaryMembers)
+
+        val topExpenseCreators = memberRepository.topExpenseCreators(recommendedMembers, maxRecommendedPerCategory)
+        recommendedMembers.addAll(topExpenseCreators)
+
+        val remainingCount = targetTotalCount - recommendedMembers.size
+        val recentJoinMembers = memberRepository.fetchRecentJoinMembers(recommendedMembers, remainingCount, currentMember)
+        recommendedMembers.addAll(recentJoinMembers)
+
+        return recommendedMembers.stream().map { m -> MemberResponseDto(m) }.toList()
     }
 
 //    fun getSuggestedMemberList() {
@@ -189,7 +226,8 @@ class MemberService(
     }
 
     fun findByNickName(nickName: String): List<FriendSearchResponse>? {
-        return memberRepository.findAllByNickName(nickName)?.stream()?.map { m -> FriendSearchResponse(m, isFriendOrNot(m.memberId)) }?.toList()
+        return memberRepository.findAllByNickName(nickName)?.stream()
+            ?.map { m -> FriendSearchResponse(m, isFriendOrNot(m.memberId)) }?.toList()
     }
 
     private fun newMember(member: MemberRequestDto): Member {
@@ -210,7 +248,8 @@ class MemberService(
         return client.logout(getCurrentLoginMember().kaKaoId)
     }
 
-    fun checkEmail(email: String): CheckDuplicateResponse = CheckDuplicateResponse(memberRepository.existsByEmail(email))
+    fun checkEmail(email: String): CheckDuplicateResponse =
+        CheckDuplicateResponse(memberRepository.existsByEmail(email))
 
     fun checkNickName(nickName: String): CheckDuplicateResponse = CheckDuplicateResponse(
         memberRepository.existsByNickName(nickName),

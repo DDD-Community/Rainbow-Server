@@ -25,7 +25,7 @@ interface CustomExpenseRepository {
     fun getFriendsExpenseList(lastId: Long?, followingMembers: List<Member>): List<FriendsExpenseDto>?
 }
 
-interface ReviewRepository : JpaRepository<Review, Long> {}
+interface ReviewRepository : JpaRepository<Review, Long>
 
 interface ExpenseReviewRepository : JpaRepository<ExpenseReview, Long> {}
 

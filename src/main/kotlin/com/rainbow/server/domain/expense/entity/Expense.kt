@@ -131,3 +131,34 @@ class CustomCategory(
         expenseMutableList.add(expense)
     }
 }
+
+@Entity
+class Review(
+    emojiPath: String,
+    emojiName: String
+) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val reviewId: Long = 0L
+
+    @Column(nullable = false)
+    var emojiPath: String = emojiPath
+
+    @Column(nullable = false)
+    var emojiName: String = emojiName
+}
+
+@Entity
+class ExpenseReview(
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expenseId")
+    val expense: Expense,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewId")
+    val review: Review
+) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val expenseReviewId: Long = 0L
+}

@@ -2,13 +2,7 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
-import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
-import com.rainbow.server.rest.dto.expense.DailyCharacter
-import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
-import com.rainbow.server.rest.dto.expense.ExpenseRequest
-import com.rainbow.server.rest.dto.expense.ExpenseResponse
-import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
-import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
+import com.rainbow.server.rest.dto.expense.*
 import com.rainbow.server.service.ExpenseService
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
@@ -85,4 +79,10 @@ class ExpenseController(
     fun getAllExpensesByContent(@RequestParam(name = "content") content: String): CommonResponse<List<ExpenseResponse>?> {
         return success(expenseService.getAllExpensesByContent(content))
     }
+
+    @PostMapping("/reviews")
+    fun createReview(@RequestBody createReviewRequest: CreateReviewRequest) {
+        expenseService.createReview(createReviewRequest)
+    }
+
 }

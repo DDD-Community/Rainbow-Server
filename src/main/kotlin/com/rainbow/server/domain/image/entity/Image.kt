@@ -16,7 +16,7 @@ class Image(
     @JoinColumn(name = "expenseId")
     val expense: Expense,
     originalFileName: String,
-    saveFileName: String
+    saveFileName: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

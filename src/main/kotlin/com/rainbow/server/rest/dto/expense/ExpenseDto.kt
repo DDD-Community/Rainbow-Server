@@ -111,12 +111,12 @@ data class DailyCharacter(
 
 data class CreateReviewRequest(
     var reviewId: Long,
-    var expenseId: Long
+    var expenseId: Long,
 ) {
     fun to(review: Review, expense: Expense): ExpenseReview {
         return ExpenseReview(
             review = review,
-            expense = expense
+            expense = expense,
         )
     }
 }

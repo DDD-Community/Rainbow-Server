@@ -135,7 +135,7 @@ class CustomCategory(
 @Entity
 class Review(
     emojiPath: String,
-    emojiName: String
+    emojiName: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -156,7 +156,7 @@ class ExpenseReview(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewId")
-    val review: Review
+    val review: Review,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

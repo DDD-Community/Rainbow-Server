@@ -16,7 +16,7 @@ interface CustomExpenseRepository {
     fun getAllExpensesByContent(content: String, member: Member): List<Expense>?
 }
 
-interface ReviewRepository : JpaRepository<Review, Long> {}
+interface ReviewRepository : JpaRepository<Review, Long>
 
 interface ExpenseReviewRepository : JpaRepository<ExpenseReview, Long> {}
 

@@ -1,21 +1,18 @@
- package com.rainbow.server.config.s3
+package com.rainbow.server.config.s3
 
- import com.amazonaws.regions.Regions
- import com.amazonaws.services.s3.AmazonS3
- import com.amazonaws.services.s3.AmazonS3ClientBuilder
- import com.amazonaws.auth.AWSStaticCredentialsProvider
- import com.amazonaws.auth.AWSCredentials
- import com.amazonaws.auth.BasicAWSCredentials
- import org.springframework.beans.factory.annotation.Qualifier
- import org.springframework.beans.factory.annotation.Value
- import org.springframework.context.annotation.Bean
- import org.slf4j.LoggerFactory
- import org.springframework.context.annotation.Configuration
- import org.springframework.context.annotation.Profile
- import org.springframework.context.annotation.PropertySource
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.auth.AWSCredentials
+import com.amazonaws.auth.BasicAWSCredentials
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
- @Configuration
- class AwsConfig {
+@Configuration
+class AwsConfig {
 
     @Value("\${cloud.aws.credentials.access-key}")
     private lateinit var awsAccessKey: String
@@ -39,4 +36,4 @@
             .withRegion(Regions.AP_NORTHEAST_2)
             .build()
     }
- }
+}

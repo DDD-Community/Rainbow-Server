@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ImageRepository : JpaRepository<Image, Long> {
- fun findByOriginalFileName(originalFileName: String): Image
+    fun findByOriginalFileName(originalFileName: String): Image
 }

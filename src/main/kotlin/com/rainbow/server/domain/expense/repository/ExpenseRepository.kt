@@ -18,7 +18,7 @@ interface CustomExpenseRepository {
 
 interface ReviewRepository : JpaRepository<Review, Long>
 
-interface ExpenseReviewRepository : JpaRepository<ExpenseReview, Long> {}
+interface ExpenseReviewRepository : JpaRepository<ExpenseReview, Long>
 
 class ExpenseRepositoryImpl(
     private val queryFactory: JPAQueryFactory,

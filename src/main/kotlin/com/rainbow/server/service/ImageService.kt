@@ -23,13 +23,13 @@ class ImageService(
     private val imageRepository: ImageRepository,
     private val expenseRepository: ExpenseRepository,
     private val s3Client: AmazonS3Client,
-    ) {
+) {
     @Value("\${cloud.aws.s3.bucket}")
     lateinit var bucket: String
 
     @Transactional
     fun saveAll(files: List<MultipartFile>, expenseId: Long): MutableList<Image> {
-        if (files.size>2) {
+        if (files.size > 2) {
             throw CustomException(ErrorCode.FILE_LIMIT_EXCEEDED)
         }
 
@@ -45,7 +45,7 @@ class ImageService(
                 Image(
                     originalFileName = originalFileName,
                     saveFileName = saveFileName,
-                    expense = expense
+                    expense = expense,
                 )
             )
         }
@@ -68,8 +68,10 @@ class ImageService(
 
         val byteArrayIs = ByteArrayInputStream(bytes)
 
-        s3Client.putObject(PutObjectRequest(bucket, saveFileName, byteArrayIs, objMeta)
-            .withCannedAcl(CannedAccessControlList.PublicRead))
+        s3Client.putObject(
+            PutObjectRequest(bucket, saveFileName, byteArrayIs, objMeta)
+            .withCannedAcl(CannedAccessControlList.PublicRead)
+        )
 
         file.inputStream.close()
 

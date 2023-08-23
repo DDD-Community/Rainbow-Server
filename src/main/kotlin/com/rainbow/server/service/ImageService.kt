@@ -46,7 +46,7 @@ class ImageService(
                     originalFileName = originalFileName,
                     saveFileName = saveFileName,
                     expense = expense,
-                )
+                ),
             )
         }
 
@@ -68,10 +68,7 @@ class ImageService(
 
         val byteArrayIs = ByteArrayInputStream(bytes)
 
-        s3Client.putObject(
-            PutObjectRequest(bucket, saveFileName, byteArrayIs, objMeta)
-            .withCannedAcl(CannedAccessControlList.PublicRead)
-        )
+        s3Client.putObject(PutObjectRequest(bucket, saveFileName, byteArrayIs, objMeta).withCannedAcl(CannedAccessControlList.PublicRead))
 
         file.inputStream.close()
 

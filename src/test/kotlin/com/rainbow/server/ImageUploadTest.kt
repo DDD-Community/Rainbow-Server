@@ -39,7 +39,7 @@ class ImageUploadTest {
         mockMvc.perform(
             multipart("/images/upload")
                 .file(file1)
-                .file(file2)
+                .file(file2),
         ).andExpect(status().isOk())
     }
 

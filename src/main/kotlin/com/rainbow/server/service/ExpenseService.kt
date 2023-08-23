@@ -7,6 +7,7 @@ import com.rainbow.server.domain.expense.repository.DailyExpenseRepository
 import com.rainbow.server.domain.expense.repository.ExpenseRepository
 import com.rainbow.server.domain.expense.repository.ExpenseReviewRepository
 import com.rainbow.server.domain.expense.repository.ReviewRepository
+import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
@@ -126,5 +127,10 @@ class ExpenseService(
         val expense = expenseRepository.findById(createReviewRequest.expenseId).orElseThrow()
 
         expenseReviewRepository.save(createReviewRequest.to(review, expense))
+    }
+
+    fun getAllReviewsByExpenseId(expenseId: Long) : List<Review>? {
+        return expenseReviewRepository.getAllReviewsByExpense(expenseId)
+//        return reviewList?.stream().map { e -> ReviewsResponse(expenseId, e.review) }?.toList()
     }
 }

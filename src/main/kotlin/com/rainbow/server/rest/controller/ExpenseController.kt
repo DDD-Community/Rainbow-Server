@@ -11,6 +11,8 @@ import com.rainbow.server.rest.dto.expense.ExpenseRequest
 import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import com.rainbow.server.rest.dto.expense.UpdateDailyExpenseRequest
 import com.rainbow.server.rest.dto.expense.UpdateExpenseRequest
+import com.rainbow.server.domain.expense.entity.ExpenseReview
+import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.service.ExpenseService
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
@@ -97,5 +99,10 @@ class ExpenseController(
     @PostMapping("/reviews")
     fun createReview(@RequestBody createReviewRequest: CreateReviewRequest) {
         expenseService.createReview(createReviewRequest)
+    }
+
+    @GetMapping("/{expenseId}/reviews")
+    fun getAllReviews(@PathVariable expenseId: Long) : CommonResponse<List<Review>?> {
+        return success(expenseService.getAllReviewsByExpenseId(expenseId))
     }
 }

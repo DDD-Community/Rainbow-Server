@@ -4,7 +4,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.expense.entity.ExpenseReview
 import com.rainbow.server.domain.expense.entity.QExpense.expense
-import com.rainbow.server.domain.expense.entity.QExpenseReview
 import com.rainbow.server.domain.expense.entity.QExpenseReview.expenseReview
 import com.rainbow.server.domain.expense.entity.QReview
 import com.rainbow.server.domain.expense.entity.Review
@@ -31,7 +30,7 @@ interface CustomExpenseReviewRepository {
 class ExpenseReviewRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
 ) : CustomExpenseReviewRepository {
-    override fun getAllReviewsByExpense(expenseId: Long) : List<Review>? {
+    override fun getAllReviewsByExpense(expenseId: Long): List<Review>? {
         val qReview = QReview.review
         val qExpenseReview = expenseReview
 
@@ -39,8 +38,8 @@ class ExpenseReviewRepositoryImpl(
             .select(qReview)
             .from(qExpenseReview)
             .join(qExpenseReview.review, qReview)
-            .where(qExpenseReview.expense.expenseId.eq(expenseId)
-        ).fetch()
+            .where(qExpenseReview.expense.expenseId.eq(expenseId))
+            .fetch()
     }
 }
 

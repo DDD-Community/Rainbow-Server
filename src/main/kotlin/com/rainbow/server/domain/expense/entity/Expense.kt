@@ -89,7 +89,7 @@ class CustomCategory(
     val member: Member,
 //    TODO: Image Upload 구현 후 되돌리기
 //    customCategoryImage: String,
-    var customCategoryImage: String? = null
+    var customCategoryImage: String? = null,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

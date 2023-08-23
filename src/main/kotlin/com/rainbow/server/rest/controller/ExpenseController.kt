@@ -102,7 +102,7 @@ class ExpenseController(
     }
 
     @GetMapping("/{expenseId}/reviews")
-    fun getAllReviews(@PathVariable expenseId: Long) : CommonResponse<List<Review>?> {
+    fun getAllReviews(@PathVariable expenseId: Long): CommonResponse<List<Review>?> {
         return success(expenseService.getAllReviewsByExpenseId(expenseId))
     }
 }

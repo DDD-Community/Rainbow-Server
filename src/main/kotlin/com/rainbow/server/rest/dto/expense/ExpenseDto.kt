@@ -102,8 +102,3 @@ data class CreateReviewRequest(
         )
     }
 }
-
-data class ReviewsResponse(
-    var expense: Long?,
-    var reviewList: List<ExpenseReview>?,
-)

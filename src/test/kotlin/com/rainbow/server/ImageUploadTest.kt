@@ -3,11 +3,11 @@ package com.rainbow.server
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.rainbow.server.domain.image.repository.ImageRepository
+
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.mock.web.MockMultipartFile
-import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
@@ -40,8 +40,7 @@ class ImageUploadTest {
             multipart("/images/upload")
                 .file(file1)
                 .file(file2)
-        )
-            .andExpect(status().isOk())
+        ).andExpect(status().isOk())
     }
 
     @AfterEach

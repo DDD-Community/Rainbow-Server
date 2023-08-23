@@ -2,6 +2,7 @@ package com.rainbow.server.service
 
 import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.expense.entity.Expense
+import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.expense.repository.*
 import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.rest.dto.expense.*
@@ -16,7 +17,6 @@ class ExpenseService(
     private val expenseRepository: ExpenseRepository,
     private val dailyExpenseRepository: DailyExpenseRepository,
     private val goalRepository: GoalRepository,
-    private val categoryRepository: CategoryRepository,
     private val customCategoryRepository: CustomCategoryRepository,
     private val memberService: MemberService,
     private val reviewRepository: ReviewRepository,
@@ -35,8 +35,7 @@ class ExpenseService(
         goal.updatePaidAmountAndSavedCost(expenseRequest.amount)
         val customCategory =
             customCategoryRepository.findByNameAndMember(expenseRequest.categoryName, currentMember) ?: run {
-                val category = categoryRepository.findByName(expenseRequest.categoryName)
-                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember, category))
+                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember))
                 newCustomCategory
             }
 
@@ -121,5 +120,10 @@ class ExpenseService(
         val expense = expenseRepository.findById(createReviewRequest.expenseId).orElseThrow()
 
         expenseReviewRepository.save(createReviewRequest.to(review, expense))
+    }
+
+    fun getAllReviewsByExpenseId(expenseId: Long) : List<Review>? {
+        return expenseReviewRepository.getAllReviewsByExpense(expenseId)
+//        return reviewList?.stream().map { e -> ReviewsResponse(expenseId, e.review) }?.toList()
     }
 }

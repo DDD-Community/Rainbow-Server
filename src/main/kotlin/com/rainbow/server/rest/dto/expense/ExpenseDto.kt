@@ -13,13 +13,12 @@ data class ExpenseRequest(
     val content: String,
     val dailyCharacter: String,
 ) {
-    fun toCustom(currentMember: Member, category: Category): CustomCategory {
+    fun toCustom(currentMember: Member): CustomCategory {
         return CustomCategory(
             name = this.categoryName,
             status = this.categoryStatus,
             member = currentMember,
-            category = category,
-            customCategoryImage = category.categoryImage,
+//            customCategoryImage = ,
         )
     }
 }
@@ -50,7 +49,6 @@ data class CustomCategoryRequest(
             name = this.name,
             status = this.status,
             member = currentMember,
-            category = null,
             customCategoryImage = this.customCategoryImage,
         )
     }
@@ -100,3 +98,9 @@ data class CreateReviewRequest(
         )
     }
 }
+
+
+data class ReviewsResponse(
+    var expense: Long?,
+    var reviewList: List<ExpenseReview>?,
+)

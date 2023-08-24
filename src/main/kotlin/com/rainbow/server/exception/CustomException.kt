@@ -1,7 +1,8 @@
 
 package com.rainbow.server.exception
 
-import com.rainbow.server.rest.dto.image.ErrorResponse
+import com.rainbow.server.common.CommonResponse
+import com.rainbow.server.common.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler

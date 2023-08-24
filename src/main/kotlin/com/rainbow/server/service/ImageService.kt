@@ -4,9 +4,8 @@ import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.CannedAccessControlList
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
-import com.amazonaws.util.IOUtils
-import com.rainbow.server.domain.expense.repository.ExpenseRepository
 import com.rainbow.server.domain.expense.entity.Expense
+import com.rainbow.server.domain.expense.repository.ExpenseRepository
 import com.rainbow.server.domain.image.entity.Image
 import com.rainbow.server.domain.image.repository.ImageRepository
 import com.rainbow.server.exception.CustomException
@@ -17,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.util.*
+import java.util.UUID
 import kotlin.collections.mutableListOf
 
 @Service
@@ -31,7 +30,7 @@ class ImageService(
 
     @Transactional
     fun saveAll(files: List<MultipartFile>, expenseId: Long): MutableList<Image> {
-        val expense = expenseRepository.findById(expenseId).orElseThrow{ CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
+        val expense = expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
         val images = getImageObjects(files, expense)
         return imageRepository.saveAll(images)
     }
@@ -44,14 +43,14 @@ class ImageService(
         } else if (files.size == 0) {
             return images
         }
-        
+
         for (file in files) {
             val originalFileName = file?.getOriginalFilename()
             val saveFileName = generateSaveFileName(originalFileName)
 
             try {
                 upload(file!!, saveFileName)
-            } catch(e: IOException) {
+            } catch (e: IOException) {
                 throw CustomException(ErrorCode.INVALID_INPUT_FILE)
             }
 
@@ -77,7 +76,7 @@ class ImageService(
     @Throws(IOException::class)
     private fun upload(file: MultipartFile, saveFileName: String): String {
         val objMeta = ObjectMetadata()
-        val bytes = file.inputStream.use{ it.readBytes() }
+        val bytes = file.inputStream.use { it.readBytes() }
         objMeta.contentLength = bytes.size.toLong()
 
         val byteArrayIs = ByteArrayInputStream(bytes)

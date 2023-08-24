@@ -2,7 +2,6 @@ package com.rainbow.server.domain.image.entity
 
 import com.rainbow.server.domain.BaseEntity
 import com.rainbow.server.domain.expense.entity.Expense
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue

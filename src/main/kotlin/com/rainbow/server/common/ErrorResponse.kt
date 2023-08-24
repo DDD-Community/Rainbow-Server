@@ -6,5 +6,5 @@ data class ErrorResponse(
     val status: Int,
     val error: HttpStatus,
     var message: String,
-    var entity: String? = null
+    var entity: String? = null,
 )

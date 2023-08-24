@@ -40,12 +40,12 @@ class ImageService(
 
         if (files.size > 2) {
             throw CustomException(ErrorCode.FILE_LIMIT_EXCEEDED)
-        } else if (files.size == 0) {
+        } else if (files.isEmpty()) {
             return images
         }
 
         for (file in files) {
-            val originalFileName = file?.getOriginalFilename()
+            val originalFileName = file?.originalFilename
             val saveFileName = generateSaveFileName(originalFileName)
 
             try {

@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.amazonaws.util.IOUtils
 import com.rainbow.server.domain.expense.repository.ExpenseRepository
+import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.image.entity.Image
 import com.rainbow.server.domain.image.repository.ImageRepository
 import com.rainbow.server.exception.CustomException
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.util.*
+import kotlin.collections.mutableListOf
 
 @Service
 class ImageService(
@@ -29,17 +31,29 @@ class ImageService(
 
     @Transactional
     fun saveAll(files: List<MultipartFile>, expenseId: Long): MutableList<Image> {
+        val expense = expenseRepository.findById(expenseId).orElseThrow{ CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
+        val images = getImageObjects(files, expense)
+        return imageRepository.saveAll(images)
+    }
+
+    private fun getImageObjects(files: List<MultipartFile?>, expense: Expense): MutableList<Image> {
+        val images = mutableListOf<Image>()
+
         if (files.size > 2) {
             throw CustomException(ErrorCode.FILE_LIMIT_EXCEEDED)
+        } else if (files.size == 0) {
+            return images
         }
-
-        val expense = expenseRepository.findById(expenseId).orElseThrow()
-        val images = mutableListOf<Image>()
+        
         for (file in files) {
-            val originalFileName = file.originalFilename!!
-            val saveFileName = genSaveFileName(originalFileName)
+            val originalFileName = file?.getOriginalFilename()
+            val saveFileName = generateSaveFileName(originalFileName)
 
-            upload(file, saveFileName)
+            try {
+                upload(file!!, saveFileName)
+            } catch(e: IOException) {
+                throw CustomException(ErrorCode.INVALID_INPUT_FILE)
+            }
 
             images.add(
                 Image(
@@ -50,10 +64,10 @@ class ImageService(
             )
         }
 
-        return imageRepository.saveAll(images)
+        return images
     }
 
-    private fun genSaveFileName(originalFilename: String?): String {
+    private fun generateSaveFileName(originalFilename: String?): String {
         val extPosIndex: Int? = originalFilename?.lastIndexOf(".")
         val ext = originalFilename?.substring(extPosIndex?.plus(1) as Int)
 
@@ -63,7 +77,7 @@ class ImageService(
     @Throws(IOException::class)
     private fun upload(file: MultipartFile, saveFileName: String): String {
         val objMeta = ObjectMetadata()
-        val bytes = IOUtils.toByteArray(file.inputStream)
+        val bytes = file.inputStream.use{ it.readBytes() }
         objMeta.contentLength = bytes.size.toLong()
 
         val byteArrayIs = ByteArrayInputStream(bytes)

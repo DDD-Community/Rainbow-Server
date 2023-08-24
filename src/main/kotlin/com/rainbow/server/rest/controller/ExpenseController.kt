@@ -88,9 +88,9 @@ class ExpenseController(
         return success(expenseService.getAllExpensesByContent(content))
     }
 
-    @PostMapping("/reviews")
-    fun createReview(@RequestBody createReviewRequest: CreateReviewRequest) {
-        expenseService.createReview(createReviewRequest)
+    @PostMapping("/{expenseId}/reviews")
+    fun createReview(@PathVariable expenseId: Long, @RequestBody createReviewRequest: CreateReviewRequest) {
+        expenseService.createReview(expenseId, createReviewRequest)
     }
 
     @GetMapping("/{expenseId}/reviews")

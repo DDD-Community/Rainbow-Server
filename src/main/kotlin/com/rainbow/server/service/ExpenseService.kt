@@ -9,6 +9,8 @@ import com.rainbow.server.domain.expense.repository.ExpenseReviewRepository
 import com.rainbow.server.domain.expense.repository.ReviewRepository
 import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.goal.repository.GoalRepository
+import com.rainbow.server.exception.CustomException
+import com.rainbow.server.exception.ErrorCode
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryResponse
@@ -122,15 +124,14 @@ class ExpenseService(
         return expenseList?.stream()?.map { e -> ExpenseResponse(e) }?.toList()
     }
 
-    fun createReview(createReviewRequest: CreateReviewRequest) {
-        val review = reviewRepository.findById(createReviewRequest.reviewId).orElseThrow()
-        val expense = expenseRepository.findById(createReviewRequest.expenseId).orElseThrow()
+    fun createReview(expenseId: Long, createReviewRequest: CreateReviewRequest) {
+        val review = reviewRepository.findById(createReviewRequest.reviewId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "review") }
+        val expense = expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
 
-        expenseReviewRepository.save(createReviewRequest.to(review, expense))
+        expenseReviewRepository.save(createReviewRequest.from(review, expense))
     }
 
-    fun getAllReviewsByExpenseId(expenseId: Long): List<Review>? {
+    fun getAllReviewsByExpenseId(expenseId: Long): List<Review> {
         return expenseReviewRepository.getAllReviewsByExpense(expenseId)
-//        return reviewList?.stream().map { e -> ReviewsResponse(expenseId, e.review) }?.toList()
     }
 }

@@ -10,21 +10,22 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+
 @Entity
 class Image(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expenseId")
     val expense: Expense,
-    originalFileName: String,
-    saveFileName: String,
+    var originalFileName: String?,
+    var saveFileName: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = 0L
 
-    @Column(nullable = false)
-    var originalFileName: String = originalFileName
+    // @Column
+    // var originalFileName: String = originalFileName
 
-    @Column(nullable = false)
-    var saveFileName: String = saveFileName
+    // @Column
+    // var saveFileName: String = saveFileName
 }

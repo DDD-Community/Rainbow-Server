@@ -121,11 +121,7 @@ class Review(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val reviewId: Long = 0L
-
-    @Column(nullable = false)
     var emojiPath: String = emojiPath
-
-    @Column(nullable = false)
     var emojiName: String = emojiName
 }
 

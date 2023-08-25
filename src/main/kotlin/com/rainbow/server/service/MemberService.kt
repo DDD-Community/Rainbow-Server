@@ -6,12 +6,15 @@ import com.rainbow.server.auth.jwt.JwtProvider
 import com.rainbow.server.auth.security.getCurrentLoginUserId
 import com.rainbow.server.config.redis.RefreshToken
 import com.rainbow.server.config.redis.RefreshTokenRepository
+import com.rainbow.server.domain.expense.repository.ExpenseRepository
 import com.rainbow.server.domain.member.entity.Follow
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.repository.FollowRepository
 import com.rainbow.server.domain.member.repository.MemberRepository
 import com.rainbow.server.domain.member.repository.SalaryRepository
+import com.rainbow.server.rest.dto.expense.FriendsExpenseDto
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
+import com.rainbow.server.rest.dto.member.ConditionFilteredMembers
 import com.rainbow.server.rest.dto.member.FollowingRequest
 import com.rainbow.server.rest.dto.member.FriendDetailResponse
 import com.rainbow.server.rest.dto.member.FriendSearchResponse
@@ -33,6 +36,7 @@ import kotlin.streams.toList
 class MemberService(
     private val client: KakaoApiClient,
     private val memberRepository: MemberRepository,
+    private val expenseRepository: ExpenseRepository,
     private val jwtProvider: JwtProvider,
     private val passwordEncoder: BCryptPasswordEncoder,
     private val refreshTokenRepository: RefreshTokenRepository,
@@ -87,7 +91,7 @@ class MemberService(
             kakaoId = username,
             email = infoResponse.email,
             birthDate = null,
-            salary = 0,
+            salary = "0",
             gender = infoResponse.kakaoAccount.gender
         )
     }
@@ -112,7 +116,7 @@ class MemberService(
         return JwtDto(jwtProvider.generateToken(member), refreshToken.refreshToken)
     }
 
-    fun getFriendRecommendations(): List<MemberResponseDto> {
+    fun getFriendRecommendations(): List<ConditionFilteredMembers> {
         val currentMember = getCurrentLoginMember() // 현재 로그인한 멤버를 가져오는 로직
 
         val maxRecommendedPerCategory = 4
@@ -121,24 +125,30 @@ class MemberService(
 
         val recommendedMembers = mutableSetOf<Member>()
 
+        val filteredRecommendedMembers = mutableListOf<ConditionFilteredMembers>()
+
         val agePredicate = memberRepository.getAgePredicate(currentMember.birthDate)
         val similarAgeMembers =
             memberRepository.fetchMembersForCondition(agePredicate, recommendedMembers, maxRecommendedPerCategory, currentMember)
         recommendedMembers.addAll(similarAgeMembers)
+        filteredRecommendedMembers.add(ConditionFilteredMembers("age", similarAgeMembers.map { MemberResponseDto(it) }))
 
         val salaryPredicate = memberRepository.getSalaryPredicate(currentMember.salary)
         val similarSalaryMembers =
             memberRepository.fetchMembersForCondition(salaryPredicate, recommendedMembers, maxRecommendedPerCategory, currentMember)
         recommendedMembers.addAll(similarSalaryMembers)
+        filteredRecommendedMembers.add(ConditionFilteredMembers("salary", similarSalaryMembers.map { MemberResponseDto(it) }))
 
         val topExpenseCreators = memberRepository.topExpenseCreators(recommendedMembers, maxRecommendedPerCategory)
         recommendedMembers.addAll(topExpenseCreators)
+        filteredRecommendedMembers.add(ConditionFilteredMembers("expense", topExpenseCreators.map { MemberResponseDto(it) }))
 
         val remainingCount = targetTotalCount - recommendedMembers.size
         val recentJoinMembers = memberRepository.fetchRecentJoinMembers(recommendedMembers, remainingCount, currentMember)
         recommendedMembers.addAll(recentJoinMembers)
+        filteredRecommendedMembers.add(ConditionFilteredMembers("recent", recentJoinMembers.map { MemberResponseDto(it) }))
 
-        return recommendedMembers.stream().map { m -> MemberResponseDto(m) }.toList()
+        return filteredRecommendedMembers
     }
 
 //    fun getSuggestedMemberList() {
@@ -285,5 +295,11 @@ class MemberService(
 //
 //        }
         return FriendDetailResponse(anotherMember, isFriend, goal)
+    }
+
+    fun getFriendsFeeds(lastId: Long?): List<FriendsExpenseDto>? {
+        val followingList = followRepository.findAllByFromMember(getCurrentLoginUserId())
+        val followingMembers = followingList.mapNotNull { f -> memberRepository.findById(f.toMember).orElse(null) }
+        return expenseRepository.getFriendsExpenseList(lastId, followingMembers)
     }
 }

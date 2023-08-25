@@ -58,6 +58,13 @@ data class CustomCategoryResponse(
     )
 }
 
+data class FriendsExpenseDto(
+    val memberId: Long,
+    val nickName: String,
+    val expenseResponse: ExpenseResponse,
+    val date: LocalDate,
+)
+
 data class UpdateExpenseRequest(
     val id: Long,
     var amount: Int,

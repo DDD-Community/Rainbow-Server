@@ -4,6 +4,7 @@ import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
+import com.rainbow.server.rest.dto.member.ConditionFilteredMembers
 import com.rainbow.server.rest.dto.member.FollowingRequest
 import com.rainbow.server.rest.dto.member.FriendDetailResponse
 import com.rainbow.server.rest.dto.member.FriendSearchResponse
@@ -77,7 +78,7 @@ class MemberController(
     }
 
     @GetMapping("/suggestedMemberList")
-    fun getSuggestedMemberList(): CommonResponse<List<MemberResponseDto>> {
+    fun getSuggestedMemberList(): CommonResponse<List<ConditionFilteredMembers>> {
         return success(memberService.getFriendRecommendations())
     }
 

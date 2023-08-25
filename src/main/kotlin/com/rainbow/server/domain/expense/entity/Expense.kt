@@ -56,13 +56,13 @@ class Expense(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customCategoryId")
     val customCategory: CustomCategory,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dailyExpenseId")
     val dailyExpense: DailyExpense,
-    @Column(nullable = false) var amount: Int,
-    @Column(nullable = false) var content: String,
-
+    @Column(nullable = false)
+    var amount: Int,
+    @Column(nullable = false)
+    var content: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -25,7 +25,7 @@ interface MemberRepository : JpaRepository<Member, Long>, MemberRepositoryCustom
 interface MemberRepositoryCustom {
     fun findSuggestedMemberList(standardMember: Member): List<Member>
 
-    fun findMemberListBySalary(salaryStart: Int, salaryEnd: Int): List<Member>
+    fun findMemberListBySalary(salaryStart: String, salaryEnd: Int): List<Member>
 
     fun findAllByNickName(nickName: String): List<Member>?
 
@@ -33,7 +33,7 @@ interface MemberRepositoryCustom {
 
     fun getAgePredicate(birthDate: LocalDate): BooleanExpression
 
-    fun getSalaryPredicate(salary: Int): BooleanExpression
+    fun getSalaryPredicate(salary: String): BooleanExpression
 
     fun fetchMembersForCondition(predicate: BooleanExpression, excludeMembers: Set<Member>, limit: Int, currentMember: Member): List<Member>
 
@@ -60,7 +60,7 @@ class MemberRepositoryImpl(
             .where(member.nickName.contains(nickName))
             .fetch()
     }
-    override fun findMemberListBySalary(salaryStart: Int, salaryEnd: Int): List<Member> {
+    override fun findMemberListBySalary(salaryStart: String, salaryEnd: Int): List<Member> {
         return queryFactory.select(member)
             .from(member)
             .limit(5)
@@ -87,7 +87,7 @@ class MemberRepositoryImpl(
         return member.birthDate.between(birthDate.minusYears(2), birthDate.plusYears(2))
     }
 
-    override fun getSalaryPredicate(salary: Int): BooleanExpression {
+    override fun getSalaryPredicate(salary: String): BooleanExpression {
         return member.salary.eq(salary)
     }
 
@@ -97,7 +97,6 @@ class MemberRepositoryImpl(
             .join(goal.dailyExpenseMutableList, dailyExpense)
             .join(dailyExpense.expenseMutableList, expense)
             .groupBy(member)
-            .orderBy(dailyExpense.expenseMutableList.size().desc())
             .where(member.notIn(excludeMembers))
             .limit(maxRecommendedPerCategory.toLong())
             .fetch()

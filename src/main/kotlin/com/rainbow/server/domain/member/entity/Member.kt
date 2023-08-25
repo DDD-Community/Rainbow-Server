@@ -27,7 +27,7 @@ class Member(
     val gender: String,
     val birthDate: LocalDate,
     val password: String,
-    var salary: Int,
+    var salary: String,
     @Column(unique = true)
     var nickName: String,
 ) : BaseEntity() {

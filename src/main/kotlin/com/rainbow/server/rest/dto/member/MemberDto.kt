@@ -11,7 +11,7 @@ data class MemberRequestDto(
     val email: String,
     val nickName: String,
     val birthDate: LocalDate,
-    val salary: Int,
+    val salary: String,
     val gender: String,
     val kaKaoId: Long,
 )
@@ -27,7 +27,7 @@ data class MemberResponseDto(
 //    val ageRange: String?,
     val birthDate: LocalDate?,
     val gender: String?,
-    val salary: Int?,
+    val salary: String?,
     val kakaoId: Long,
 ) {
     //    constructor (email: String) : this(email, null, null,null,null)
@@ -40,6 +40,11 @@ data class MemberResponseDto(
         kakaoId = member.kaKaoId,
     )
 }
+
+data class ConditionFilteredMembers(
+    val condition: String, // "age", "salary", "topExpense", ...
+    val members: List<MemberResponseDto>
+)
 
 data class FriendSearchResponse(
     val memberId: Long,

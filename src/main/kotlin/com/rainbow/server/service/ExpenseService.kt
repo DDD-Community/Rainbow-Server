@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 import kotlin.streams.toList
+import kotlin.collections.emptyList
 
 @Service
 class ExpenseService(
@@ -33,6 +34,7 @@ class ExpenseService(
     private val goalRepository: GoalRepository,
     private val customCategoryRepository: CustomCategoryRepository,
     private val memberService: MemberService,
+    private val imageService: ImageService,
     private val reviewRepository: ReviewRepository,
     private val expenseReviewRepository: ExpenseReviewRepository,
 ) {
@@ -71,7 +73,9 @@ class ExpenseService(
             dailyExpense = dailyExpense,
         )
 
-        expense.addImage(image)
+        expenseRequest.files?.let {
+            imageService.addImages(it, expense) // TODO: for문 여기로 옮기고 addImage 함수 다시 작성하기
+        }
 
         dailyExpense.addExpense(expense)
         customCategory.addExpenseList(expense)

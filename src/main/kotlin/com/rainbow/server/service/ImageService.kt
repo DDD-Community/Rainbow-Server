@@ -35,7 +35,7 @@ class ImageService(
         return imageRepository.saveAll(images)
     }
 
-    private fun addImages(files: List<MultipartFile>?, expense: Expense): MutableList<Image> {
+    fun addImages(files: List<MultipartFile>, expense: Expense): MutableList<Image> {
         val images = mutableListOf<Image>()
 
         if (files.size > 2) {
@@ -45,11 +45,11 @@ class ImageService(
         }
 
         for (file in files) {
-            val originalFileName = file?.originalFilename
+            val originalFileName = file.originalFilename
             val saveFileName = generateSaveFileName(originalFileName)
 
             try {
-                upload(file!!, saveFileName)
+                upload(file, saveFileName)
             } catch (e: IOException) {
                 throw CustomException(ErrorCode.INVALID_INPUT_FILE)
             }

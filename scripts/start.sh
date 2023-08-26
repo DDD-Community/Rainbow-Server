@@ -22,4 +22,4 @@ then
     sleep 5
 fi
 
-nohup java -jar -Dspring.profiles.active=local $JAR_FILE > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar -Dspring.profiles.active=local -Dcloud.aws.credentials.access-key=${IAM_ACCESS_KEY} -Dcloud.aws.credentials.secret-key=${IAM_SECRET_KEY} $JAR_FILE > /dev/null 2> /dev/null < /dev/null &

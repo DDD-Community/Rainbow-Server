@@ -41,13 +41,9 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: clean build -x test
-      # TODO: Test
-    - name: Standart output Access Keys
-      run: |
-        echo $IAMAccessKey &&\
-        echo ${{ secrets.IAM_ACCESS_KEY }} &&\
-        echo $IAMSecretKey &&\
-        echo ${{ secrets.IAM_SECRET_KEY }}
+      env:
+        IAMAccessKey: ${{ secrets.IAM_ACCESS_KEY }}
+        IAMSecretKey: ${{ secrets.IAM_SECRET_KEY }}
 
     # (4) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
     - name: Configure AWS credentials

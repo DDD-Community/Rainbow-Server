@@ -81,35 +81,15 @@ class Expense(
 }
 
 @Entity
-class Category(
-    name: String,
-    categoryImage: String,
-) : BaseEntity() {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val categoryId: Long = 0L
-
-    @Column(nullable = false)
-    val name: String = name
-
-    var categoryImage: String = categoryImage
-
-    @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL], orphanRemoval = true)
-    protected val customCategoryMutableList: MutableList<CustomCategory> = mutableListOf()
-    val customCategoryList: List<CustomCategory> get() = customCategoryMutableList.toList()
-}
-
-@Entity
 class CustomCategory(
     name: String,
     status: Boolean,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     val member: Member,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId")
-    val category: Category?,
-    customCategoryImage: String,
+//    TODO: Image Upload 구현 후 되돌리기
+//    customCategoryImage: String,
+    var customCategoryImage: String? = null,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -121,7 +101,8 @@ class CustomCategory(
     @Column(nullable = false)
     val status: Boolean = status
 
-    var customCategoryImage: String = customCategoryImage
+//    TODO: Image Upload 구현 후 되돌리기
+//    var customCategoryImage: String = customCategoryImage
 
     @OneToMany(mappedBy = "customCategory", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val expenseMutableList: MutableList<Expense> = mutableListOf()
@@ -130,4 +111,31 @@ class CustomCategory(
     fun addExpenseList(expense: Expense) {
         expenseMutableList.add(expense)
     }
+}
+
+@Entity
+class Review(
+    emojiPath: String,
+    emojiName: String,
+) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val reviewId: Long = 0L
+    var emojiPath: String = emojiPath
+    var emojiName: String = emojiName
+}
+
+@Entity
+class ExpenseReview(
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expenseId")
+    val expense: Expense,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewId")
+    val review: Review,
+) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val expenseReviewId: Long = 0L
 }

@@ -60,7 +60,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.0")
 
     // s3
-//    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.5.RELEASE")
+    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

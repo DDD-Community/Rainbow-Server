@@ -2,6 +2,8 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
+import com.rainbow.server.domain.expense.entity.Review
+import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
@@ -84,5 +86,15 @@ class ExpenseController(
     @GetMapping
     fun getAllExpensesByContent(@RequestParam(name = "content") content: String): CommonResponse<List<ExpenseResponse>?> {
         return success(expenseService.getAllExpensesByContent(content))
+    }
+
+    @PostMapping("/{expenseId}/reviews")
+    fun createReview(@PathVariable expenseId: Long, @RequestBody createReviewRequest: CreateReviewRequest) {
+        expenseService.createReview(expenseId, createReviewRequest)
+    }
+
+    @GetMapping("/{expenseId}/reviews")
+    fun getAllReviews(@PathVariable expenseId: Long): CommonResponse<List<Review>?> {
+        return success(expenseService.getAllReviewsByExpenseId(expenseId))
     }
 }

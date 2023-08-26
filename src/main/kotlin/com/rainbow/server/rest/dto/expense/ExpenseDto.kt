@@ -1,9 +1,10 @@
 package com.rainbow.server.rest.dto.expense
 
-import com.rainbow.server.domain.expense.entity.Category
 import com.rainbow.server.domain.expense.entity.CustomCategory
 import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.expense.entity.Expense
+import com.rainbow.server.domain.expense.entity.ExpenseReview
+import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.member.entity.Member
 import java.time.LocalDate
 
@@ -16,13 +17,12 @@ data class ExpenseRequest(
     val content: String,
     val dailyCharacter: String,
 ) {
-    fun toCustom(currentMember: Member, category: Category): CustomCategory {
+    fun toCustom(currentMember: Member): CustomCategory {
         return CustomCategory(
             name = this.categoryName,
             status = this.categoryStatus,
             member = currentMember,
-            category = category,
-            customCategoryImage = category.categoryImage,
+//            customCategoryImage = ,
         )
     }
 }
@@ -53,7 +53,6 @@ data class CustomCategoryRequest(
             name = this.name,
             status = this.status,
             member = currentMember,
-            category = null,
             customCategoryImage = this.customCategoryImage,
         )
     }
@@ -90,4 +89,15 @@ data class DailyCharacter(
         character = expense?.dailyCharacter,
         date = expense?.date,
     )
+}
+
+data class CreateReviewRequest(
+    var reviewId: Long,
+) {
+    fun from(review: Review, expense: Expense): ExpenseReview {
+        return ExpenseReview(
+            review = review,
+            expense = expense,
+        )
+    }
 }

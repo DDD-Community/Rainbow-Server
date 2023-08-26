@@ -2,11 +2,16 @@ package com.rainbow.server.service
 
 import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.expense.entity.Expense
-import com.rainbow.server.domain.expense.repository.CategoryRepository
+import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.expense.repository.CustomCategoryRepository
 import com.rainbow.server.domain.expense.repository.DailyExpenseRepository
 import com.rainbow.server.domain.expense.repository.ExpenseRepository
+import com.rainbow.server.domain.expense.repository.ExpenseReviewRepository
+import com.rainbow.server.domain.expense.repository.ReviewRepository
 import com.rainbow.server.domain.goal.repository.GoalRepository
+import com.rainbow.server.exception.CustomException
+import com.rainbow.server.exception.ErrorCode
+import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
@@ -25,9 +30,10 @@ class ExpenseService(
     private val expenseRepository: ExpenseRepository,
     private val dailyExpenseRepository: DailyExpenseRepository,
     private val goalRepository: GoalRepository,
-    private val categoryRepository: CategoryRepository,
     private val customCategoryRepository: CustomCategoryRepository,
     private val memberService: MemberService,
+    private val reviewRepository: ReviewRepository,
+    private val expenseReviewRepository: ExpenseReviewRepository,
 ) {
 
     private val maxCategorySize: Int = 30
@@ -42,8 +48,7 @@ class ExpenseService(
         goal.updatePaidAmountAndSavedCost(expenseRequest.amount)
         val customCategory =
             customCategoryRepository.findByNameAndMember(expenseRequest.categoryName, currentMember) ?: run {
-                val category = categoryRepository.findByName(expenseRequest.categoryName)
-                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember, category))
+                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember))
                 newCustomCategory
             }
 
@@ -121,5 +126,16 @@ class ExpenseService(
         val currentMember = memberService.getCurrentLoginMember()
         val expenseList = expenseRepository.getAllExpensesByContent(content, currentMember)
         return expenseList?.stream()?.map { e -> ExpenseResponse(e) }?.toList()
+    }
+
+    fun createReview(expenseId: Long, createReviewRequest: CreateReviewRequest) {
+        val review = reviewRepository.findById(createReviewRequest.reviewId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "review") }
+        val expense = expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
+
+        expenseReviewRepository.save(createReviewRequest.from(review, expense))
+    }
+
+    fun getAllReviewsByExpenseId(expenseId: Long): List<Review> {
+        return expenseReviewRepository.getAllReviewsByExpense(expenseId)
     }
 }

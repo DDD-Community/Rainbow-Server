@@ -33,8 +33,8 @@ jwt:
 cloud:
   aws:
     credentials:
-      access-key: ${IAMAccessKey}
-      secret-key: ${IAMSecretKey}
+      access-key: ${IAM_ACCESS_KEY}
+      secret-key: ${IAM_SECRET_KEY}
     s3:
       bucket: rainbow-github-actions-s3-bucket
 

@@ -21,10 +21,4 @@ class Image(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = 0L
-
-    // @Column
-    // var originalFileName: String = originalFileName
-
-    // @Column
-    // var saveFileName: String = saveFileName
 }

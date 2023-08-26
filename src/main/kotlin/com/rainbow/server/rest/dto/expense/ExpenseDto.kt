@@ -6,7 +6,9 @@ import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.expense.entity.ExpenseReview
 import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.member.entity.Member
+import com.rainbow.server.domain.image.entity.Image
 import java.time.LocalDate
+import org.springframework.web.multipart.MultipartFile
 
 data class ExpenseRequest(
     var amount: Int,
@@ -16,13 +18,13 @@ data class ExpenseRequest(
     val comment: String,
     val content: String,
     val dailyCharacter: String,
+    val files: List<MultipartFile>?,
 ) {
     fun toCustom(currentMember: Member): CustomCategory {
         return CustomCategory(
             name = this.categoryName,
             status = this.categoryStatus,
             member = currentMember,
-//            customCategoryImage = ,
         )
     }
 }

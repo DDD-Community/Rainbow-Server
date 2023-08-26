@@ -31,11 +31,11 @@ class ImageService(
     @Transactional
     fun saveAll(files: List<MultipartFile>, expenseId: Long): MutableList<Image> {
         val expense = expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
-        val images = getImageObjects(files, expense)
+        val images = addImages(files, expense)
         return imageRepository.saveAll(images)
     }
 
-    private fun getImageObjects(files: List<MultipartFile?>, expense: Expense): MutableList<Image> {
+    private fun addImages(files: List<MultipartFile>?, expense: Expense): MutableList<Image> {
         val images = mutableListOf<Image>()
 
         if (files.size > 2) {

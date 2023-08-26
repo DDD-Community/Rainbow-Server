@@ -78,6 +78,10 @@ class Expense(
         this.amount = amount
         this.content = content
     }
+
+    fun addImage(image: Image) {
+        imageMutableList.add(image)
+    }
 }
 
 @Entity

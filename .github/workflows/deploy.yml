@@ -12,8 +12,8 @@ env:
   S3_BUCKET_NAME: rainbow-github-actions-s3-bucket
   CODE_DEPLOY_APPLICATION_NAME: my-codedeploy-app
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: my-codedeploy-deployment-group
-  IAMAccessKey: AKIARPNRQT2EVC4ZCOKW
-  IAMSecretKey: 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
+  IAM_ACCESS_KEY: ${{ secrets.IAM_ACCESS_KEY }}
+  IAM_SECRET_KEY: ${{ secrets.IAM_SECRET_KEY }}
 
 permissions:
   contents: read
@@ -41,9 +41,6 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: clean build -x test
-      env:
-        IAMAccessKey: ${{ secrets.IAM_ACCESS_KEY }}
-        IAMSecretKey: ${{ secrets.IAM_SECRET_KEY }}
 
     # (4) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
     - name: Configure AWS credentials

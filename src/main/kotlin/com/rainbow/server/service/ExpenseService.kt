@@ -9,6 +9,7 @@ import com.rainbow.server.domain.expense.repository.ExpenseRepository
 import com.rainbow.server.domain.expense.repository.ExpenseReviewRepository
 import com.rainbow.server.domain.expense.repository.ReviewRepository
 import com.rainbow.server.domain.goal.repository.GoalRepository
+import com.rainbow.server.domain.image.entity.Image
 import com.rainbow.server.exception.CustomException
 import com.rainbow.server.exception.ErrorCode
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
@@ -69,6 +70,9 @@ class ExpenseService(
             customCategory = customCategory,
             dailyExpense = dailyExpense,
         )
+
+        expense.addImage(image)
+
         dailyExpense.addExpense(expense)
         customCategory.addExpenseList(expense)
         dailyExpenseRepository.save(dailyExpense)

@@ -1,5 +1,6 @@
 package com.rainbow.server.rest.dto.member
 
+import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.goal.entity.Goal
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.entity.Salary
@@ -64,9 +65,9 @@ data class FriendDetailResponse(
     val memberInfo: MemberResponseDto,
     val isFriend: Boolean,
 ) {
-    constructor(member: Member, isFriend: Boolean, goal: Goal?) : this(
+    constructor(member: Member, dailyExpenseList: List<DailyExpense>?, isFriend: Boolean, goal: Goal?) : this(
         monthlyPaidAmount = goal?.paidAmount,
-        dailyExpenseList = goal?.dailyExpenseList?.stream()?.map { d -> DailyExpenseResponse(d) }?.toList(),
+        dailyExpenseList = dailyExpenseList?.stream()?.map { d -> DailyExpenseResponse(d) }?.toList(),
         memberInfo = MemberResponseDto(member),
         isFriend = isFriend,
     )

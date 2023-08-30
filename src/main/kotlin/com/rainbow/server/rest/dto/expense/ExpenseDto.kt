@@ -13,8 +13,6 @@ data class ExpenseRequest(
     var amount: Int,
     var date: LocalDate,
     val categoryId: Long,
-    val categoryStatus: Boolean,
-    val comment: String,
     val content: String,
     val dailyExpenseId: Long,
 )
@@ -65,8 +63,21 @@ data class FriendsExpenseDto(
     val nickName: String,
     val expenseResponse: ExpenseResponse,
     val date: LocalDate,
-    var isFriend: Boolean = true
+    var isFriend: Boolean,
 ) {
+    constructor(
+        memberId: Long,
+        nickName: String,
+        expenseResponse: ExpenseResponse,
+        date: LocalDate,
+    ) : this(
+        memberId = memberId,
+        nickName = nickName,
+        expenseResponse = expenseResponse,
+        date = date,
+        isFriend = true,
+    )
+
     fun updateIsFriend(isFriend: Boolean) {
         this.isFriend = isFriend
     }
@@ -108,7 +119,7 @@ data class DailyCharacter(
     var character: String?,
     var date: LocalDate?,
 ) {
-    constructor(expense: DailyExpense?) : this (
+    constructor(expense: DailyExpense?) : this(
         character = expense?.dailyCharacter,
         date = expense?.date,
     )

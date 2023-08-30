@@ -5,13 +5,13 @@ import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.rest.dto.goal.GoalRequestDto
 import com.rainbow.server.rest.dto.goal.GoalResponseDto
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
+import com.rainbow.server.rest.dto.goal.YearlyGoalData
 import com.rainbow.server.util.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Calendar
 import java.util.Date
-import kotlin.streams.toList
 
 @Service
 class GoalService(
@@ -52,46 +52,40 @@ class GoalService(
 
         val goalList = member.goalList
         var savedCost = 0
-        goalList.stream().map { g ->
-            {
-                savedCost += g.cost - g.paidAmount
-            }
-        }
+        goalList.forEach { g -> savedCost += g.savedCost }
 
         log.info("날짜: $sinceDate")
         return TotalSavedCost(sinceSignUp = sinceDate, savedCost = savedCost)
     }
 
-    fun getYearlyGoals(): List<Any> {
+//    fun getYearlyGoals(): List<Any> {
+    fun getYearlyGoals(): YearlyGoalData {
         val currentMember = memberService.getCurrentLoginMember()
         val startYear = currentMember.createdAt.year
         val maxDate: LocalDate? = goalRepository.findMaxDate()
 
         val maxYear = maxDate?.year
 
-        var startCountYear = startYear
-
         val yearDifference = maxYear?.minus(startYear)
 
-        val mapList = mutableListOf<Any>()
-        val totalSavedMap = HashMap<Int, Int>()
+        val yearMap = mutableMapOf<Int, List<GoalResponseDto>>()
+        val totalSavedMap = mutableMapOf<Int, Int>()
 
-        val yearMap = HashMap<Int, List<GoalResponseDto>>()
-        for (i: Int in 0..yearDifference!!) {
-            val countStart = YearMonth.of(startCountYear, 1).atDay(1)
-            val countEnd = YearMonth.of(startCountYear, 12).atEndOfMonth()
-            yearMap[startCountYear] =
-                goalRepository.findByMemberIdAndTimeBetween(countStart, countEnd, currentMember.memberId).stream()
-                    .map { g -> GoalResponseDto(g) }.toList().sortedBy { it.time }
-            var sum = 0
-            yearMap[startCountYear]?.stream()?.forEach { g -> sum += g.savedCost }
-            totalSavedMap[startCountYear] = sum
-            startCountYear++
+        for (i in 0..(yearDifference ?: 0)) {
+            val countStart = YearMonth.of(startYear + i, 1).atDay(1)
+            val countEnd = YearMonth.of(startYear + i, 12).atEndOfMonth()
+
+            val goals = goalRepository.findByMemberIdAndTimeBetween(
+                countStart,
+                countEnd,
+                currentMember.memberId
+            ).map { g -> GoalResponseDto(g) }.sortedBy { it.time }
+
+            val sum = goals.sumOf { it.savedCost }
+            yearMap[startYear + i] = goals
+            totalSavedMap[startYear + i] = sum
         }
 
-        mapList.add(yearMap)
-        mapList.add(totalSavedMap)
-
-        return mapList
+        return YearlyGoalData(yearMap, totalSavedMap)
     }
 }

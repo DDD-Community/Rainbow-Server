@@ -22,6 +22,7 @@ import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
 import com.rainbow.server.rest.dto.member.SalaryDto
+import com.rainbow.server.util.logger
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -44,20 +45,10 @@ class MemberService(
     private val followRepository: FollowRepository,
 ) {
 
+    val log = logger()
     fun getCurrentLoginMember(): Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()
 
     fun getCurrentMemberInfo() = MemberResponseDto(getCurrentLoginMember())
-
-//    @Transactional
-//    fun kaKaoLogin(code:String):MemberResponseDto {
-//        val accessToken = client.requestAccessToken(code)
-//        val infoResponse = client.requestOauthInfo(accessToken)
-//        val member=findMember(infoResponse)
-// //        if(member!=null) return MemberResponseDto(sessionService.storeSessionId(member).getSessionKey(),member)
-//
-//        return MemberResponseDto(infoResponse.email)
-//
-//    }
 
     @Transactional
     fun login(authorizedCode: String): Any {
@@ -150,86 +141,6 @@ class MemberService(
         return filteredRecommendedMembers
     }
 
-//    fun getSuggestedMemberList() {
-//        val member = getCurrentLoginMember()
-//        val memberSet: MutableSet<Member> = mutableSetOf()
-//        val allSimilarMembers = memberRepository.findSuggestedMemberList(member)
-//        // memberRepository.findMemberListBySalary(member.salaryStart, member.salaryEnd)
-//        val salaryMemberList = mutableListOf<Member>()
-//        val birthDateList = mutableListOf<Member>()
-//
-//        val newBies = memberRepository.findNewbies()
-// //        if(newBies.isNotEmpty()){
-// //            newBies.stream().map { m->memberSet.add(m) }
-// //        }
-// //        if(allSimilarMembers.isNotEmpty()){
-// //           allSimilarMembers.stream().map { m->{
-// //               if(m.salaryStart==member.salaryStart) salaryMemberList.add(m)
-// //               if(m.birthDate == member.birthDate) birthDateList.add(m)
-// //           } }
-// //        }
-// //        if(salaryMemberList.isNotEmpty()){
-// //            val nowSize=memberSet.size
-// //            while(true){
-// //                val setSize=memberSet.size
-// //
-// //                if((setSize-nowSize)>5) break
-// //            }
-// //        }
-//    }
-
-//    fun getRandomFriends(): HashSet<MemberResponseDto> {
-//        val member = getCurrentLoginMember()
-//        val allSimilarMembers = memberRepository.findSuggestedMemberList(member)
-//        val arr = makeRandomNumbs(allSimilarMembers.size)
-//        val friendsList = mutableListOf<MemberResponseDto>()
-//        val friendsSet = HashSet<MemberResponseDto>()
-//        val newBies = memberRepository.findNewbies()
-// //        arr.forEach { n->friendsList.add(MemberResponseDto(allSimilarMembers[n])) }
-//        arr.forEach { n -> friendsSet.add(MemberResponseDto(allSimilarMembers[n])) }
-//        newBies.forEach { m -> friendsSet.add(MemberResponseDto(m)) }
-//
-//        return friendsSet
-//    }
-
-//    private fun makeRandomNumbs(n: Int): IntArray {
-//        val randNum = IntArray(15)
-//        // 구하고자하는 랜덤번호 3가지를 넣을 정수 배열을 선언한다.
-//
-//        val switch = BooleanArray(n)
-//        // switch는 10개의 공간이 모두 0으로 채워진 배열이라고 가정한다.
-//
-//        for (i in switch.indices) {
-//            switch[i] = false
-//            // 스위치가 false라는 말은 값이 배열에 있는 값이 전부 0 으로 세팅 되었다는 말이다.
-//        }
-//
-//        var w = 0
-//        while (w < 5) {
-//            // 뽑고 싶은 랜덤 번호의 숫자가 3개이므로 w은 <3으로 설정한다.
-//
-//            val r = (Math.random() * n).toInt()
-//            // var r은 1~9 사이에서 랜덤으로 뽑힌 숫자이다.
-//
-//            if (!switch[r]) {
-//                switch[r] = true
-//                // switch[r] 번째는 초기에 false, 즉 0으로 세팅되었으므로 if문의 조건문으로 성립된다.
-//                // 조건이 성립된후, r번째에 있는 switch 배열의 값은 true로 변한다.
-//
-//                randNum[w] = r + 1
-//                // r은 1에서 9까지의 값이므로 1을 더한다. 그리하여 최대값을 10으로 만든다.
-//                // 제일 처음 선언헌 랜덤번호 배열에 r+1의 값을 대입한다.
-//
-//                w++
-//            }
-//        }
-//        for (i in randNum.indices) {
-//            println("randNum[$i] = ${randNum[i]}")
-//        }
-//
-//        return randNum
-//    }
-
     private fun findMember(infoResponse: KakaoInfoResponse): Member? {
         return memberRepository.findByEmail(infoResponse.email)
     }
@@ -268,10 +179,6 @@ class MemberService(
         return salaryRepository.findAll().stream().map { s -> SalaryDto(s) }.toList().sortedBy { it.idx }
     }
 
-    fun getMySalary(id: Long) {
-        salaryRepository.findById(id)
-    }
-
     @Transactional
     fun followMember(followingId: FollowingRequest) {
         val follow = Follow(fromMember = getCurrentLoginUserId(), toMember = followingId.followingId)
@@ -286,16 +193,19 @@ class MemberService(
         return followRepository.existsByFromMemberAndToMember(getCurrentLoginUserId(), checkId)
     }
 
-    fun getAnotherMemberInfo(memberId: Long): FriendDetailResponse {
+    fun getAnotherMemberInfo(memberId: Long, page: Long?): FriendDetailResponse {
+        val pageSize = 10L
+        val pageNum = ((page ?: 1L) - 1L) * pageSize
         val anotherMember = memberRepository.findById(memberId).orElseThrow()
         val goal = anotherMember.goalList.maxByOrNull { it.time }
+        val dailyExpenseList = expenseRepository.getAnotherMemberExpenseList(anotherMember.memberId, pageSize, pageNum)
         val isFriend = isFriendOrNot(anotherMember.memberId)
-        return FriendDetailResponse(anotherMember, isFriend, goal)
+        return FriendDetailResponse(anotherMember, dailyExpenseList, isFriend, goal)
     }
 
     fun getFriendsFeeds(lastId: Long?): List<FriendsExpenseDto>? {
         val followingList = followRepository.findAllByFromMember(getCurrentLoginUserId())
         val followingMembers = followingList.mapNotNull { f -> memberRepository.findById(f.toMember).orElse(null) }
-        return expenseRepository.getFriendsExpenseList(lastId, getCurrentLoginMember(), followingMembers)
+        return expenseRepository.getFriendsFeedList(lastId, getCurrentLoginMember(), followingMembers)
     }
 }

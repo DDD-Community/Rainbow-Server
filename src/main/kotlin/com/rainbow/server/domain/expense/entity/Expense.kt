@@ -59,6 +59,8 @@ class Expense(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dailyExpenseId")
     val dailyExpense: DailyExpense,
+//    @Column(nullable = false)
+//    val date: LocalDate,
     @Column(nullable = false)
     var amount: Int,
     @Column(nullable = false)

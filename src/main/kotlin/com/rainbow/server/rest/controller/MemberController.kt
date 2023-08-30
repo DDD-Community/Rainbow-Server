@@ -3,6 +3,7 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
+import com.rainbow.server.rest.dto.goal.YearlyGoalData
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
 import com.rainbow.server.rest.dto.member.ConditionFilteredMembers
 import com.rainbow.server.rest.dto.member.FollowingRequest
@@ -63,18 +64,13 @@ class MemberController(
     }
 
     @GetMapping("/me/goals")
-    fun getGoals(@RequestParam month: String): CommonResponse<List<Any>> {
+    fun getGoals(): CommonResponse<YearlyGoalData> {
         return success(goalService.getYearlyGoals())
     }
 
     @GetMapping("/salary")
     fun getSalary(): CommonResponse<List<SalaryDto>> {
         return success(memberService.getSalaryRange())
-    }
-
-    @GetMapping("/salary/{id}")
-    fun getMySalary(@PathVariable id: Long) {
-        memberService.getMySalary(id)
     }
 
     @GetMapping("/suggestedMemberList")
@@ -101,8 +97,8 @@ class MemberController(
     }
 
     @GetMapping("/{memberId}")
-    fun getFeedById(@PathVariable(name = "memberId")memberId: Long): CommonResponse<FriendDetailResponse> {
-        return success(memberService.getAnotherMemberInfo(memberId))
+    fun getFeedById(@PathVariable(name = "memberId")memberId: Long, @RequestParam(required = false, name = "page")page: Long?): CommonResponse<FriendDetailResponse> {
+        return success(memberService.getAnotherMemberInfo(memberId, page))
     }
 
     @PostMapping("/following")

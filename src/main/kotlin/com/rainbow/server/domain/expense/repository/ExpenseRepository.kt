@@ -3,6 +3,7 @@ package com.rainbow.server.domain.expense.repository
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
+import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.expense.entity.ExpenseReview
 import com.rainbow.server.domain.expense.entity.QDailyExpense.dailyExpense
@@ -14,6 +15,7 @@ import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.entity.QMember.member
 import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import com.rainbow.server.rest.dto.expense.FriendsExpenseDto
+import com.rainbow.server.util.logger
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
@@ -24,7 +26,9 @@ interface ExpenseRepository : JpaRepository<Expense, Long>, CustomExpenseReposit
 interface CustomExpenseRepository {
     fun getAllExpensesByContentAndDateBetween(content: String, startDate: LocalDate, endDate: LocalDate, member: Member): List<Expense>?
 
-    fun getFriendsExpenseList(lastId: Long?, member: Member, followingMembers: List<Member>): List<FriendsExpenseDto>?
+    fun getFriendsFeedList(lastId: Long?, member: Member, followingMembers: List<Member>): List<FriendsExpenseDto>?
+
+    fun getAnotherMemberExpenseList(memberId: Long, pageSize: Long, pageNum: Long): List<DailyExpense>?
 }
 
 interface ReviewRepository : JpaRepository<Review, Long>
@@ -51,6 +55,7 @@ class ExpenseReviewRepositoryImpl(
 class ExpenseRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
 ) : CustomExpenseRepository {
+
     override fun getAllExpensesByContentAndDateBetween(content: String, startDate: LocalDate, endDate: LocalDate, member: Member): List<Expense>? {
         return queryFactory.selectFrom(expense).where(
             (expense.dailyExpense.member.memberId.eq(member.memberId)).and(
@@ -59,7 +64,7 @@ class ExpenseRepositoryImpl(
         ).fetch()
     }
 
-    override fun getFriendsExpenseList(lastId: Long?, currentMember: Member, followingMembers: List<Member>): List<FriendsExpenseDto>? {
+    override fun getFriendsFeedList(lastId: Long?, currentMember: Member, followingMembers: List<Member>): List<FriendsExpenseDto>? {
         val query = getCommonQuery()
         if (lastId != null) {
             query.where(expense.expenseId.lt(lastId)) // 지정한 lastId보다 작은 ID를 가진 데이터만 가져오도록 조건 추가
@@ -94,11 +99,23 @@ class ExpenseRepositoryImpl(
                         ExpenseResponse::class.java,
                         expense,
                     ),
-                    dailyExpense.date
+                    dailyExpense.date,
+
                 )
             )
             .from(expense)
             .join(dailyExpense).on(expense.dailyExpense.dailyExpenseId.eq(dailyExpense.dailyExpenseId))
             .join(member).on(dailyExpense.member.memberId.eq(member.memberId))
+    }
+
+    override fun getAnotherMemberExpenseList(memberId: Long, pageSize: Long, pageNum: Long): List<DailyExpense>? {
+        return queryFactory
+            .selectFrom(dailyExpense)
+            .join(dailyExpense.expenseMutableList, expense)
+            .where(dailyExpense.member.memberId.eq(memberId))
+            .orderBy(dailyExpense.date.desc(), expense.createdAt.asc())
+            .limit(pageSize)
+            .offset(pageNum)
+            .fetch()
     }
 }

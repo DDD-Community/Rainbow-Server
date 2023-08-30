@@ -119,14 +119,19 @@ class ExpenseService(
     fun getAllExpensesByContent(date: LocalDate, content: String): List<ExpenseResponse>? {
         val currentMember = memberService.getCurrentLoginMember()
         val expenseList = expenseRepository.getAllExpensesByContentAndDateBetween(
-            content, date, date.with(TemporalAdjusters.lastDayOfMonth()), currentMember,
+            content,
+            date,
+            date.with(TemporalAdjusters.lastDayOfMonth()),
+            currentMember,
         )
         return expenseList?.stream()?.map { e -> ExpenseResponse(e) }?.toList()
     }
 
     fun createReview(expenseId: Long, createReviewRequest: CreateReviewRequest) {
-        val review = reviewRepository.findById(createReviewRequest.reviewId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "review") }
-        val expense = expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
+        val review = reviewRepository.findById(createReviewRequest.reviewId)
+            .orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "review") }
+        val expense =
+            expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
 
         expenseReviewRepository.save(createReviewRequest.from(review, expense))
     }

@@ -61,6 +61,7 @@ class Follow(
     val fromMember: Long,
 
 ) : BaseEntity()
+
 @Embeddable
 data class FollowPK(
     private val toMember: Long,

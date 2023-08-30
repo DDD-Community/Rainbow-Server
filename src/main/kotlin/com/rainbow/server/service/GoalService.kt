@@ -58,7 +58,6 @@ class GoalService(
         return TotalSavedCost(sinceSignUp = sinceDate, savedCost = savedCost)
     }
 
-
     fun getYearlyGoals(): YearlyGoalData {
         val currentMember = memberService.getCurrentLoginMember()
         val startYear = currentMember.createdAt.year
@@ -78,7 +77,7 @@ class GoalService(
             val goals = goalRepository.findByMemberIdAndTimeBetween(
                 countStart,
                 countEnd,
-                currentMember.memberId
+                currentMember.memberId,
             ).map { g -> GoalResponseDto(g) }.sortedBy { it.time }
 
             val sum = goals.sumOf { it.savedCost }

@@ -50,7 +50,7 @@ class MemberRepositoryImpl(
         return queryFactory.selectFrom(member)
             .where(
                 (member.salary.eq(standardMember.salary))
-                    .or(member.birthDate.eq(standardMember.birthDate))
+                    .or(member.birthDate.eq(standardMember.birthDate)),
             )
             .fetch()
     }

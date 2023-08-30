@@ -15,7 +15,6 @@ import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.entity.QMember.member
 import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import com.rainbow.server.rest.dto.expense.FriendsExpenseDto
-import com.rainbow.server.util.logger
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
@@ -101,7 +100,7 @@ class ExpenseRepositoryImpl(
                     ),
                     dailyExpense.date,
 
-                )
+                ),
             )
             .from(expense)
             .join(dailyExpense).on(expense.dailyExpense.dailyExpenseId.eq(dailyExpense.dailyExpenseId))

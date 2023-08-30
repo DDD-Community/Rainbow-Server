@@ -81,7 +81,7 @@ class MemberService(
             email = infoResponse.email,
             birthDate = null,
             salary = "0",
-            gender = infoResponse.kakaoAccount.gender
+            gender = infoResponse.kakaoAccount.gender,
         )
     }
 

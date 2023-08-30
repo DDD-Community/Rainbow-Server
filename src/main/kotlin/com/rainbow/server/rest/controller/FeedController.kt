@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/feeds")
-class FeedController(private val memberService: MemberService,) {
+class FeedController(private val memberService: MemberService) {
 
     @GetMapping("/friend-feeds")
     fun getFriendsFeeds(@RequestParam(required = false)lastId: Long?): CommonResponse<List<FriendsExpenseDto>?> {

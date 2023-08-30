@@ -44,7 +44,7 @@ data class MemberResponseDto(
 
 data class ConditionFilteredMembers(
     val condition: String, // "age", "salary", "topExpense", ...
-    val members: List<MemberResponseDto>
+    val members: List<MemberResponseDto>,
 )
 
 data class FriendSearchResponse(

@@ -54,7 +54,7 @@ data class CustomCategoryResponse(
 ) {
     constructor(customCategory: CustomCategory) : this(
         categoryId = customCategory.customCategoryId,
-        expenseList = customCategory.expenseList.stream().map { e -> ExpenseResponse(e) }.toList()
+        expenseList = customCategory.expenseList.stream().map { e -> ExpenseResponse(e) }.toList(),
     )
 }
 

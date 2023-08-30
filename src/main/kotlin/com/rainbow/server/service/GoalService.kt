@@ -58,7 +58,7 @@ class GoalService(
         return TotalSavedCost(sinceSignUp = sinceDate, savedCost = savedCost)
     }
 
-//    fun getYearlyGoals(): List<Any> {
+
     fun getYearlyGoals(): YearlyGoalData {
         val currentMember = memberService.getCurrentLoginMember()
         val startYear = currentMember.createdAt.year

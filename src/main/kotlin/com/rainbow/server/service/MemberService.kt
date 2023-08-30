@@ -45,7 +45,6 @@ class MemberService(
     private val followRepository: FollowRepository,
 ) {
 
-    val log = logger()
     fun getCurrentLoginMember(): Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()
 
     fun getCurrentMemberInfo() = MemberResponseDto(getCurrentLoginMember())

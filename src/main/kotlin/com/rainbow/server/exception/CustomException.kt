@@ -1,7 +1,7 @@
-/*
+
 package com.rainbow.server.exception
 
-import com.rainbow.server.rest.dto.ErrorResponse
+import com.rainbow.server.rest.dto.image.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -16,7 +16,7 @@ open class CustomException(
 
 enum class ErrorCode(val status: HttpStatus, val message: String) {
     // 400 - Bad Request
-//    FILE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 갯수 제한을 초과했습니다.")
+    FILE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 갯수 제한을 초과했습니다.")
 }
 
 @RestControllerAdvice
@@ -42,4 +42,3 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE.value()).body(errorResponse)
     }
 }
-*/

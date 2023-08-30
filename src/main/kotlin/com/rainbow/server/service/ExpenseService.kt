@@ -5,7 +5,10 @@ import com.rainbow.server.domain.expense.entity.Expense
 import com.rainbow.server.domain.expense.repository.CustomCategoryRepository
 import com.rainbow.server.domain.expense.repository.DailyExpenseRepository
 import com.rainbow.server.domain.expense.repository.ExpenseRepository
+import com.rainbow.server.domain.expense.repository.ExpenseReviewRepository
+import com.rainbow.server.domain.expense.repository.ReviewRepository
 import com.rainbow.server.domain.goal.repository.GoalRepository
+import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryResponse
 import com.rainbow.server.rest.dto.expense.DailyCharacter
@@ -27,6 +30,8 @@ class ExpenseService(
     private val goalRepository: GoalRepository,
     private val customCategoryRepository: CustomCategoryRepository,
     private val memberService: MemberService,
+    private val reviewRepository: ReviewRepository,
+    private val expenseReviewRepository: ExpenseReviewRepository
 ) {
 
     private val maxCategorySize: Int = 30
@@ -114,5 +119,12 @@ class ExpenseService(
             content, date, date.with(TemporalAdjusters.lastDayOfMonth()), currentMember,
         )
         return expenseList?.stream()?.map { e -> ExpenseResponse(e) }?.toList()
+    }
+
+    fun createReview(createReviewRequest: CreateReviewRequest) {
+        val review = reviewRepository.findById(createReviewRequest.reviewId).orElseThrow()
+        val expense = expenseRepository.findById(createReviewRequest.expenseId).orElseThrow()
+
+        expenseReviewRepository.save(createReviewRequest.to(review, expense))
     }
 }

@@ -4,8 +4,10 @@ import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.rainbow.server.domain.expense.entity.Expense
+import com.rainbow.server.domain.expense.entity.ExpenseReview
 import com.rainbow.server.domain.expense.entity.QDailyExpense.dailyExpense
 import com.rainbow.server.domain.expense.entity.QExpense.expense
+import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.entity.QMember.member
 import com.rainbow.server.rest.dto.expense.ExpenseResponse
@@ -22,6 +24,10 @@ interface CustomExpenseRepository {
 
     fun getFriendsExpenseList(lastId: Long?, followingMembers: List<Member>): List<FriendsExpenseDto>?
 }
+
+interface ReviewRepository : JpaRepository<Review, Long> {}
+
+interface ExpenseReviewRepository : JpaRepository<ExpenseReview, Long> {}
 
 class ExpenseRepositoryImpl(
     private val queryFactory: JPAQueryFactory,

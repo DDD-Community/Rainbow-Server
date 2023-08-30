@@ -3,6 +3,8 @@ package com.rainbow.server.rest.dto.expense
 import com.rainbow.server.domain.expense.entity.CustomCategory
 import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.expense.entity.Expense
+import com.rainbow.server.domain.expense.entity.ExpenseReview
+import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.domain.member.entity.Member
 import java.time.LocalDate
 import kotlin.streams.toList
@@ -105,4 +107,16 @@ data class DailyCharacter(
         character = expense?.dailyCharacter,
         date = expense?.date,
     )
+}
+
+data class CreateReviewRequest(
+    var reviewId: Long,
+    var expenseId: Long
+) {
+    fun to(review: Review, expense: Expense): ExpenseReview {
+        return ExpenseReview(
+            review = review,
+            expense = expense
+        )
+    }
 }

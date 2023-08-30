@@ -2,6 +2,7 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
+import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryResponse
 import com.rainbow.server.rest.dto.expense.DailyCharacter
@@ -92,4 +93,10 @@ class ExpenseController(
     ): CommonResponse<List<ExpenseResponse>?> {
         return success(expenseService.getAllExpensesByContent(date, content))
     }
+
+    @PostMapping("/reviews")
+    fun createReview(@RequestBody createReviewRequest: CreateReviewRequest) {
+        expenseService.createReview(createReviewRequest)
+    }
+
 }

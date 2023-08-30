@@ -45,7 +45,7 @@ data class CustomCategoryRequest(
             name = this.name,
             status = this.status,
             member = currentMember,
-           // customCategoryImage = this.customCategoryImage,
+            // customCategoryImage = this.customCategoryImage,
         )
     }
 }
@@ -65,7 +65,12 @@ data class FriendsExpenseDto(
     val nickName: String,
     val expenseResponse: ExpenseResponse,
     val date: LocalDate,
-)
+    var isFriend: Boolean = true
+) {
+    fun updateIsFriend(isFriend: Boolean) {
+        this.isFriend = isFriend
+    }
+}
 
 data class UpdateExpenseRequest(
     val id: Long,

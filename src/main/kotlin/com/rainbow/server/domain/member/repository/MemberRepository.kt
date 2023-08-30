@@ -37,7 +37,7 @@ interface MemberRepositoryCustom {
 
     fun fetchMembersForCondition(predicate: BooleanExpression, excludeMembers: Set<Member>, limit: Int, currentMember: Member): List<Member>
 
-    fun topExpenseCreators(excludeMembers: Set<Member>, maxRecommendedPerCategory: Int): List<Member>
+    fun topExpenseCreators(excludeMembers: Set<Member>, currentMember: Member, maxRecommendedPerCategory: Int): List<Member>
 
     fun fetchRecentJoinMembers(existingMembers: Set<Member>, count: Int, currentMember: Member): List<Member>
 }
@@ -91,13 +91,15 @@ class MemberRepositoryImpl(
         return member.salary.eq(salary)
     }
 
-    override fun topExpenseCreators(excludeMembers: Set<Member>, maxRecommendedPerCategory: Int): List<Member> {
+    override fun topExpenseCreators(excludeMembers: Set<Member>, currentMember: Member, maxRecommendedPerCategory: Int): List<Member> {
+        val allExcludeMembers = excludeMembers.toMutableList()
+        allExcludeMembers.add(currentMember)
         return queryFactory.selectFrom(member)
             .join(member.goalMutableList, goal)
             .join(goal.dailyExpenseMutableList, dailyExpense)
             .join(dailyExpense.expenseMutableList, expense)
             .groupBy(member)
-            .where(member.notIn(excludeMembers))
+            .where(member.notIn(allExcludeMembers))
             .limit(maxRecommendedPerCategory.toLong())
             .fetch()
     }

@@ -139,13 +139,12 @@ class MemberService(
         recommendedMembers.addAll(similarSalaryMembers)
         filteredRecommendedMembers.add(ConditionFilteredMembers("salary", similarSalaryMembers.map { MemberResponseDto(it) }))
 
-        val topExpenseCreators = memberRepository.topExpenseCreators(recommendedMembers, maxRecommendedPerCategory)
+        val topExpenseCreators = memberRepository.topExpenseCreators(recommendedMembers, currentMember, maxRecommendedPerCategory)
         recommendedMembers.addAll(topExpenseCreators)
         filteredRecommendedMembers.add(ConditionFilteredMembers("expense", topExpenseCreators.map { MemberResponseDto(it) }))
 
         val remainingCount = targetTotalCount - recommendedMembers.size
         val recentJoinMembers = memberRepository.fetchRecentJoinMembers(recommendedMembers, remainingCount, currentMember)
-        recommendedMembers.addAll(recentJoinMembers)
         filteredRecommendedMembers.add(ConditionFilteredMembers("recent", recentJoinMembers.map { MemberResponseDto(it) }))
 
         return filteredRecommendedMembers
@@ -291,15 +290,12 @@ class MemberService(
         val anotherMember = memberRepository.findById(memberId).orElseThrow()
         val goal = anotherMember.goalList.maxByOrNull { it.time }
         val isFriend = isFriendOrNot(anotherMember.memberId)
-//        if(!isFriend)){
-//
-//        }
         return FriendDetailResponse(anotherMember, isFriend, goal)
     }
 
     fun getFriendsFeeds(lastId: Long?): List<FriendsExpenseDto>? {
         val followingList = followRepository.findAllByFromMember(getCurrentLoginUserId())
         val followingMembers = followingList.mapNotNull { f -> memberRepository.findById(f.toMember).orElse(null) }
-        return expenseRepository.getFriendsExpenseList(lastId, followingMembers)
+        return expenseRepository.getFriendsExpenseList(lastId, getCurrentLoginMember(), followingMembers)
     }
 }

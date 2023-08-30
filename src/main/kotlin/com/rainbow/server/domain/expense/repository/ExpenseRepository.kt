@@ -4,7 +4,6 @@ import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.rainbow.server.domain.expense.entity.Expense
-import com.rainbow.server.domain.expense.entity.QDailyExpense.dailyExpense
 import com.rainbow.server.domain.expense.entity.ExpenseReview
 import com.rainbow.server.domain.expense.entity.QDailyExpense.dailyExpense
 import com.rainbow.server.domain.expense.entity.QExpense.expense
@@ -25,7 +24,7 @@ interface ExpenseRepository : JpaRepository<Expense, Long>, CustomExpenseReposit
 interface CustomExpenseRepository {
     fun getAllExpensesByContentAndDateBetween(content: String, startDate: LocalDate, endDate: LocalDate, member: Member): List<Expense>?
 
-    fun getFriendsExpenseList(lastId: Long?, followingMembers: List<Member>): List<FriendsExpenseDto>?
+    fun getFriendsExpenseList(lastId: Long?, member: Member, followingMembers: List<Member>): List<FriendsExpenseDto>?
 }
 
 interface ReviewRepository : JpaRepository<Review, Long>
@@ -60,7 +59,7 @@ class ExpenseRepositoryImpl(
         ).fetch()
     }
 
-    override fun getFriendsExpenseList(lastId: Long?, followingMembers: List<Member>): List<FriendsExpenseDto>? {
+    override fun getFriendsExpenseList(lastId: Long?, currentMember: Member, followingMembers: List<Member>): List<FriendsExpenseDto>? {
         val query = getCommonQuery()
         if (lastId != null) {
             query.where(expense.expenseId.lt(lastId)) // 지정한 lastId보다 작은 ID를 가진 데이터만 가져오도록 조건 추가
@@ -68,13 +67,17 @@ class ExpenseRepositoryImpl(
 
         val result = mutableListOf<FriendsExpenseDto>()
 
-        val friendsExpensesQuery = query.where(member.`in`(followingMembers)).limit(4)
+        val friendsExpensesQuery = query.where(member.`in`(followingMembers)).orderBy(expense.expenseId.desc())
+            .orderBy(expense.createdAt.desc()).limit(4)
         val friendsExpenses = friendsExpensesQuery.fetch()
         result.addAll(friendsExpenses)
 
-        val nonFollowingQuery = getCommonQuery().where(member.notIn(followingMembers)).limit(1)
+        val notFollowingMembers = followingMembers.toMutableList()
+        notFollowingMembers.add(currentMember)
+        val nonFollowingQuery = getCommonQuery().where(member.notIn(notFollowingMembers.toList())).limit(1)
         val nonFollowingExpense = nonFollowingQuery.fetchOne()
         nonFollowingExpense?.let {
+            it.updateIsFriend(false)
             result.add(it)
         }
         return result
@@ -97,7 +100,5 @@ class ExpenseRepositoryImpl(
             .from(expense)
             .join(dailyExpense).on(expense.dailyExpense.dailyExpenseId.eq(dailyExpense.dailyExpenseId))
             .join(member).on(dailyExpense.member.memberId.eq(member.memberId))
-            .orderBy(expense.expenseId.desc())
-            .orderBy(expense.createdAt.desc())
     }
 }

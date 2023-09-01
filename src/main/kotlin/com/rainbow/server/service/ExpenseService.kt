@@ -13,6 +13,7 @@ import com.rainbow.server.exception.CustomException
 import com.rainbow.server.exception.ErrorCode
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
+import com.rainbow.server.rest.dto.expense.CustomCategoryResponse
 import com.rainbow.server.rest.dto.expense.DailyCharacter
 import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
 import com.rainbow.server.rest.dto.expense.ExpenseRequest
@@ -41,28 +42,10 @@ class ExpenseService(
     @Transactional
     fun createExpense(expenseRequest: ExpenseRequest) {
         val currentMember = memberService.getCurrentLoginMember()
-        val month = expenseRequest.date.monthValue
-        val year = expenseRequest.date.year
-        val goalDate = LocalDate.of(year, month, 1)
-        val goal = goalRepository.findByMemberAndTime(currentMember.memberId, goalDate)
+        val goal = goalRepository.findByMemberAndTime(currentMember.memberId, expenseRequest.date.withDayOfMonth(1))
         goal.updatePaidAmountAndSavedCost(expenseRequest.amount)
-        val customCategory =
-            customCategoryRepository.findByNameAndMember(expenseRequest.categoryName, currentMember) ?: run {
-                val newCustomCategory = customCategoryRepository.save(expenseRequest.toCustom(currentMember))
-                newCustomCategory
-            }
-
-        val dailyExpense = dailyExpenseRepository.findByDateAndMember(expenseRequest.date, currentMember) ?: run {
-            val newDailyExpense = DailyExpense(
-                member = currentMember,
-                goal = goal,
-                comment = expenseRequest.comment,
-                date = expenseRequest.date,
-                dailyCharacter = expenseRequest.dailyCharacter,
-            )
-            newDailyExpense
-        }
-
+        val customCategory = customCategoryRepository.findById(expenseRequest.categoryId).orElseThrow()
+        val dailyExpense = dailyExpenseRepository.findById(expenseRequest.dailyExpenseId).orElseThrow()
         val expense = Expense(
             amount = expenseRequest.amount,
             content = expenseRequest.content,
@@ -70,7 +53,6 @@ class ExpenseService(
             dailyExpense = dailyExpense,
         )
         dailyExpense.addExpense(expense)
-        customCategory.addExpenseList(expense)
         dailyExpenseRepository.save(dailyExpense)
     }
 
@@ -80,15 +62,19 @@ class ExpenseService(
         customCategoryRepository.save(customCategoryRequest.to(currentMember))
     }
 
+    fun updateCustomCategory(id: Long, customCategoryRequest: CustomCategoryRequest) {
+        val customCategory = customCategoryRepository.findById(id).orElseThrow()
+        customCategory.updateCustomCategory(customCategoryRequest)
+        customCategoryRepository.save(customCategory)
+    }
+
     fun countCustomCategory(): Boolean {
         val currentMember = memberService.getCurrentLoginMember()
         return currentMember.customCategoryList.size < maxCategorySize
     }
 
-    fun getDailyExpense(date: LocalDate): DailyExpenseResponse {
-        val currentMember = memberService.getCurrentLoginMember()
-        val dailyExpense = dailyExpenseRepository.findByDateAndMember(date, currentMember)
-        return DailyExpenseResponse(dailyExpense)
+    fun getCustomCategory(categoryId: Long): CustomCategoryResponse {
+        return CustomCategoryResponse(customCategoryRepository.findById(categoryId).orElseThrow())
     }
 
     fun modifyExpense(expenseRequest: UpdateExpenseRequest) {
@@ -100,15 +86,23 @@ class ExpenseService(
         expenseRepository.save(expense)
     }
 
-    fun updateDailyCharacter(id: Long, updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
-        val dailyExpense = dailyExpenseRepository.findById(id).orElseThrow()
-        updateDailyExpenseRequest.dailyCharacter?.let { dailyExpense.updateCharacter(it) }
-        dailyExpenseRepository.save(dailyExpense)
+    @Transactional
+    fun createOrReadDailyExpense(date: LocalDate): DailyExpenseResponse {
+        val currentMember = memberService.getCurrentLoginMember()
+        val goal = goalRepository.findByMemberAndTime(currentMember.memberId, date.withDayOfMonth(1))
+        val dailyExpense = dailyExpenseRepository.findByDateAndMember(date, currentMember) ?: DailyExpense(
+            member = currentMember,
+            goal = goal,
+            date = date,
+        )
+        goal.addDailyExpenseList(dailyExpense)
+        goalRepository.save(goal)
+        return DailyExpenseResponse(dailyExpense)
     }
 
-    fun updateDailyComment(id: Long, updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
+    fun updateDailyCharacterAndComment(id: Long, updateDailyExpenseRequest: UpdateDailyExpenseRequest) {
         val dailyExpense = dailyExpenseRepository.findById(id).orElseThrow()
-        updateDailyExpenseRequest.comment?.let { dailyExpense.updateComment(it) }
+        dailyExpense.updateCharacterAndComment(updateDailyExpenseRequest)
         dailyExpenseRepository.save(dailyExpense)
     }
 
@@ -122,15 +116,22 @@ class ExpenseService(
         return dailyExpenseList?.stream()?.map { e -> DailyCharacter(e) }?.toList()?.sortedBy { it.date }
     }
 
-    fun getAllExpensesByContent(content: String): List<ExpenseResponse>? {
+    fun getAllExpensesByContent(date: LocalDate, content: String): List<ExpenseResponse>? {
         val currentMember = memberService.getCurrentLoginMember()
-        val expenseList = expenseRepository.getAllExpensesByContent(content, currentMember)
+        val expenseList = expenseRepository.getAllExpensesByContentAndDateBetween(
+            content,
+            date,
+            date.with(TemporalAdjusters.lastDayOfMonth()),
+            currentMember,
+        )
         return expenseList?.stream()?.map { e -> ExpenseResponse(e) }?.toList()
     }
 
     fun createReview(expenseId: Long, createReviewRequest: CreateReviewRequest) {
-        val review = reviewRepository.findById(createReviewRequest.reviewId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "review") }
-        val expense = expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
+        val review = reviewRepository.findById(createReviewRequest.reviewId)
+            .orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "review") }
+        val expense =
+            expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
 
         expenseReviewRepository.save(createReviewRequest.from(review, expense))
     }

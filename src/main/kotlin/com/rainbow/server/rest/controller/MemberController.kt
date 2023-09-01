@@ -3,7 +3,12 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
+import com.rainbow.server.rest.dto.goal.YearlyGoalData
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
+import com.rainbow.server.rest.dto.member.ConditionFilteredMembers
+import com.rainbow.server.rest.dto.member.FollowingRequest
+import com.rainbow.server.rest.dto.member.FriendDetailResponse
+import com.rainbow.server.rest.dto.member.FriendSearchResponse
 import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
@@ -59,7 +64,7 @@ class MemberController(
     }
 
     @GetMapping("/me/goals")
-    fun getGoals(@RequestParam month: String): CommonResponse<List<Any>> {
+    fun getGoals(): CommonResponse<YearlyGoalData> {
         return success(goalService.getYearlyGoals())
     }
 
@@ -68,15 +73,10 @@ class MemberController(
         return success(memberService.getSalaryRange())
     }
 
-    @GetMapping("/salary/{id}")
-    fun getMySalary(@PathVariable id: Long) {
-        memberService.getMySalary(id)
+    @GetMapping("/suggestedMemberList")
+    fun getSuggestedMemberList(): CommonResponse<List<ConditionFilteredMembers>> {
+        return success(memberService.getFriendRecommendations())
     }
-
-//    @GetMapping("/suggestedMemberList")
-//    fun getSuggestedMemberList(){
-//        success(memberService.getSuggestedMemberList())
-//    }
 
     @PostMapping("/signUp")
     fun signIn(@RequestBody memberInfo: MemberRequestDto, response: HttpServletResponse): CommonResponse<Any> {
@@ -90,6 +90,31 @@ class MemberController(
 
     @PostMapping("/logout")
     fun logout(): CommonResponse<Boolean> = success(memberService.logout())
+
+    @GetMapping("/search")
+    fun findByNickName(@RequestParam(name = "nickname")nickname: String): CommonResponse<List<FriendSearchResponse>?> {
+        return success(memberService.findByNickName(nickname))
+    }
+
+    @GetMapping("/{memberId}")
+    fun getFeedById(@PathVariable(name = "memberId")memberId: Long, @RequestParam(required = false, name = "page")page: Long?): CommonResponse<FriendDetailResponse> {
+        return success(memberService.getAnotherMemberInfo(memberId, page))
+    }
+
+    @PostMapping("/following")
+    fun followMember(@RequestBody followingId: FollowingRequest) {
+        memberService.followMember(followingId)
+    }
+
+    @GetMapping("/following/names")
+    fun getAllFollowingNames(): CommonResponse<List<String?>> {
+        return success(memberService.getAllFollowingNames())
+    }
+
+    @GetMapping("/following/check")
+    fun checkFriend(id: Long): Boolean {
+        return memberService.isFriendOrNot(id)
+    }
 
     @GetMapping("/kakao/signin")
     fun kakaoBackendSignPage(): ResponseEntity<*> {

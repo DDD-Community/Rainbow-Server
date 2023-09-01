@@ -32,3 +32,5 @@ data class TotalSavedCost(
     var sinceSignUp: Int,
     var savedCost: Int,
 )
+
+data class YearlyGoalData(val yearMap: Map<Int, List<GoalResponseDto>>, val totalSavedMap: Map<Int, Int>)

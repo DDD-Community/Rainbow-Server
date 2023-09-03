@@ -4,6 +4,7 @@ import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.domain.expense.entity.Review
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
+import com.rainbow.server.rest.dto.expense.CustomCategoryExpenseListResponse
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryResponse
 import com.rainbow.server.rest.dto.expense.DailyCharacter
@@ -40,6 +41,11 @@ class ExpenseController(
         expenseService.createCustomCategory(customCategoryRequest)
     }
 
+    @GetMapping("/custom-category")
+    fun getAllMyCustomCategory(): CommonResponse<List<CustomCategoryResponse>?> {
+        return success(expenseService.getAllMyCustomCategory())
+    }
+
     @PutMapping("/custom-category/{id}")
     fun updateCustomCategory(@PathVariable(name = "id")id: Long, @RequestBody customCategoryRequest: CustomCategoryRequest) {
         expenseService.updateCustomCategory(id, customCategoryRequest)
@@ -60,7 +66,7 @@ class ExpenseController(
     }
 
     @GetMapping("/category/{id}")
-    fun getCategoryInfo(@PathVariable(name = "id")id: Long): CommonResponse<CustomCategoryResponse> {
+    fun getCategoryInfo(@PathVariable(name = "id")id: Long): CommonResponse<CustomCategoryExpenseListResponse> {
         return success(expenseService.getCustomCategory(id))
     }
 

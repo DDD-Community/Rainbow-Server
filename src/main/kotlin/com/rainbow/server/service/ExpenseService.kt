@@ -12,6 +12,7 @@ import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.exception.CustomException
 import com.rainbow.server.exception.ErrorCode
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
+import com.rainbow.server.rest.dto.expense.CustomCategoryExpenseListResponse
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryResponse
 import com.rainbow.server.rest.dto.expense.DailyCharacter
@@ -62,6 +63,11 @@ class ExpenseService(
         customCategoryRepository.save(customCategoryRequest.to(currentMember))
     }
 
+    fun getAllMyCustomCategory(): List<CustomCategoryResponse>? {
+        val currentMember = memberService.getCurrentLoginMember()
+        return currentMember.customCategoryList.stream().map { c -> CustomCategoryResponse(c) }.toList()
+    }
+
     fun updateCustomCategory(id: Long, customCategoryRequest: CustomCategoryRequest) {
         val customCategory = customCategoryRepository.findById(id).orElseThrow()
         customCategory.updateCustomCategory(customCategoryRequest)
@@ -73,8 +79,8 @@ class ExpenseService(
         return currentMember.customCategoryList.size < maxCategorySize
     }
 
-    fun getCustomCategory(categoryId: Long): CustomCategoryResponse {
-        return CustomCategoryResponse(customCategoryRepository.findById(categoryId).orElseThrow())
+    fun getCustomCategory(categoryId: Long): CustomCategoryExpenseListResponse {
+        return CustomCategoryExpenseListResponse(customCategoryRepository.findById(categoryId).orElseThrow())
     }
 
     fun modifyExpense(expenseRequest: UpdateExpenseRequest) {

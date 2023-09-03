@@ -43,18 +43,30 @@ data class CustomCategoryRequest(
             name = this.name,
             status = this.status,
             member = currentMember,
-            // customCategoryImage = this.customCategoryImage,
+            customCategoryImage = this.customCategoryImage,
         )
     }
 }
 
-data class CustomCategoryResponse(
+data class CustomCategoryExpenseListResponse(
     val categoryId: Long,
     val expenseList: List<ExpenseResponse>?,
 ) {
     constructor(customCategory: CustomCategory) : this(
         categoryId = customCategory.customCategoryId,
         expenseList = customCategory.expenseList.stream().map { e -> ExpenseResponse(e) }.toList(),
+    )
+}
+
+data class CustomCategoryResponse(
+    val categoryId: Long,
+    val name: String,
+    val status: Boolean,
+) {
+    constructor(customCategory: CustomCategory) : this(
+        categoryId = customCategory.customCategoryId,
+        name = customCategory.name,
+        status = customCategory.status,
     )
 }
 

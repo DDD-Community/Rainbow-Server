@@ -87,8 +87,7 @@ class CustomCategory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     val member: Member,
-//    TODO: Image Upload 구현 후 되돌리기
-//    customCategoryImage: String,
+    customCategoryImage: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,8 +99,7 @@ class CustomCategory(
     @Column(nullable = false)
     var status: Boolean = status
 
-//    TODO: Image Upload 구현 후 되돌리기
-//    var customCategoryImage: String = customCategoryImage
+    var customCategoryImage: String = customCategoryImage
 
     @OneToMany(mappedBy = "customCategory", cascade = [CascadeType.ALL], orphanRemoval = true)
     protected val expenseMutableList: MutableList<Expense> = mutableListOf()
@@ -110,7 +108,7 @@ class CustomCategory(
     fun updateCustomCategory(categoryRequest: CustomCategoryRequest) {
         this.name = categoryRequest.name
         this.status = categoryRequest.status
-//        this.customCategoryImage = categoryRequest.customCategoryImage
+        this.customCategoryImage = categoryRequest.customCategoryImage
     }
 }
 

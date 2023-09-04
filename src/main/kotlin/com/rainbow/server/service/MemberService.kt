@@ -198,7 +198,7 @@ class MemberService(
         val anotherMember = memberRepository.findById(memberId).orElseThrow()
         val goal = anotherMember.goalList.maxByOrNull { it.time }
         val expenseList = expenseRepository.getAnotherMemberExpenseList(anotherMember.memberId, pageSize, pageNum)
-        val expenseResponseList=expenseList?.stream()?.map { e->ExpenseResponse(e) }?.toList()
+        val expenseResponseList = expenseList?.stream()?.map { e -> ExpenseResponse(e) }?.toList()
         val isFriend = isFriendOrNot(anotherMember.memberId)
 
         val groupedExpenses = expenseResponseList?.groupBy { it?.date }

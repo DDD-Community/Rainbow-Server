@@ -27,7 +27,7 @@ data class ExpenseResponse(
         amount = expense?.amount,
         content = expense?.content,
         expenseId = expense?.expenseId,
-        date= expense?.dailyExpense?.date,
+        date = expense?.dailyExpense?.date,
     )
 }
 

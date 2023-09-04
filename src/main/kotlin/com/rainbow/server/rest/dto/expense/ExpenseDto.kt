@@ -19,17 +19,15 @@ data class ExpenseRequest(
 
 data class ExpenseResponse(
     var amount: Int?,
-    val categoryName: String?,
-    val categoryStatus: Boolean?,
     val content: String?,
     val expenseId: Long?,
+    val date: LocalDate?,
 ) {
     constructor(expense: Expense?) : this(
         amount = expense?.amount,
-        categoryName = expense?.customCategory?.name,
-        categoryStatus = expense?.customCategory?.status,
         content = expense?.content,
         expenseId = expense?.expenseId,
+        date= expense?.dailyExpense?.date,
     )
 }
 

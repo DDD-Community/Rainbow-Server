@@ -12,6 +12,7 @@ import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.repository.FollowRepository
 import com.rainbow.server.domain.member.repository.MemberRepository
 import com.rainbow.server.domain.member.repository.SalaryRepository
+import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import com.rainbow.server.rest.dto.expense.FriendsExpenseDto
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
 import com.rainbow.server.rest.dto.member.ConditionFilteredMembers
@@ -77,7 +78,7 @@ class MemberService(
 
         return MemberResponseDto(
             nickName = infoResponse.kakaoProfile.nickname,
-            kakaoId = username,
+            kaKaoId = username,
             email = infoResponse.email,
             birthDate = null,
             salary = "0",
@@ -196,9 +197,14 @@ class MemberService(
         val pageNum = ((page ?: 1L) - 1L) * pageSize
         val anotherMember = memberRepository.findById(memberId).orElseThrow()
         val goal = anotherMember.goalList.maxByOrNull { it.time }
-        val dailyExpenseList = expenseRepository.getAnotherMemberExpenseList(anotherMember.memberId, pageSize, pageNum)
+        val expenseList = expenseRepository.getAnotherMemberExpenseList(anotherMember.memberId, pageSize, pageNum)
+        val expenseResponseList=expenseList?.stream()?.map { e->ExpenseResponse(e) }?.toList()
         val isFriend = isFriendOrNot(anotherMember.memberId)
-        return FriendDetailResponse(anotherMember, dailyExpenseList, isFriend, goal)
+
+        val groupedExpenses = expenseResponseList?.groupBy { it?.date }
+            ?.toSortedMap(compareByDescending { it })
+
+        return FriendDetailResponse(anotherMember, groupedExpenses, isFriend, goal)
     }
 
     fun getFriendsFeeds(lastId: Long?): List<FriendsExpenseDto>? {

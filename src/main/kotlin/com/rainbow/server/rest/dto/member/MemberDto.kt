@@ -1,12 +1,11 @@
 package com.rainbow.server.rest.dto.member
 
-import com.rainbow.server.domain.expense.entity.DailyExpense
 import com.rainbow.server.domain.goal.entity.Goal
 import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.domain.member.entity.Salary
-import com.rainbow.server.rest.dto.expense.DailyExpenseResponse
+import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import java.time.LocalDate
-import kotlin.streams.toList
+import java.util.SortedMap
 
 data class MemberRequestDto(
     val email: String,
@@ -29,7 +28,7 @@ data class MemberResponseDto(
     val birthDate: LocalDate?,
     val gender: String?,
     val salary: String?,
-    val kakaoId: Long,
+    val kaKaoId: Long,
 ) {
     //    constructor (email: String) : this(email, null, null,null,null)
     constructor(member: Member) : this(
@@ -38,7 +37,7 @@ data class MemberResponseDto(
         birthDate = member.birthDate,
         gender = member.gender,
         salary = member.salary,
-        kakaoId = member.kaKaoId,
+        kaKaoId = member.kaKaoId,
     )
 }
 
@@ -61,13 +60,14 @@ data class FriendSearchResponse(
 
 data class FriendDetailResponse(
     val monthlyPaidAmount: Int?,
-    val dailyExpenseList: List<DailyExpenseResponse>?,
+//    val dailyExpenseList: List<DailyExpenseResponse>?,
+    val expenseMap: SortedMap<LocalDate?, List<ExpenseResponse>>?,
     val memberInfo: MemberResponseDto,
     val isFriend: Boolean,
 ) {
-    constructor(member: Member, dailyExpenseList: List<DailyExpense>?, isFriend: Boolean, goal: Goal?) : this(
+    constructor(member: Member, expenseMap: SortedMap<LocalDate?, List<ExpenseResponse>>?, isFriend: Boolean, goal: Goal?) : this(
         monthlyPaidAmount = goal?.paidAmount,
-        dailyExpenseList = dailyExpenseList?.stream()?.map { d -> DailyExpenseResponse(d) }?.toList(),
+        expenseMap = expenseMap,
         memberInfo = MemberResponseDto(member),
         isFriend = isFriend,
     )

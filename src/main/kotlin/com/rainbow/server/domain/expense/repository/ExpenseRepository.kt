@@ -27,7 +27,7 @@ interface CustomExpenseRepository {
 
     fun getFriendsFeedList(lastId: Long?, member: Member, followingMembers: List<Member>): List<FriendsExpenseDto>?
 
-    fun getAnotherMemberExpenseList(memberId: Long, pageSize: Long, pageNum: Long): List<DailyExpense>?
+    fun getAnotherMemberExpenseList(memberId: Long, pageSize: Long, pageNum: Long): List<Expense>?
 }
 
 interface ReviewRepository : JpaRepository<Review, Long>
@@ -107,11 +107,11 @@ class ExpenseRepositoryImpl(
             .join(member).on(dailyExpense.member.memberId.eq(member.memberId))
     }
 
-    override fun getAnotherMemberExpenseList(memberId: Long, pageSize: Long, pageNum: Long): List<DailyExpense>? {
+    override fun getAnotherMemberExpenseList(memberId: Long, pageSize: Long, pageNum: Long): List<Expense>? {
         return queryFactory
-            .selectFrom(dailyExpense)
-            .join(dailyExpense.expenseMutableList, expense)
-            .where(dailyExpense.member.memberId.eq(memberId))
+            .selectFrom(expense)
+            .join(expense.dailyExpense, dailyExpense)
+            .where((dailyExpense.member.memberId.eq(memberId)).and(expense.customCategory.status.eq(true)))
             .orderBy(dailyExpense.date.desc(), expense.createdAt.asc())
             .limit(pageSize)
             .offset(pageNum)

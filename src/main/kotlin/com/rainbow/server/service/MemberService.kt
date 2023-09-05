@@ -184,8 +184,8 @@ class MemberService(
         followRepository.save(follow)
     }
     @Transactional
-    fun followMembers(followIds:List<FollowingRequest>){
-        followIds.stream().forEach { i->followRepository.save(Follow(fromMember = getCurrentLoginUserId(), toMember = i.followingId)) }
+    fun followMembers(followIds: List<FollowingRequest>) {
+        followIds.stream().forEach { i -> followRepository.save(Follow(fromMember = getCurrentLoginUserId(), toMember = i.followingId)) }
     }
 
     fun getAllFollowingNames(): List<String?> {

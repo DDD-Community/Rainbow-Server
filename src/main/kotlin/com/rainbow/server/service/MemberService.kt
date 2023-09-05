@@ -183,6 +183,10 @@ class MemberService(
         val follow = Follow(fromMember = getCurrentLoginUserId(), toMember = followingId.followingId)
         followRepository.save(follow)
     }
+    @Transactional
+    fun followMembers(followIds:List<FollowingRequest>){
+        followIds.stream().forEach { i->followRepository.save(Follow(fromMember = getCurrentLoginUserId(), toMember = i.followingId)) }
+    }
 
     fun getAllFollowingNames(): List<String?> {
         return followRepository.finAllByFromMemberWithMember(getCurrentLoginUserId())

@@ -106,6 +106,11 @@ class MemberController(
         memberService.followMember(followingId)
     }
 
+    @PostMapping("/first-following")
+    fun followMembers(@RequestBody followingIds: List<FollowingRequest>) {
+        memberService.followMembers(followingIds)
+    }
+
     @GetMapping("/following/names")
     fun getAllFollowingNames(): CommonResponse<List<String?>> {
         return success(memberService.getAllFollowingNames())

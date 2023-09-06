@@ -134,7 +134,7 @@ class MemberController(
     }
 
     @PatchMapping("/profile-image")
-    fun uploadImage(@RequestParam file: MultipartFile): ResponseEntity<Any> {
+    fun uploadImage(@RequestParam(name = "file") file: MultipartFile): ResponseEntity<Any> {
         val save = memberService.saveImage(file)
         return ResponseEntity.ok().body(save)
     }

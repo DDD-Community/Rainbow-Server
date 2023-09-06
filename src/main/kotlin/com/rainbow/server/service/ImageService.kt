@@ -74,7 +74,10 @@ class ImageService(
     }
 
     @Throws(IOException::class)
-    fun upload(file: MultipartFile, saveFileName: String): String {
+    fun upload(
+        file: MultipartFile,
+        saveFileName: String,
+    ): String {
         val objMeta = ObjectMetadata()
         val bytes = file.inputStream.use { it.readBytes() }
         objMeta.contentLength = bytes.size.toLong()

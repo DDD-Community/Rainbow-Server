@@ -66,7 +66,7 @@ class ImageService(
         return images
     }
 
-    private fun generateSaveFileName(originalFilename: String?): String {
+    fun generateSaveFileName(originalFilename: String?): String {
         val extPosIndex: Int? = originalFilename?.lastIndexOf(".")
         val ext = originalFilename?.substring(extPosIndex?.plus(1) as Int)
 
@@ -74,7 +74,7 @@ class ImageService(
     }
 
     @Throws(IOException::class)
-    private fun upload(file: MultipartFile, saveFileName: String): String {
+    fun upload(file: MultipartFile, saveFileName: String): String {
         val objMeta = ObjectMetadata()
         val bytes = file.inputStream.use { it.readBytes() }
         objMeta.contentLength = bytes.size.toLong()

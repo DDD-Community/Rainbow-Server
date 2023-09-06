@@ -28,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.lang.NullPointerException
 import java.util.UUID
 import kotlin.streams.toList
@@ -43,6 +44,7 @@ class MemberService(
     private val refreshTokenRepository: RefreshTokenRepository,
     private val salaryRepository: SalaryRepository,
     private val followRepository: FollowRepository,
+    private val imageService: ImageService,
 ) {
 
     fun getCurrentLoginMember(): Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()
@@ -215,5 +217,14 @@ class MemberService(
         val followingList = followRepository.findAllByFromMember(getCurrentLoginUserId())
         val followingMembers = followingList.mapNotNull { f -> memberRepository.findById(f.toMember).orElse(null) }
         return expenseRepository.getFriendsFeedList(lastId, getCurrentLoginMember(), followingMembers)
+    }
+
+    @Transactional
+    fun saveImage(file: MultipartFile): Member {
+        val member = memberRepository.findById(1).orElseThrow()//getCurrentLoginMember()
+        val saveFileName = imageService.generateSaveFileName(file.originalFilename)
+
+        member.imagePath = imageService.upload(file, saveFileName)
+        return memberRepository.save(member)
     }
 }

@@ -30,6 +30,7 @@ class Member(
     var salary: String,
     @Column(unique = true)
     var nickName: String,
+    var imagePath: String? = null,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

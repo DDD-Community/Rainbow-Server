@@ -32,7 +32,7 @@ data class ExpenseResponse(
         expenseId = expense?.expenseId,
         date = expense?.dailyExpense?.date,
         memo = expense?.memo,
-        imageList = expense?.imageList?.map { it.saveFileName }
+        imageList = expense?.imageList?.map { it.saveFileName },
     )
 }
 

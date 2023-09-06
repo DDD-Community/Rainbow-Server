@@ -59,8 +59,8 @@ class Expense(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dailyExpenseId")
     val dailyExpense: DailyExpense,
-//    @Column(nullable = false)
-//    val date: LocalDate,
+    @Column(length = 50)
+    var memo: String,
     @Column(nullable = false)
     var amount: Int,
     @Column(nullable = false)
@@ -74,9 +74,10 @@ class Expense(
     protected val imageMutableList: MutableList<Image> = mutableListOf()
     val imageList: List<Image> get() = imageMutableList.toList()
 
-    fun modifyExpense(amount: Int, content: String) {
+    fun modifyExpense(amount: Int, content: String, memo: String) {
         this.amount = amount
         this.content = content
+        this.memo = memo
     }
 }
 

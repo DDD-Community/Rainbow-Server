@@ -52,6 +52,7 @@ class ExpenseService(
             content = expenseRequest.content,
             customCategory = customCategory,
             dailyExpense = dailyExpense,
+            memo = expenseRequest.memo,
         )
         dailyExpense.addExpense(expense)
         dailyExpenseRepository.save(dailyExpense)
@@ -87,7 +88,7 @@ class ExpenseService(
         val expense = expenseRepository.findById(expenseRequest.id).orElseThrow()
         val goal = expense.dailyExpense.goal
         goal.modifyPaidAmountAndSavedCost(expense.amount, expenseRequest.amount)
-        expense.modifyExpense(expenseRequest.amount, expenseRequest.content)
+        expense.modifyExpense(expenseRequest.amount, expenseRequest.content, expenseRequest.memo)
         goalRepository.save(goal)
         expenseRepository.save(expense)
     }

@@ -15,6 +15,7 @@ data class ExpenseRequest(
     val categoryId: Long,
     val content: String,
     val dailyExpenseId: Long,
+    val memo: String,
 )
 
 data class ExpenseResponse(
@@ -22,12 +23,14 @@ data class ExpenseResponse(
     val content: String?,
     val expenseId: Long?,
     val date: LocalDate?,
+    val memo: String?,
 ) {
     constructor(expense: Expense?) : this(
         amount = expense?.amount,
         content = expense?.content,
         expenseId = expense?.expenseId,
         date = expense?.dailyExpense?.date,
+        memo = expense?.memo
     )
 }
 
@@ -97,6 +100,7 @@ data class UpdateExpenseRequest(
     val id: Long,
     var amount: Int,
     val content: String,
+    val memo: String,
 )
 
 data class UpdateDailyExpenseRequest(

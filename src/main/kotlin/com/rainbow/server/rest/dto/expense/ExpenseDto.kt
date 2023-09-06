@@ -140,7 +140,7 @@ data class DailyCharacter(
 }
 
 data class CreateReviewRequest(
-    var reviewId: Long,
+    var reviewType: String,
 ) {
     fun from(review: Review, expense: Expense): ExpenseReview {
         return ExpenseReview(

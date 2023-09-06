@@ -29,7 +29,9 @@ interface CustomExpenseRepository {
     fun getAnotherMemberExpenseList(memberId: Long, pageSize: Long, pageNum: Long): List<Expense>?
 }
 
-interface ReviewRepository : JpaRepository<Review, Long>
+interface ReviewRepository : JpaRepository<Review, Long> {
+    fun findByEmojiName(emojiNAme: String): Review?
+}
 
 interface ExpenseReviewRepository : JpaRepository<ExpenseReview, Long>, CustomExpenseReviewRepository
 

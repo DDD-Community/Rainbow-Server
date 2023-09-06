@@ -221,7 +221,7 @@ class MemberService(
 
     @Transactional
     fun saveImage(file: MultipartFile): Member {
-        val member = memberRepository.findById(1).orElseThrow()//getCurrentLoginMember()
+        val member = memberRepository.findById(1).orElseThrow() // getCurrentLoginMember()
         val saveFileName = imageService.generateSaveFileName(file.originalFilename)
 
         member.imagePath = imageService.upload(file, saveFileName)

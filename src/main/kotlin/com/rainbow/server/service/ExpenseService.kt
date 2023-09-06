@@ -135,8 +135,9 @@ class ExpenseService(
     }
 
     fun createReview(expenseId: Long, createReviewRequest: CreateReviewRequest) {
-        val review = reviewRepository.findByEmojiName(createReviewRequest.reviewType)
-            ?: throw CustomException(ErrorCode.ENTITY_NOT_FOUND, "review")
+        val review =
+            reviewRepository.findByEmojiName(createReviewRequest.reviewType)
+                ?: throw CustomException(ErrorCode.ENTITY_NOT_FOUND, "review")
         val expense =
             expenseRepository.findById(expenseId).orElseThrow { CustomException(ErrorCode.ENTITY_NOT_FOUND, "expense") }
 

@@ -2,7 +2,6 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
-import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
 import com.rainbow.server.rest.dto.goal.YearlyGoalData
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
@@ -122,7 +121,7 @@ class MemberController(
     @GetMapping("/following/check")
     fun checkFriend(id: Long): Boolean {
         return memberService.isFriendOrNot(id)
-    }   
+    }
 
     @GetMapping("/kakao/signin")
     fun kakaoBackendSignPage(): ResponseEntity<*> {

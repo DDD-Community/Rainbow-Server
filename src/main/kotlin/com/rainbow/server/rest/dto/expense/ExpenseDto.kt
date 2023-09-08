@@ -71,7 +71,7 @@ data class CustomCategoryResponse(
         categoryId = customCategory.customCategoryId,
         name = customCategory.name,
         status = customCategory.status,
-        customCategoryImage=customCategory.customCategoryImage,
+        customCategoryImage = customCategory.customCategoryImage,
     )
 }
 

@@ -24,13 +24,15 @@ data class ExpenseResponse(
     val expenseId: Long?,
     val date: LocalDate?,
     val memo: String?,
+    val imageList: List<String>?,
 ) {
     constructor(expense: Expense?) : this(
         amount = expense?.amount,
         content = expense?.content,
         expenseId = expense?.expenseId,
         date = expense?.dailyExpense?.date,
-        memo = expense?.memo
+        memo = expense?.memo,
+        imageList = expense?.imageList?.map { it.saveFileName },
     )
 }
 

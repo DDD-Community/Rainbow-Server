@@ -2,6 +2,7 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
+import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
 import com.rainbow.server.rest.dto.goal.YearlyGoalData
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
@@ -21,18 +22,21 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import java.net.URI
 import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("/members")
 class MemberController(
+    private val member: Member,
     private val memberService: MemberService,
     private val goalService: GoalService,
     @Value("\${oauth.kakao.client-id}")
@@ -129,5 +133,12 @@ class MemberController(
         val headers = HttpHeaders()
         headers.location = uri
         return ResponseEntity<Any>(headers, HttpStatus.SEE_OTHER)
+    }
+
+    @PatchMapping("/profile-image")
+    fun uploadImage(
+        @RequestParam(name = "file") file: MultipartFile,
+    ): CommonResponse<MemberResponseDto> {
+        return success(memberService.saveImage(file))
     }
 }

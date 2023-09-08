@@ -34,8 +34,9 @@ class KakaoApiClient(
     fun getRedirectUri(): String {
         val os = System.getProperty("os.name")
         log.info("OS : {}", os)
-        if (os.contains("Mac")) return "http://localhost:8080/member/login"
-        return "http://localhost:3000/member/kakao"
+//        if (os.contains("Mac"))
+        return "http://localhost:8080/member/login"
+//        return "http://localhost:3000/member/kakao"
 //        return "http://www.buy-bye.com/members/login"
     }
 

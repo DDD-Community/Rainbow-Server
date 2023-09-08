@@ -29,7 +29,7 @@ data class MemberResponseDto(
     val gender: String?,
     val salary: String?,
     val kaKaoId: Long,
-//    val imagePath: String?,
+    val imagePath: String? = null,
 ) {
     //    constructor (email: String) : this(email, null, null,null,null)
     constructor(member: Member) : this(
@@ -39,7 +39,7 @@ data class MemberResponseDto(
         gender = member.gender,
         salary = member.salary,
         kaKaoId = member.kaKaoId,
-//        imagePath = member.imagePath,
+        imagePath = member.imagePath,
     )
 }
 

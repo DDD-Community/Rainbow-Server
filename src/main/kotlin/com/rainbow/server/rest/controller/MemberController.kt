@@ -2,6 +2,7 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
+import com.rainbow.server.domain.member.entity.Member
 import com.rainbow.server.rest.dto.goal.TotalSavedCost
 import com.rainbow.server.rest.dto.goal.YearlyGoalData
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse
 @RestController
 @RequestMapping("/members")
 class MemberController(
+    private val member: Member,
     private val memberService: MemberService,
     private val goalService: GoalService,
     @Value("\${oauth.kakao.client-id}")
@@ -136,8 +138,7 @@ class MemberController(
     @PatchMapping("/profile-image")
     fun uploadImage(
         @RequestParam(name = "file") file: MultipartFile,
-    ): ResponseEntity<Any> {
-        val save = memberService.saveImage(file)
-        return ResponseEntity.ok().body(save)
+    ): CommonResponse<MemberResponseDto> {
+        return success(memberService.saveImage(file))
     }
 }

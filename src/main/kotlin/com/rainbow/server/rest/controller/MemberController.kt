@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletResponse
 @RestController
 @RequestMapping("/members")
 class MemberController(
-    private val member: Member,
     private val memberService: MemberService,
     private val goalService: GoalService,
     @Value("\${oauth.kakao.client-id}")
@@ -123,7 +122,7 @@ class MemberController(
     @GetMapping("/following/check")
     fun checkFriend(id: Long): Boolean {
         return memberService.isFriendOrNot(id)
-    }
+    }   
 
     @GetMapping("/kakao/signin")
     fun kakaoBackendSignPage(): ResponseEntity<*> {

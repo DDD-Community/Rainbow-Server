@@ -65,11 +65,13 @@ data class CustomCategoryResponse(
     val categoryId: Long,
     val name: String,
     val status: Boolean,
+    val customCategoryImage: String,
 ) {
     constructor(customCategory: CustomCategory) : this(
         categoryId = customCategory.customCategoryId,
         name = customCategory.name,
         status = customCategory.status,
+        customCategoryImage=customCategory.customCategoryImage,
     )
 }
 

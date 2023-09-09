@@ -81,18 +81,21 @@ data class FriendsExpenseDto(
     val expenseResponse: ExpenseResponse,
     val date: LocalDate,
     var isFriend: Boolean,
+    val imagePath: String?,
 ) {
     constructor(
         memberId: Long,
         nickName: String,
         expenseResponse: ExpenseResponse,
         date: LocalDate,
+        imagePath: String?,
     ) : this(
         memberId = memberId,
         nickName = nickName,
         expenseResponse = expenseResponse,
         date = date,
         isFriend = true,
+        imagePath = imagePath,
     )
 
     fun updateIsFriend(isFriend: Boolean) {

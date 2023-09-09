@@ -52,11 +52,13 @@ data class FriendSearchResponse(
     val memberId: Long,
     val isFriend: Boolean,
     val nickName: String,
+    val imagePath: String?,
 ) {
     constructor(member: Member, isFriend: Boolean) : this(
         memberId = member.memberId,
         isFriend = isFriend,
         nickName = member.nickName,
+        imagePath = member.imagePath,
     )
 }
 

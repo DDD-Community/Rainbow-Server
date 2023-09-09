@@ -100,6 +100,7 @@ class ExpenseRepositoryImpl(
                         expense,
                     ),
                     dailyExpense.date,
+                    member.imagePath,
 
                 ),
             )

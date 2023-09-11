@@ -85,6 +85,7 @@ class MemberService(
             birthDate = null,
             salary = "0",
             gender = infoResponse.kakaoAccount.gender,
+            id = 0,
         )
     }
 

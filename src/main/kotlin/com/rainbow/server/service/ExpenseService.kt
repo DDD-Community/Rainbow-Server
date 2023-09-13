@@ -11,6 +11,7 @@ import com.rainbow.server.domain.expense.repository.ReviewRepository
 import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.exception.CustomException
 import com.rainbow.server.exception.ErrorCode
+import com.rainbow.server.rest.dto.expense.CreateExpenseResponse
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryExpenseListResponse
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
@@ -41,7 +42,7 @@ class ExpenseService(
     private val maxCategorySize: Int = 30
 
     @Transactional
-    fun createExpense(expenseRequest: ExpenseRequest) {
+    fun createExpense(expenseRequest: ExpenseRequest): CreateExpenseResponse {
         val currentMember = memberService.getCurrentLoginMember()
         val goal = goalRepository.findByMemberAndTime(currentMember.memberId, expenseRequest.date.withDayOfMonth(1))
         goal.updatePaidAmountAndSavedCost(expenseRequest.amount)
@@ -54,8 +55,10 @@ class ExpenseService(
             dailyExpense = dailyExpense,
             memo = expenseRequest.memo,
         )
-        dailyExpense.addExpense(expense)
-        dailyExpenseRepository.save(dailyExpense)
+//        dailyExpense.addExpense(expense)
+//        dailyExpenseRepository.save(dailyExpense)
+
+        return CreateExpenseResponse(expenseRepository.save(expense).expenseId)
     }
 
     @Transactional

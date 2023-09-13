@@ -4,22 +4,16 @@ import com.rainbow.server.domain.goal.entity.Goal
 import com.rainbow.server.domain.goal.repository.GoalRepository
 import com.rainbow.server.rest.dto.goal.GoalRequestDto
 import com.rainbow.server.rest.dto.goal.GoalResponseDto
-import com.rainbow.server.rest.dto.goal.TotalSavedCost
 import com.rainbow.server.rest.dto.goal.YearlyGoalData
-import com.rainbow.server.util.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.YearMonth
-import java.util.Calendar
-import java.util.Date
 
 @Service
 class GoalService(
     private val goalRepository: GoalRepository,
     private val memberService: MemberService,
 ) {
-
-    val log = logger()
 
     fun createGoal(goalRequestDto: GoalRequestDto) {
         val currentMember = memberService.getCurrentLoginMember()
@@ -41,21 +35,6 @@ class GoalService(
         val goal = goalRepository.findById(id).orElseThrow()
         goal.updateCostAndSavedCost(goalRequestDto.cost)
         return GoalResponseDto(goalRepository.save(goal))
-    }
-
-    fun getSavedCost(): TotalSavedCost {
-        val member = memberService.getCurrentLoginMember()
-        val today = Calendar.getInstance()
-        val startDate = Date.from(member.createdAt.toInstant())
-        val calculateDate = (today.time.time - startDate.time) / (60 * 60 * 24 * 1000)
-        val sinceDate = (calculateDate + 1).toInt()
-
-        val goalList = member.goalList
-        var savedCost = 0
-        goalList.forEach { g -> savedCost += g.savedCost }
-
-        log.info("날짜: $sinceDate")
-        return TotalSavedCost(sinceSignUp = sinceDate, savedCost = savedCost)
     }
 
     fun getYearlyGoals(): YearlyGoalData {

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository
 interface FollowRepository : JpaRepository<Follow, FollowPK>, FollowRepositoryCustom {
     fun findAllByFromMember(fromId: Long): List<Follow>
     fun existsByFromMemberAndToMember(fromId: Long, toId: Long): Boolean
+
+    fun countAllByFromMember(fromId: Long): Long
 }
 
 interface FollowRepositoryCustom {

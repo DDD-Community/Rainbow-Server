@@ -14,6 +14,7 @@ import com.rainbow.server.domain.member.repository.MemberRepository
 import com.rainbow.server.domain.member.repository.SalaryRepository
 import com.rainbow.server.rest.dto.expense.ExpenseResponse
 import com.rainbow.server.rest.dto.expense.FriendsExpenseDto
+import com.rainbow.server.rest.dto.goal.TotalHistory
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
 import com.rainbow.server.rest.dto.member.ConditionFilteredMembers
 import com.rainbow.server.rest.dto.member.FollowingRequest
@@ -23,6 +24,7 @@ import com.rainbow.server.rest.dto.member.JwtDto
 import com.rainbow.server.rest.dto.member.MemberRequestDto
 import com.rainbow.server.rest.dto.member.MemberResponseDto
 import com.rainbow.server.rest.dto.member.SalaryDto
+import com.rainbow.server.util.logger
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -30,6 +32,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.lang.NullPointerException
+import java.util.Calendar
+import java.util.Date
 import java.util.UUID
 import kotlin.streams.toList
 
@@ -46,6 +50,8 @@ class MemberService(
     private val followRepository: FollowRepository,
     private val imageService: ImageService,
 ) {
+
+    val log = logger()
 
     fun getCurrentLoginMember(): Member = memberRepository.findById(getCurrentLoginUserId()).orElseThrow()
 
@@ -227,5 +233,22 @@ class MemberService(
 
         member.imagePath = imageService.upload(file, saveFileName)
         return MemberResponseDto(memberRepository.save(member))
+    }
+
+    fun getHistory(): TotalHistory {
+        val member = getCurrentLoginMember()
+        val today = Calendar.getInstance()
+        val startDate = Date.from(member.createdAt.toInstant())
+        val calculateDate = (today.time.time - startDate.time) / (60 * 60 * 24 * 1000)
+        val sinceDate = (calculateDate + 1).toInt()
+
+        val goalList = member.goalList
+        var savedCost = 0
+        goalList.forEach { g -> savedCost += g.savedCost }
+
+        val friends = followRepository.countAllByFromMember(member.memberId)
+
+        log.info("날짜: $sinceDate")
+        return TotalHistory(sinceSignUp = sinceDate, savedCost = savedCost, friends = friends)
     }
 }

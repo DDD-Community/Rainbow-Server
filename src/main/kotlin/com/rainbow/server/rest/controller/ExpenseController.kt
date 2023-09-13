@@ -3,6 +3,7 @@ package com.rainbow.server.rest.controller
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
 import com.rainbow.server.domain.expense.entity.Review
+import com.rainbow.server.rest.dto.expense.CreateExpenseResponse
 import com.rainbow.server.rest.dto.expense.CreateReviewRequest
 import com.rainbow.server.rest.dto.expense.CustomCategoryExpenseListResponse
 import com.rainbow.server.rest.dto.expense.CustomCategoryRequest
@@ -32,8 +33,8 @@ class ExpenseController(
 ) {
 
     @PostMapping
-    fun createExpense(@RequestBody expenseRequest: ExpenseRequest) {
-        expenseService.createExpense(expenseRequest)
+    fun createExpense(@RequestBody expenseRequest: ExpenseRequest): CommonResponse<CreateExpenseResponse> {
+        return success(expenseService.createExpense(expenseRequest))
     }
 
     @PostMapping("/custom-category")

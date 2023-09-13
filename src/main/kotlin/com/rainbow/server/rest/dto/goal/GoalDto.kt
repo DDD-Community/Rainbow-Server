@@ -28,9 +28,10 @@ data class GoalResponseDto(
     )
 }
 
-data class TotalSavedCost(
+data class TotalHistory(
     var sinceSignUp: Int,
     var savedCost: Int,
+    val friends: Long,
 )
 
 data class YearlyGoalData(val yearMap: Map<Int, List<GoalResponseDto>>, val totalSavedMap: Map<Int, Int>)

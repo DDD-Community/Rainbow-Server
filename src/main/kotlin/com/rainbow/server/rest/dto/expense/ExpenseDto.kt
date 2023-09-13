@@ -36,6 +36,10 @@ data class ExpenseResponse(
     )
 }
 
+data class CreateExpenseResponse(
+    val id: Long,
+)
+
 data class CustomCategoryRequest(
     val name: String,
     val status: Boolean,

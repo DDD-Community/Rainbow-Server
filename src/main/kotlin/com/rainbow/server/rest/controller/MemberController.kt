@@ -2,7 +2,7 @@ package com.rainbow.server.rest.controller
 
 import com.rainbow.server.common.CommonResponse
 import com.rainbow.server.common.success
-import com.rainbow.server.rest.dto.goal.TotalSavedCost
+import com.rainbow.server.rest.dto.goal.TotalHistory
 import com.rainbow.server.rest.dto.goal.YearlyGoalData
 import com.rainbow.server.rest.dto.member.CheckDuplicateResponse
 import com.rainbow.server.rest.dto.member.ConditionFilteredMembers
@@ -60,9 +60,9 @@ class MemberController(
         return success(memberService.getCurrentMemberInfo())
     }
 
-    @GetMapping("/me/saved-cost")
-    fun getSavedCost(): CommonResponse<TotalSavedCost> {
-        return success(goalService.getSavedCost())
+    @GetMapping("/me/history")
+    fun getSavedCost(): CommonResponse<TotalHistory> {
+        return success(memberService.getHistory())
     }
 
     @GetMapping("/me/goals")

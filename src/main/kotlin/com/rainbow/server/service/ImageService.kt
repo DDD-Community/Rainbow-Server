@@ -57,7 +57,7 @@ class ImageService(
             images.add(
                 Image(
                     originalFileName = originalFileName,
-                    saveFileName = saveFileName,
+                    saveFileName = "https://rainbow-github-actions-s3-bucket.s3.ap-northeast-2.amazonaws.com/${saveFileName}", // TODO: url 환경변수로 넣기
                     expense = expense,
                 ),
             )

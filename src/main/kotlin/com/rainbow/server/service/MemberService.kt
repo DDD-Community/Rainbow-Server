@@ -176,6 +176,13 @@ class MemberService(
         return client.logout(getCurrentLoginMember().kaKaoId)
     }
 
+    @Transactional
+    fun delete(memberId: Long): String {
+        memberRepository.deleteById(memberId)
+        if (!memberRepository.existsById(memberId)) return "삭제 성공"
+        return "삭제 실패"
+    }
+
     fun checkEmail(email: String): CheckDuplicateResponse =
         CheckDuplicateResponse(memberRepository.existsByEmail(email))
 

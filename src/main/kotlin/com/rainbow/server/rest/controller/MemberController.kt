@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -92,6 +93,9 @@ class MemberController(
 
     @PostMapping("/logout")
     fun logout(): CommonResponse<Boolean> = success(memberService.logout())
+
+    @DeleteMapping("/{memberId}/delete")
+    fun delete(@PathVariable(name = "memberId")memberId: Long): CommonResponse<String> = success(memberService.delete(memberId))
 
     @GetMapping("/search")
     fun findByNickName(@RequestParam(name = "nickname")nickname: String): CommonResponse<List<FriendSearchResponse>?> {

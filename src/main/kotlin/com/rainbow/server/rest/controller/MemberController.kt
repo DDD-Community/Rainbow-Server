@@ -94,8 +94,8 @@ class MemberController(
     @PostMapping("/logout")
     fun logout(): CommonResponse<Boolean> = success(memberService.logout())
 
-    @DeleteMapping("/{memberId}/delete")
-    fun delete(@PathVariable(name = "memberId")memberId: Long): CommonResponse<String> = success(memberService.delete(memberId))
+    @DeleteMapping("/delete")
+    fun delete(): CommonResponse<String> = success(memberService.delete())
 
     @GetMapping("/search")
     fun findByNickName(@RequestParam(name = "nickname")nickname: String): CommonResponse<List<FriendSearchResponse>?> {

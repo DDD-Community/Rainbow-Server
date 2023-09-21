@@ -177,9 +177,9 @@ class MemberService(
     }
 
     @Transactional
-    fun delete(memberId: Long): String {
-        memberRepository.deleteById(memberId)
-        if (!memberRepository.existsById(memberId)) return "삭제 성공"
+    fun delete(): String {
+        memberRepository.deleteById(getCurrentLoginUserId())
+        if (!memberRepository.existsById(getCurrentLoginUserId())) return "삭제 성공"
         return "삭제 실패"
     }
 

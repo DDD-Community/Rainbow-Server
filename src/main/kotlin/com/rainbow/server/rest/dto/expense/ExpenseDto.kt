@@ -25,6 +25,7 @@ data class ExpenseResponse(
     val date: LocalDate?,
     val memo: String?,
     val imageList: List<String>?,
+    val reviewList: List<ReviewResponse>?,
 ) {
     constructor(expense: Expense?) : this(
         amount = expense?.amount,
@@ -33,6 +34,7 @@ data class ExpenseResponse(
         date = expense?.dailyExpense?.date,
         memo = expense?.memo,
         imageList = expense?.imageList?.map { it.saveFileName },
+        reviewList = expense?.expenseReviewList?.map { ReviewResponse(it.review.emojiName, it.review.emojiPath) }?.toList(),
     )
 }
 
@@ -86,7 +88,6 @@ data class FriendsExpenseDto(
     val date: LocalDate,
     var isFriend: Boolean,
     val imagePath: String?,
-    var reviewList: List<Review>?,
 ) {
     constructor(
         memberId: Long,
@@ -94,7 +95,6 @@ data class FriendsExpenseDto(
         expenseResponse: ExpenseResponse,
         date: LocalDate,
         imagePath: String?,
-        reviewList: List<Review>?,
     ) : this(
         memberId = memberId,
         nickName = nickName,
@@ -102,7 +102,6 @@ data class FriendsExpenseDto(
         date = date,
         isFriend = true,
         imagePath = imagePath,
-        reviewList = reviewList,
     )
 
     fun updateIsFriend(isFriend: Boolean) {
@@ -163,3 +162,8 @@ data class CreateReviewRequest(
         )
     }
 }
+
+data class ReviewResponse(
+    val emojiName: String,
+    val emojiPath: String,
+)

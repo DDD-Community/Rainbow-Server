@@ -78,11 +78,6 @@ class ExpenseRepositoryImpl(
         val friendsExpenses = friendsExpensesQuery.fetch()
         result.addAll(friendsExpenses)
 
-        for (expense in friendsExpenses) {
-            val reviews = expenseReviewRepository.getAllReviewsByExpense(expense.expenseResponse.expenseId!!)
-            expense.reviewList = reviews
-        }
-
         val notFollowingMembers = followingMembers.toMutableList()
         notFollowingMembers.add(currentMember)
         val nonFollowingQuery = getCommonQuery().where(member.notIn(notFollowingMembers.toList())).limit(1)

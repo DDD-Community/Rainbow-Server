@@ -54,6 +54,7 @@ class ExpenseReviewRepositoryImpl(
 
 class ExpenseRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
+    private val expenseReviewRepository: ExpenseReviewRepository,
 ) : CustomExpenseRepository {
 
     override fun getAllExpensesByContentAndDateBetween(content: String, startDate: LocalDate, endDate: LocalDate, member: Member): List<Expense>? {

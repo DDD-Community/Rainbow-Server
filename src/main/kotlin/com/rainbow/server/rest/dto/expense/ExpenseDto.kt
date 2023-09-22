@@ -25,6 +25,7 @@ data class ExpenseResponse(
     val date: LocalDate?,
     val memo: String?,
     val imageList: List<String>?,
+    val reviewList: List<ReviewResponse>?,
 ) {
     constructor(expense: Expense?) : this(
         amount = expense?.amount,
@@ -33,6 +34,7 @@ data class ExpenseResponse(
         date = expense?.dailyExpense?.date,
         memo = expense?.memo,
         imageList = expense?.imageList?.map { it.saveFileName },
+        reviewList = expense?.expenseReviewList?.map { ReviewResponse(it.review.emojiName, it.review.emojiPath) }?.toList(),
     )
 }
 
@@ -160,3 +162,8 @@ data class CreateReviewRequest(
         )
     }
 }
+
+data class ReviewResponse(
+    val emojiName: String,
+    val emojiPath: String,
+)

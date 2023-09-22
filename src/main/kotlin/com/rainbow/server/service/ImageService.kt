@@ -37,6 +37,7 @@ class ImageService(
 
     private fun getImageObjects(files: List<MultipartFile?>, expense: Expense): MutableList<Image> {
         val images = mutableListOf<Image>()
+        val s3Url = "https://rainbow-github-actions-s3-bucket.s3.ap-northeast-2.amazonaws.com/"
 
         if (files.size > 2) {
             throw CustomException(ErrorCode.FILE_LIMIT_EXCEEDED)
@@ -57,7 +58,7 @@ class ImageService(
             images.add(
                 Image(
                     originalFileName = originalFileName,
-                    saveFileName = saveFileName,
+                    saveFileName = s3Url + saveFileName,
                     expense = expense,
                 ),
             )

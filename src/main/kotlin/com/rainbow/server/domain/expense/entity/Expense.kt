@@ -74,6 +74,10 @@ class Expense(
     protected val imageMutableList: MutableList<Image> = mutableListOf()
     val imageList: List<Image> get() = imageMutableList.toList()
 
+    @OneToMany(mappedBy = "expense", cascade = [CascadeType.ALL], orphanRemoval = true)
+    protected val expenseReviewMutableList: MutableList<ExpenseReview> = mutableListOf()
+    val expenseReviewList: List<ExpenseReview> get() = expenseReviewMutableList.toList()
+
     fun modifyExpense(amount: Int, content: String, memo: String) {
         this.amount = amount
         this.content = content

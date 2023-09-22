@@ -54,6 +54,7 @@ class ExpenseReviewRepositoryImpl(
 
 class ExpenseRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
+    private val expenseReviewRepository: ExpenseReviewRepository,
 ) : CustomExpenseRepository {
 
     override fun getAllExpensesByContentAndDateBetween(content: String, startDate: LocalDate, endDate: LocalDate, member: Member): List<Expense>? {
@@ -76,6 +77,11 @@ class ExpenseRepositoryImpl(
             .orderBy(expense.createdAt.desc()).limit(4)
         val friendsExpenses = friendsExpensesQuery.fetch()
         result.addAll(friendsExpenses)
+
+        for (expense in friendsExpenses) {
+            val reviews = expenseReviewRepository.getAllReviewsByExpense(expense.expenseResponse.expenseId!!)
+            expense.reviewList = reviews
+        }
 
         val notFollowingMembers = followingMembers.toMutableList()
         notFollowingMembers.add(currentMember)

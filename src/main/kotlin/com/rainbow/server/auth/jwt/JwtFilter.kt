@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse
 class JwtFilter(private val jwtProvider: JwtProvider) : OncePerRequestFilter() {
 
     private fun HttpServletRequest.getToken(): String? {
-        return this.getHeader("Authorization")
-//        rawToken
-//        return if/ (rawToken != null && rawToken.startsWith("Bearer"))
-//            rawToken.replace("Bearer ", "")
-//        else null
+        val rawToken = this.getHeader("Authorization")
+        return if (rawToken != null && rawToken.startsWith("Bearer"))
+            rawToken.replace("Bearer ", "")
+        else null
     }
+
 
     override fun doFilterInternal(
         request: HttpServletRequest,

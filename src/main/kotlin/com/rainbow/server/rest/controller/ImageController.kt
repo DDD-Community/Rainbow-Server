@@ -13,7 +13,12 @@ import org.springframework.web.multipart.MultipartFile
 class ImageController(private val imageService: ImageService) {
 
     @PostMapping("/upload/{expense_id}")
-    fun postImage(@RequestParam(required = true) files: List<MultipartFile>, @PathVariable(name = "expense_id") expenseId: Long) {
+    fun postImage(
+        @RequestParam(required = true)
+        files: List<MultipartFile>,
+        @PathVariable(name = "expense_id")
+        expenseId: Long,
+    ) {
         val save = imageService.saveAll(files, expenseId)
         // return ResponseEntity.ok().body(save)
         // return success(save)

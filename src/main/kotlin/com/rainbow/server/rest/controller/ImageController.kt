@@ -1,9 +1,6 @@
 package com.rainbow.server.rest.controller
 
 import com.rainbow.server.service.ImageService
-import com.rainbow.server.common.success
-import com.rainbow.server.common.CommonResponse
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

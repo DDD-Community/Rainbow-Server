@@ -19,8 +19,6 @@ class ImageController(private val imageService: ImageService) {
         @PathVariable(name = "expense_id")
         expenseId: Long,
     ) {
-        val save = imageService.saveAll(files, expenseId)
-        // return ResponseEntity.ok().body(save)
-        // return success(save)
+        imageService.saveAll(files, expenseId)
     }
 }

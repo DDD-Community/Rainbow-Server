@@ -1,6 +1,8 @@
 package com.rainbow.server.rest.controller
 
 import com.rainbow.server.service.ImageService
+import com.rainbow.server.common.success
+import com.rainbow.server.common.CommonResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,8 +16,9 @@ import org.springframework.web.multipart.MultipartFile
 class ImageController(private val imageService: ImageService) {
 
     @PostMapping("/upload/{expense_id}")
-    fun postImage(@RequestParam(required = true) files: List<MultipartFile>, @PathVariable(name = "expense_id") expenseId: Long): ResponseEntity<Any> {
+    fun postImage(@RequestParam(required = true) files: List<MultipartFile>, @PathVariable(name = "expense_id") expenseId: Long) {
         val save = imageService.saveAll(files, expenseId)
-        return ResponseEntity.ok().body(save)
+        // return ResponseEntity.ok().body(save)
+        // return success(save)
     }
 }

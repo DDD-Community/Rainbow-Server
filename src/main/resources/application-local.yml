@@ -27,7 +27,8 @@ oauth:
       api: https://kapi.kakao.com
 jwt:
   secret-key: 4c97e958673eaf841788de6503a9d844b071258d9991bcbf1ef8de9ef55f0949f1eced914099926167caefab2190709a206709e6deba843ba007f0b63ca2c4cb
-  access-duration-mils: 2147483647
+#  access-duration-mils: 2147483647
+  access-duration-mils: 1800000
 
 
 cloud:

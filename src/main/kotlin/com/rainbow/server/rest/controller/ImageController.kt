@@ -1,9 +1,9 @@
 package com.rainbow.server.rest.controller
 
+import com.rainbow.server.service.ImageService
 import lombok.extern.slf4j.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import com.rainbow.server.service.ImageService
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

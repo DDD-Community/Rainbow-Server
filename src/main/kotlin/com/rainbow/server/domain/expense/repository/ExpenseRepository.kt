@@ -96,13 +96,14 @@ class ExpenseRepositoryImpl(
                     FriendsExpenseDto::class.java,
                     member.memberId,
                     member.nickName,
+                    member.birthDate,
+                    member.salary,
                     Projections.constructor(
                         ExpenseResponse::class.java,
                         expense,
                     ),
                     dailyExpense.date,
                     member.imagePath,
-
                 ),
             )
             .from(expense)

@@ -45,9 +45,9 @@ class MemberController(
     val log = logger()
 
     @GetMapping("/login")
-    fun kakaoLogin(code: String): CommonResponse<Any> {
+    fun kakaoLogin(code: String, status: String): CommonResponse<Any> {
         log.info(code)
-        return success(memberService.login(code))
+        return success(memberService.login(code, status))
     }
 
     @GetMapping("/email/check")

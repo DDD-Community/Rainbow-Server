@@ -31,15 +31,16 @@ class KakaoApiClient(
 
     val log = logger()
 
-    fun getRedirectUri(): String {
+    fun getRedirectUri(status: String): String {
         val os = System.getProperty("os.name")
         log.info("OS : {}", os)
-        if (os.contains("Mac") || os.contains("Windows")) return "http://localhost:8080/member/login"
-        return "http://localhost:3000/member/kakao"
-//        return "http://www.buy-bye.com/members/login"
+//        if (os.contains("Mac") || os.contains("Windows")) return "http://localhost:8080/member/login"
+        if (status == "local")return "http://localhost:3000/member/kakao"
+        if (status == "prod") return "http://www.buy-bye.com/member/kakao"
+        return "http://localhost:8080/member/login"
     }
 
-    fun requestAccessToken(code: String): String {
+    fun requestAccessToken(code: String, status: String): String {
         val url = "$authUrl/oauth/token"
         val httpHeaders = HttpHeaders()
         httpHeaders.contentType = MediaType.APPLICATION_FORM_URLENCODED
@@ -48,7 +49,7 @@ class KakaoApiClient(
         body.add("grant_type", "authorization_code")
         body.add("client_id", clientId)
         body.add("client_secret", secret)
-        body.add("redirect_uri", getRedirectUri())
+        body.add("redirect_uri", getRedirectUri(status))
 
         val request = HttpEntity(body, httpHeaders)
 

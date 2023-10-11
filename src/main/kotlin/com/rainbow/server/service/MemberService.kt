@@ -58,8 +58,8 @@ class MemberService(
     fun getCurrentMemberInfo() = MemberResponseDto(getCurrentLoginMember())
 
     @Transactional
-    fun login(authorizedCode: String): Any {
-        val accessToken = client.requestAccessToken(authorizedCode)
+    fun login(authorizedCode: String, status: String): Any {
+        val accessToken = client.requestAccessToken(authorizedCode, status)
         val infoResponse = client.requestOauthInfo(accessToken)
         println(infoResponse.id)
 
@@ -228,9 +228,27 @@ class MemberService(
     }
 
     fun getFriendsFeeds(lastId: Long?): List<FriendsExpenseDto>? {
+        val me = getCurrentLoginMember()
         val followingList = followRepository.findAllByFromMember(getCurrentLoginUserId())
         val followingMembers = followingList.mapNotNull { f -> memberRepository.findById(f.toMember).orElse(null) }
-        return expenseRepository.getFriendsFeedList(lastId, getCurrentLoginMember(), followingMembers)
+        val friendsList = expenseRepository.getFriendsFeedList(lastId, getCurrentLoginMember(), followingMembers)
+
+        val modifiedList = mutableListOf<FriendsExpenseDto>()
+
+        if (friendsList != null) {
+            for (item in friendsList) {
+                val newItem = if (me.birthDate.isAfter(item.birthDate.minusYears(2)) && me.birthDate.isBefore(me.birthDate.plusYears(2))) {
+                    item.copy(status = "age")
+                } else if (me.salary == item.salary) {
+                    item.copy(status = "salary")
+                } else {
+                    item
+                }
+                modifiedList.add(newItem)
+            }
+        }
+
+        return modifiedList
     }
 
     @Transactional

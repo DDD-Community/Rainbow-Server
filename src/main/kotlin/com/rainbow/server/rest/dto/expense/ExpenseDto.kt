@@ -84,20 +84,27 @@ data class CustomCategoryResponse(
 data class FriendsExpenseDto(
     val memberId: Long,
     val nickName: String,
+    val birthDate: LocalDate,
+    val salary: String,
     val expenseResponse: ExpenseResponse,
     val date: LocalDate,
     var isFriend: Boolean,
     val imagePath: String?,
+    var status: String = "normal",
 ) {
     constructor(
         memberId: Long,
         nickName: String,
+        birthDate: LocalDate,
+        salary: String,
         expenseResponse: ExpenseResponse,
         date: LocalDate,
         imagePath: String?,
     ) : this(
         memberId = memberId,
         nickName = nickName,
+        birthDate = birthDate,
+        salary = salary,
         expenseResponse = expenseResponse,
         date = date,
         isFriend = true,

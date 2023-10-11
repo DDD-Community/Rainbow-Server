@@ -36,7 +36,7 @@ class KakaoApiClient(
         log.info("OS : {}", os)
 //        if (os.contains("Mac") || os.contains("Windows")) return "http://localhost:8080/member/login"
         if (status == "local")return "http://localhost:3000/member/kakao"
-        if (status == "prod") return "http://www.buy-bye.com/member/kakao"
+        if (status == "prod") return "http://www.buybye.kr/member/kakao"
         return "http://localhost:8080/member/login"
     }
 

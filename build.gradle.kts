@@ -37,6 +37,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // logging
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    implementation("org.springframework.boot:spring-boot-starter-log4j2")
+
     // security
     implementation("org.springframework.boot:spring-boot-starter-security:2.7.12")
 
@@ -64,6 +69,11 @@ dependencies {
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+configurations.forEach {
+    it.exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    it.exclude(group = "org.apache.logging.log4j", module = "log4j-to-slf4j")
 }
 
 tasks.withType<KotlinCompile> {
